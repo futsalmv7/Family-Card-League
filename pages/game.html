@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- =========================================================
+         BASIC SETTINGS
+    ========================================================== -->
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#111827"
+    >
+
+    <title>Start Game | Family Card League</title>
+
+
+    <!-- =========================================================
+         GOOGLE FONT
+    ========================================================== -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =========================================================
+         SHARED CSS
+    ========================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="../style.css"
+    >
+
+
+    <!-- =========================================================
+         GAME PAGE CSS
+    ========================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="game.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
+
+    <header class="game-page-header">
+
+        <div class="game-header-inner">
+
+            <a
+                href="../index.html"
+                class="game-back-link"
+            >
+                ← Dashboard
+            </a>
+
+
+            <div class="game-header-top">
+
+                <div>
+
+                    <div class="game-header-eyebrow">
+                        FAMILY CARD LEAGUE
+                    </div>
+
+                    <h1>
+                        Start New Game
+                    </h1>
+
+                    <p id="activeMonthLabel">
+                        Loading active month...
+                    </p>
+
+                </div>
+
+
+                <div class="game-header-symbol">
+                    ♠
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         MAIN CONTENT
+    ========================================================== -->
+
+    <main class="main-container game-container">
+
+
+        <!-- =====================================================
+             GAME INFORMATION
+        ====================================================== -->
+
+        <section class="game-info-grid">
+
+            <article class="game-info-card">
+
+                <span>
+                    Month
+                </span>
+
+                <strong id="gameMonthDisplay">
+                    —
+                </strong>
+
+            </article>
+
+
+            <article class="game-info-card">
+
+                <span>
+                    Next Game
+                </span>
+
+                <strong id="nextGameNumberDisplay">
+                    #—
+                </strong>
+
+            </article>
+
+
+            <article class="game-info-card">
+
+                <span>
+                    Matches
+                </span>
+
+                <strong>
+                    10
+                </strong>
+
+            </article>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             SELECT PLAYERS
+        ====================================================== -->
+
+        <section class="game-content-card">
+
+            <div class="game-section-heading">
+
+                <div>
+
+                    <span class="game-section-kicker">
+                        STEP 1
+                    </span>
+
+                    <h2>
+                        Select 4 Players
+                    </h2>
+
+                    <p>
+                        Tap the players who will participate in this game.
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="selection-counter"
+                    id="selectionCounter"
+                >
+                    0 / 4
+                </div>
+
+            </div>
+
+
+
+            <!-- Loading -->
+            <div
+                class="game-state-message"
+                id="playersLoading"
+            >
+
+                <div class="state-symbol">
+                    ♣
+                </div>
+
+                <strong>
+                    Loading players...
+                </strong>
+
+            </div>
+
+
+
+            <!-- No Players -->
+            <div
+                class="game-state-message hidden"
+                id="noPlayersMessage"
+            >
+
+                <div class="state-symbol">
+                    👥
+                </div>
+
+                <strong>
+                    Not enough active players
+                </strong>
+
+                <p>
+                    At least 4 active players are needed to start a game.
+                </p>
+
+                <a
+                    href="players.html"
+                    class="manage-players-link"
+                >
+                    Manage Players
+                </a>
+
+            </div>
+
+
+
+            <!-- Player Selection Grid -->
+            <div
+                class="player-selection-grid hidden"
+                id="playerSelectionGrid"
+            >
+                <!-- Created by game.js -->
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             SELECTED PLAYERS
+        ====================================================== -->
+
+        <section class="game-content-card">
+
+            <div class="game-section-heading">
+
+                <div>
+
+                    <span class="game-section-kicker">
+                        STEP 2
+                    </span>
+
+                    <h2>
+                        Game Table
+                    </h2>
+
+                    <p>
+                        These four players will remain fixed for all 10 matches.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="selected-players-list">
+
+
+                <div
+                    class="selected-player-slot"
+                    id="selectedSlot1"
+                >
+
+                    <span class="seat-number">
+                        1
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Select Player
+                        </strong>
+
+                        <small>
+                            Seat 1
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+
+                <div
+                    class="selected-player-slot"
+                    id="selectedSlot2"
+                >
+
+                    <span class="seat-number">
+                        2
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Select Player
+                        </strong>
+
+                        <small>
+                            Seat 2
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+
+                <div
+                    class="selected-player-slot"
+                    id="selectedSlot3"
+                >
+
+                    <span class="seat-number">
+                        3
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Select Player
+                        </strong>
+
+                        <small>
+                            Seat 3
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+
+                <div
+                    class="selected-player-slot"
+                    id="selectedSlot4"
+                >
+
+                    <span class="seat-number">
+                        4
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Select Player
+                        </strong>
+
+                        <small>
+                            Seat 4
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             START GAME
+        ====================================================== -->
+
+        <section class="start-game-action-card">
+
+            <div class="start-game-summary">
+
+                <span>
+                    Ready?
+                </span>
+
+                <strong id="startSummary">
+                    Select 4 players
+                </strong>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="startGameButton"
+                class="create-game-button"
+                disabled
+            >
+                Start Game
+            </button>
+
+
+            <div
+                class="game-form-message"
+                id="gameMessage"
+            ></div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             SUCCESS PANEL
+        ====================================================== -->
+
+        <section
+            class="game-created-panel hidden"
+            id="gameCreatedPanel"
+        >
+
+            <div class="created-check">
+                ✓
+            </div>
+
+
+            <span class="created-label">
+                GAME CREATED
+            </span>
+
+
+            <h2 id="createdGameNumber">
+                Game #1
+            </h2>
+
+
+            <p id="createdGamePlayers">
+                Player 1 • Player 2 • Player 3 • Player 4
+            </p>
+
+
+            <div class="created-info">
+
+                <span>
+                    10 matches required
+                </span>
+
+                <span>
+                    Status: ACTIVE
+                </span>
+
+            </div>
+
+
+            <p class="created-next-message">
+                In the next step we will build the live score-entry screen for this game.
+            </p>
+
+
+            <div class="created-action-buttons">
+
+    <a
+        href="#"
+        id="openCreatedGameButton"
+        class="created-dashboard-button"
+    >
+        Enter Scores
+    </a>
+
+    <a
+        href="../index.html"
+        class="created-secondary-button"
+    >
+        Dashboard
+    </a>
+
+</div>
+
+        </section>
+
+
+
+        <div class="bottom-spacing"></div>
+
+    </main>
+
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script
+        type="module"
+        src="game.js"
+    ></script>
+
+
+</body>
+
+</html>

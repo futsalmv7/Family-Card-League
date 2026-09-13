@@ -1,0 +1,1297 @@
+/* ============================================================
+   FAMILY CARD LEAGUE
+   START GAME PAGE
+
+   Sections:
+   01. Header
+   02. Layout
+   03. Game Information
+   04. Content Cards
+   05. Player Selection
+   06. Selected Players
+   07. Start Game Area
+   08. Success Panel
+   09. State Messages
+   10. Responsive
+============================================================ */
+
+
+/* ============================================================
+   01. HEADER
+============================================================ */
+
+.game-page-header {
+
+    position: relative;
+
+    overflow: hidden;
+
+    padding:
+        calc(25px + env(safe-area-inset-top))
+        18px
+        29px;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(212, 160, 23, 0.2),
+            transparent 37%
+        ),
+        linear-gradient(
+            135deg,
+            #111827,
+            #202b3a
+        );
+
+    color: white;
+
+}
+
+
+.game-header-inner {
+
+    width: 100%;
+
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+}
+
+
+.game-back-link {
+
+    display: inline-flex;
+
+    margin-bottom: 20px;
+
+    color:
+        rgba(255, 255, 255, 0.65);
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+}
+
+
+.game-header-top {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+}
+
+
+.game-header-eyebrow {
+
+    margin-bottom: 5px;
+
+    color: #f5d56b;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+}
+
+
+.game-page-header h1 {
+
+    font-size: 27px;
+
+    font-weight: 800;
+
+    letter-spacing: -0.6px;
+
+}
+
+
+.game-page-header p {
+
+    margin-top: 6px;
+
+    color:
+        rgba(255, 255, 255, 0.6);
+
+    font-size: 12px;
+
+}
+
+
+.game-header-symbol {
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 52px;
+
+    height: 52px;
+
+    background:
+        rgba(255, 255, 255, 0.08);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 16px;
+
+    color: #f1c644;
+
+    font-size: 26px;
+
+}
+
+
+/* ============================================================
+   02. LAYOUT
+============================================================ */
+
+.game-container {
+
+    padding-top: 15px;
+
+}
+
+
+/* ============================================================
+   03. GAME INFORMATION
+============================================================ */
+
+.game-info-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 8px;
+
+    margin-bottom: 13px;
+
+}
+
+
+.game-info-card {
+
+    min-width: 0;
+
+    padding: 13px 8px;
+
+    background: white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 13px;
+
+    text-align: center;
+
+    box-shadow:
+        var(--shadow-small);
+
+}
+
+
+.game-info-card span {
+
+    display: block;
+
+    margin-bottom: 4px;
+
+    color:
+        var(--text-light);
+
+    font-size: 8px;
+
+    font-weight: 600;
+
+}
+
+
+.game-info-card strong {
+
+    display: block;
+
+    overflow: hidden;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+}
+
+
+/* ============================================================
+   04. CONTENT CARDS
+============================================================ */
+
+.game-content-card {
+
+    margin-bottom: 13px;
+
+    padding: 17px;
+
+    background: white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        var(--radius-medium);
+
+    box-shadow:
+        var(--shadow-small);
+
+}
+
+
+.game-section-heading {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 16px;
+
+}
+
+
+.game-section-kicker {
+
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--accent);
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.2px;
+
+}
+
+
+.game-section-heading h2 {
+
+    font-size: 18px;
+
+    font-weight: 800;
+
+}
+
+
+.game-section-heading p {
+
+    max-width: 390px;
+
+    margin-top: 5px;
+
+    color:
+        var(--text-secondary);
+
+    font-size: 10px;
+
+    line-height: 1.45;
+
+}
+
+
+.selection-counter {
+
+    flex-shrink: 0;
+
+    padding:
+        6px
+        9px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 100px;
+
+    color:
+        var(--text-secondary);
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+}
+
+
+.selection-counter.complete {
+
+    background:
+        #eaf8f1;
+
+    border-color:
+        #d6f0e2;
+
+    color:
+        #168552;
+
+}
+
+
+/* ============================================================
+   05. PLAYER SELECTION
+============================================================ */
+
+.player-selection-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+
+}
+
+
+.player-select-card {
+
+    position: relative;
+
+    min-width: 0;
+
+    min-height: 70px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 10px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 13px;
+
+    background:
+        var(--surface-soft);
+
+    cursor: pointer;
+
+    transition:
+        transform 0.12s ease,
+        border-color 0.12s ease,
+        background 0.12s ease;
+
+}
+
+
+.player-select-card:active {
+
+    transform: scale(0.98);
+
+}
+
+
+.player-select-card.selected {
+
+    background:
+        #fff8df;
+
+    border-color:
+        #d7aa29;
+
+}
+
+
+.player-select-card.disabled {
+
+    cursor: not-allowed;
+
+    opacity: 0.43;
+
+}
+
+
+.player-select-avatar {
+
+    width: 38px;
+
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #111827,
+            #303b4c
+        );
+
+    color: #f4cc54;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+}
+
+
+.player-select-name {
+
+    min-width: 0;
+
+    overflow: hidden;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+}
+
+
+.player-selected-check {
+
+    position: absolute;
+
+    top: 7px;
+
+    right: 7px;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 17px;
+
+    height: 17px;
+
+    border-radius: 50%;
+
+    background:
+        var(--primary);
+
+    color: white;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+}
+
+
+.player-select-card.selected
+.player-selected-check {
+
+    display: flex;
+
+}
+
+
+/* ============================================================
+   06. SELECTED PLAYERS
+============================================================ */
+
+.selected-players-list {
+
+    display: grid;
+
+    grid-template-columns: 1fr;
+
+    gap: 7px;
+
+}
+
+
+.selected-player-slot {
+
+    min-height: 55px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    padding:
+        9px
+        11px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px dashed #dce2e8;
+
+    border-radius: 12px;
+
+}
+
+
+.selected-player-slot.filled {
+
+    background: white;
+
+    border:
+        1px solid #ead48e;
+
+}
+
+
+.seat-number {
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 30px;
+
+    height: 30px;
+
+    border-radius: 9px;
+
+    background:
+        #eceff3;
+
+    color:
+        var(--text-secondary);
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+}
+
+
+.selected-player-slot.filled
+.seat-number {
+
+    background:
+        #fff0bd;
+
+    color:
+        #98710c;
+
+}
+
+
+.selected-player-slot strong {
+
+    display: block;
+
+    margin-bottom: 2px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+}
+
+
+.selected-player-slot small {
+
+    color:
+        var(--text-light);
+
+    font-size: 8px;
+
+}
+
+/* ============================================================
+   CONTINUE ACTIVE GAME CARD
+============================================================ */
+
+.continue-game-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    width: 100%;
+
+    margin-bottom: 14px;
+    padding: 18px;
+
+    text-decoration: none;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #111827,
+            #1f2937
+        );
+
+    border: 2px solid #d4a017;
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 24px
+        rgba(17, 24, 39, 0.18);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.continue-game-card:active {
+    transform: scale(0.98);
+}
+
+
+.continue-game-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: 52px;
+    height: 52px;
+
+    border-radius: 14px;
+
+    font-size: 20px;
+    font-weight: 800;
+
+    color: #111827;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f5d56b,
+            #d4a017
+        );
+}
+
+
+.continue-game-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    flex: 1;
+    min-width: 0;
+}
+
+
+.continue-game-small {
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 1.3px;
+
+    color: #f5d56b;
+}
+
+
+.continue-game-content strong {
+    font-size: 18px;
+    font-weight: 800;
+
+    color: white;
+}
+
+
+.continue-game-description {
+    font-size: 13px;
+
+    color: #d1d5db;
+}
+
+
+.continue-game-arrow {
+    flex-shrink: 0;
+
+    font-size: 24px;
+    font-weight: 700;
+
+    color: #f5d56b;
+}
+
+
+/* ============================================================
+   HIDDEN ELEMENT
+============================================================ */
+
+.hidden {
+    display: none !important;
+}
+
+/* ============================================================
+   07. START GAME AREA
+============================================================ */
+
+.start-game-action-card {
+
+    margin-bottom: 13px;
+
+    padding: 16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #151d2a,
+            #222d3d
+        );
+
+    border-radius:
+        var(--radius-medium);
+
+    box-shadow:
+        var(--shadow-medium);
+
+}
+
+
+.start-game-summary {
+
+    margin-bottom: 12px;
+
+}
+
+
+.start-game-summary span {
+
+    display: block;
+
+    margin-bottom: 3px;
+
+    color:
+        rgba(255, 255, 255, 0.45);
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.8px;
+
+    text-transform: uppercase;
+
+}
+
+
+.start-game-summary strong {
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+}
+
+
+.create-game-button {
+
+    width: 100%;
+
+    height: 51px;
+
+    border: none;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d8a51f,
+            #f1ca4c
+        );
+
+    color:
+        #111827;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+}
+
+
+.create-game-button:active {
+
+    transform: scale(0.985);
+
+}
+
+
+.create-game-button:disabled {
+
+    cursor: not-allowed;
+
+    opacity: 0.35;
+
+}
+
+
+.game-form-message {
+
+    display: none;
+
+    margin-top: 10px;
+
+    padding: 9px;
+
+    border-radius: 9px;
+
+    font-size: 9px;
+
+    line-height: 1.4;
+
+}
+
+
+.game-form-message.error {
+
+    display: block;
+
+    background:
+        rgba(221, 75, 75, 0.14);
+
+    color:
+        #ffb7b7;
+
+}
+
+
+.game-form-message.success {
+
+    display: block;
+
+    background:
+        rgba(46, 187, 113, 0.15);
+
+    color:
+        #8ee3b7;
+
+}
+
+
+/* ============================================================
+   08. SUCCESS PANEL
+============================================================ */
+
+.game-created-panel {
+
+    margin-bottom: 14px;
+
+    padding:
+        28px
+        18px;
+
+    background: white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        var(--radius-large);
+
+    box-shadow:
+        var(--shadow-medium);
+
+    text-align: center;
+
+}
+
+
+.created-check {
+
+    width: 58px;
+
+    height: 58px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin:
+        0 auto
+        13px;
+
+    border-radius: 18px;
+
+    background:
+        #eaf8f1;
+
+    color:
+        #15955a;
+
+    font-size: 26px;
+
+    font-weight: 800;
+
+}
+
+
+.created-label {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    color:
+        var(--accent);
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.3px;
+
+}
+
+
+.game-created-panel h2 {
+
+    margin-bottom: 8px;
+
+    font-size: 24px;
+
+    font-weight: 800;
+
+}
+
+
+.game-created-panel > p {
+
+    color:
+        var(--text-secondary);
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+}
+
+
+.created-info {
+
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    margin:
+        15px
+        0;
+
+}
+
+
+.created-info span {
+
+    padding:
+        6px
+        9px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 100px;
+
+    color:
+        var(--text-secondary);
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+}
+
+
+.created-next-message {
+
+    max-width: 400px;
+
+    margin:
+        0 auto
+        16px;
+
+}
+
+
+.created-dashboard-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 43px;
+
+    padding:
+        0
+        18px;
+
+    background:
+        var(--primary);
+
+    color: white;
+
+    border-radius: 11px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+}
+
+
+/* ============================================================
+   09. STATE MESSAGES
+============================================================ */
+
+.game-state-message {
+
+    padding:
+        28px
+        15px;
+
+    text-align: center;
+
+}
+
+
+.state-symbol {
+
+    margin-bottom: 8px;
+
+    font-size: 27px;
+
+}
+
+
+.game-state-message strong {
+
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-size: 13px;
+
+}
+
+
+.game-state-message p {
+
+    max-width: 270px;
+
+    margin:
+        0 auto;
+
+    color:
+        var(--text-secondary);
+
+    font-size: 9px;
+
+    line-height: 1.5;
+
+}
+
+
+.manage-players-link {
+
+    display: inline-flex;
+
+    margin-top: 12px;
+
+    padding:
+        8px
+        11px;
+
+    background:
+        var(--primary);
+
+    color: white;
+
+    border-radius: 9px;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+}
+
+
+/* ============================================================
+   10. RESPONSIVE
+============================================================ */
+
+@media (min-width: 500px) {
+
+    .player-selection-grid {
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+    }
+
+
+    .selected-players-list {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+    }
+
+}
+
+
+@media (min-width: 700px) {
+
+    .game-page-header {
+
+        padding:
+            35px
+            28px
+            38px;
+
+    }
+
+
+    .game-page-header h1 {
+
+        font-size: 34px;
+
+    }
+
+
+    .game-container {
+
+        padding-top: 22px;
+
+    }
+
+
+    .game-content-card {
+
+        padding: 22px;
+
+    }
+
+
+    .player-selection-grid {
+
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+
+    }
+
+
+    .game-info-card {
+
+        padding: 16px;
+
+    }
+
+
+    .game-info-card strong {
+
+        font-size: 15px;
+
+    }
+
+}
+
+/* ============================================================
+   CREATED GAME ACTIONS
+============================================================ */
+
+.created-action-buttons {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.created-secondary-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 43px;
+
+    padding:
+        0
+        18px;
+
+    background:
+        var(--surface-soft);
+
+    color:
+        var(--text-primary);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 11px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+}

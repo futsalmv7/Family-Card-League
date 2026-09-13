@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- =========================================================
+         BASIC PAGE SETTINGS
+    ========================================================== -->
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#111827"
+    >
+
+    <title>Family Card League</title>
+
+
+    <!-- =========================================================
+         GOOGLE FONT
+    ========================================================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =========================================================
+         MAIN CSS
+    ========================================================== -->
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+    <!-- =========================================================
+         APP HEADER
+    ========================================================== -->
+    <header class="app-header">
+
+        <div class="header-inner">
+
+            <div class="header-text">
+
+                <p class="header-eyebrow">
+                    FAMILY CARD LEAGUE
+                </p>
+
+                <h1>
+                    Dashboard
+                </h1>
+
+                <p
+                    class="current-month"
+                    id="currentMonth"
+                >
+                    September 2026
+                </p>
+
+            </div>
+
+
+            <!-- Decorative playing-card icon -->
+            <div class="header-logo" aria-hidden="true">
+
+                <span class="card-icon card-icon-back">
+                    ♠
+                </span>
+
+                <span class="card-icon card-icon-front">
+                    ♥
+                </span>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         MAIN CONTENT
+    ========================================================== -->
+    <main class="main-container">
+
+
+        <!-- =====================================================
+             START NEW GAME
+        ====================================================== -->
+        <section class="start-game-section">
+
+
+    <!-- =====================================================
+         CONTINUE ACTIVE GAME
+
+         Hidden automatically when there is no ACTIVE game.
+    ====================================================== -->
+    <a
+        href="#"
+        class="continue-game-card hidden"
+        id="continueGameCard"
+    >
+
+        <div class="continue-game-icon">
+            ▶
+        </div>
+
+
+        <div class="continue-game-content">
+
+            <span class="continue-game-small">
+                ACTIVE GAME
+            </span>
+
+            <strong id="continueGameTitle">
+                Game
+            </strong>
+
+            <span
+                class="continue-game-description"
+                id="continueGameDescription"
+            >
+                Continue scoring
+            </span>
+
+        </div>
+
+
+        <div class="continue-game-arrow">
+            →
+        </div>
+
+    </a>
+
+
+
+    <!-- =====================================================
+         START NEW GAME
+    ====================================================== -->
+    <a
+        href="pages/game.html"
+        class="start-game-card"
+        id="startNewGameCard"
+    >
+
+        <div class="start-game-icon">
+            ♠
+        </div>
+
+
+        <div class="start-game-content">
+
+            <span class="start-game-small">
+                READY TO PLAY?
+            </span>
+
+            <strong>
+                Start New Game
+            </strong>
+
+            <span class="start-game-description">
+                Select 4 players and begin a 10-match game
+            </span>
+
+        </div>
+
+
+        <div class="start-game-arrow">
+            →
+        </div>
+
+    </a>
+
+</section>
+
+
+
+        <!-- =====================================================
+             MONTH STATUS / QUICK INFORMATION
+        ====================================================== -->
+        <section class="quick-stats-grid">
+
+            <div class="quick-stat-card">
+
+                <div class="quick-stat-icon">
+                    🎮
+                </div>
+
+                <div>
+                    <span class="quick-stat-label">
+                        Games
+                    </span>
+
+                    <strong id="monthGamesCount">
+                        0
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="quick-stat-card">
+
+                <div class="quick-stat-icon">
+                    👥
+                </div>
+
+                <div>
+                    <span class="quick-stat-label">
+                        Players
+                    </span>
+
+                    <strong id="activePlayersCount">
+                        0
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="quick-stat-card">
+
+                <div class="quick-stat-icon">
+                    🎯
+                </div>
+
+                <div>
+                    <span class="quick-stat-label">
+                        Cat. 1 Cutoff
+                    </span>
+
+                    <strong id="categoryCutoff">
+                        -
+                    </strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             OVERALL MONTHLY RANKING
+        ====================================================== -->
+        <section class="content-card ranking-card">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-kicker">
+                        CURRENT MONTH
+                    </span>
+
+                    <h2>
+                        Overall Ranking
+                    </h2>
+
+                </div>
+
+
+                <div class="live-badge">
+
+                    <span class="live-dot"></span>
+
+                    LIVE
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Empty state shown until Firebase data exists -->
+            <div
+                class="empty-state"
+                id="rankingEmptyState"
+            >
+
+                <div class="empty-state-icon">
+                    🏆
+                </div>
+
+                <strong>
+                    No rankings yet
+                </strong>
+
+                <p>
+                    Rankings will appear after completed games.
+                </p>
+
+            </div>
+
+
+
+            <!-- Ranking table -->
+            <div
+                class="ranking-table-wrapper hidden"
+                id="rankingTableWrapper"
+            >
+
+                <table class="ranking-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th class="rank-column">
+                                #
+                            </th>
+
+                            <th>
+                                Player
+                            </th>
+
+                            <th>
+                                GP
+                            </th>
+
+                            <th>
+                                W
+                            </th>
+
+                            <th>
+                                Win %
+                            </th>
+
+                            <th class="points-column">
+                                Points
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="rankingTableBody">
+
+                        <!--
+                            Later JavaScript + Firebase
+                            will automatically create rows here.
+                        -->
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             MONTHLY RECORDS
+        ====================================================== -->
+        <section class="content-card">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-kicker">
+                        THIS MONTH
+                    </span>
+
+                    <h2>
+                        Monthly Records
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="records-grid">
+
+
+                <!-- Highest Single Match Score -->
+                <article class="record-card">
+
+                    <div class="record-card-top">
+
+                        <div class="record-icon">
+                            🔥
+                        </div>
+
+                        <span class="record-label">
+                            Highest Match
+                        </span>
+
+                    </div>
+
+
+                    <div class="record-value" id="highestMatchScore">
+                        —
+                    </div>
+
+
+                    <div class="record-player" id="highestMatchPlayer">
+                        No record yet
+                    </div>
+
+
+                    <div class="record-detail" id="highestMatchDetail">
+                        Complete a game to begin
+                    </div>
+
+                </article>
+
+
+
+                <!-- Lowest Single Match Score -->
+                <article class="record-card">
+
+                    <div class="record-card-top">
+
+                        <div class="record-icon">
+                            ❄️
+                        </div>
+
+                        <span class="record-label">
+                            Lowest Match
+                        </span>
+
+                    </div>
+
+
+                    <div class="record-value" id="lowestMatchScore">
+                        —
+                    </div>
+
+
+                    <div class="record-player" id="lowestMatchPlayer">
+                        No record yet
+                    </div>
+
+
+                    <div class="record-detail" id="lowestMatchDetail">
+                        Complete a game to begin
+                    </div>
+
+                </article>
+
+
+
+                <!-- Highest Complete Game Total -->
+                <article class="record-card">
+
+                    <div class="record-card-top">
+
+                        <div class="record-icon">
+                            🚀
+                        </div>
+
+                        <span class="record-label">
+                            Highest Game
+                        </span>
+
+                    </div>
+
+
+                    <div class="record-value" id="highestGameScore">
+                        —
+                    </div>
+
+
+                    <div class="record-player" id="highestGamePlayer">
+                        No record yet
+                    </div>
+
+
+                    <div class="record-detail" id="highestGameDetail">
+                        Complete a game to begin
+                    </div>
+
+                </article>
+
+
+
+                <!-- Lowest Complete Game Total -->
+                <article class="record-card">
+
+                    <div class="record-card-top">
+
+                        <div class="record-icon">
+                            📉
+                        </div>
+
+                        <span class="record-label">
+                            Lowest Game
+                        </span>
+
+                    </div>
+
+
+                    <div class="record-value" id="lowestGameScore">
+                        —
+                    </div>
+
+
+                    <div class="record-player" id="lowestGamePlayer">
+                        No record yet
+                    </div>
+
+
+                    <div class="record-detail" id="lowestGameDetail">
+                        Complete a game to begin
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             CATEGORY RANKINGS
+        ====================================================== -->
+        <section class="categories-section">
+
+            <div class="section-heading category-section-heading">
+
+                <div>
+
+                    <span class="section-kicker">
+                        MONTHLY COMPETITION
+                    </span>
+
+                    <h2>
+                        Categories
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="categories-grid">
+
+
+                <!-- =================================================
+                     CATEGORY 1
+                ================================================== -->
+                <article class="category-card category-one">
+
+                    <div class="category-header">
+
+                        <div>
+
+                            <span class="category-number">
+                                CATEGORY 1
+                            </span>
+
+                            <h3>
+                                Regular Players
+                            </h3>
+
+                        </div>
+
+
+                        <div class="category-symbol">
+                            ♠
+                        </div>
+
+                    </div>
+
+
+                    <p class="category-description">
+
+    Players who have played at least
+
+    <strong id="categoryOneCutoff">
+        half
+    </strong>
+
+    of the highest number of games.
+
+</p>
+
+
+<div
+    class="category-current-standings"
+    id="categoryOneAllPlayers"
+>
+    No qualified players yet
+</div>
+
+
+<div class="podium-list">
+
+
+                        <div class="podium-row first-place">
+
+                            <div class="podium-rank">
+                                1
+                            </div>
+
+                            <div class="podium-medal">
+                                🥇
+                            </div>
+
+                            <div class="podium-player">
+
+                                <strong id="categoryOneFirst">
+                                    —
+                                </strong>
+
+                                <span>
+                                    1st Place
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="podium-row">
+
+                            <div class="podium-rank">
+                                2
+                            </div>
+
+                            <div class="podium-medal">
+                                🥈
+                            </div>
+
+                            <div class="podium-player">
+
+                                <strong id="categoryOneSecond">
+                                    —
+                                </strong>
+
+                                <span>
+                                    2nd Place
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="podium-row">
+
+                            <div class="podium-rank">
+                                3
+                            </div>
+
+                            <div class="podium-medal">
+                                🥉
+                            </div>
+
+                            <div class="podium-player">
+
+                                <strong id="categoryOneThird">
+                                    —
+                                </strong>
+
+                                <span>
+                                    3rd Place
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- =================================================
+                     CATEGORY 2
+                ================================================== -->
+                <article class="category-card category-two">
+
+                    <div class="category-header">
+
+                        <div>
+
+                            <span class="category-number">
+                                CATEGORY 2
+                            </span>
+
+                            <h3>
+                                Casual Players
+                            </h3>
+
+                        </div>
+
+
+                        <div class="category-symbol">
+                            ♦
+                        </div>
+
+                    </div>
+
+
+                    <p class="category-description">
+
+    Players below the current Category 1
+    qualification cutoff.
+
+</p>
+
+
+<div
+    class="category-current-standings"
+    id="categoryTwoAllPlayers"
+>
+    No qualified players yet
+</div>
+
+
+<div class="podium-list">
+
+
+                        <div class="podium-row first-place">
+
+                            <div class="podium-rank">
+                                1
+                            </div>
+
+                            <div class="podium-medal">
+                                🥇
+                            </div>
+
+                            <div class="podium-player">
+
+                                <strong id="categoryTwoFirst">
+                                    —
+                                </strong>
+
+                                <span>
+                                    1st Place
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="podium-row">
+
+                            <div class="podium-rank">
+                                2
+                            </div>
+
+                            <div class="podium-medal">
+                                🥈
+                            </div>
+
+                            <div class="podium-player">
+
+                                <strong id="categoryTwoSecond">
+                                    —
+                                </strong>
+
+                                <span>
+                                    2nd Place
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="podium-row">
+
+                            <div class="podium-rank">
+                                3
+                            </div>
+
+                            <div class="podium-medal">
+                                🥉
+                            </div>
+
+                            <div class="podium-player">
+
+                                <strong id="categoryTwoThird">
+                                    —
+                                </strong>
+
+                                <span>
+                                    3rd Place
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             EXTRA SPACE FOR FIXED MOBILE NAVIGATION
+        ====================================================== -->
+        <div class="bottom-spacing"></div>
+
+    </main>
+
+
+
+    <!-- =========================================================
+         MOBILE BOTTOM NAVIGATION
+    ========================================================== -->
+    <nav class="bottom-navigation">
+
+        <a
+            href="index.html"
+            class="nav-item active"
+        >
+
+            <span class="nav-icon">
+                ⌂
+            </span>
+
+            <span>
+                Home
+            </span>
+
+        </a>
+
+
+        <a
+            href="pages/players.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ♟
+            </span>
+
+            <span>
+                Players
+            </span>
+
+        </a>
+
+
+        <a
+            href="pages/history.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ◷
+            </span>
+
+            <span>
+                History
+            </span>
+
+        </a>
+
+
+        <a
+            href="pages/hall-of-fame.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ★
+            </span>
+
+            <span>
+                Records
+            </span>
+
+        </a>
+
+
+        <a
+            href="pages/admin.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ⚙
+            </span>
+
+            <span>
+                Admin
+            </span>
+
+        </a>
+
+    </nav>
+
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+    <script
+    type="module"
+    src="app.js"
+></script>
+
+</body>
+
+</html>

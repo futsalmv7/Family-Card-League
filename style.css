@@ -1,0 +1,1900 @@
+/* ============================================================
+   FAMILY CARD LEAGUE
+   MAIN STYLESHEET
+
+   Sections:
+   01. Root Variables
+   02. Reset / Base
+   03. Header
+   04. Main Layout
+   05. Start Game Card
+   06. Quick Statistics
+   07. Common Content Cards
+   08. Ranking Table
+   09. Empty States
+   10. Monthly Records
+   11. Categories
+   12. Bottom Navigation
+   13. Utility Classes
+   14. Tablet / Desktop Responsive Styles
+============================================================ */
+
+
+/* ============================================================
+   01. ROOT VARIABLES
+
+   Change colors here later and the whole website updates.
+============================================================ */
+
+:root {
+
+    /* Main colors */
+    --primary: #111827;
+    --primary-soft: #1f2937;
+
+    --accent: #d4a017;
+    --accent-light: #f5d56b;
+
+    /* Backgrounds */
+    --background: #f4f6f9;
+    --surface: #ffffff;
+    --surface-soft: #f8fafc;
+
+    /* Text */
+    --text-primary: #161b26;
+    --text-secondary: #687386;
+    --text-light: #94a0b2;
+
+    /* Borders */
+    --border: #e8ecf1;
+
+    /* Status */
+    --success: #16a05d;
+    --success-background: #eaf8f1;
+
+    --danger: #d64545;
+
+    /* Shadows */
+    --shadow-small:
+        0 2px 8px rgba(15, 23, 42, 0.05);
+
+    --shadow-medium:
+        0 8px 24px rgba(15, 23, 42, 0.08);
+
+    /* Radius */
+    --radius-small: 10px;
+    --radius-medium: 16px;
+    --radius-large: 22px;
+
+    /* Layout */
+    --content-max-width: 1100px;
+
+}
+
+
+/* ============================================================
+   02. RESET / BASE
+============================================================ */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    font-family:
+        "Inter",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background: var(--background);
+
+    color: var(--text-primary);
+
+    -webkit-font-smoothing: antialiased;
+
+    padding-bottom:
+        calc(82px + env(safe-area-inset-bottom));
+
+}
+
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+
+/* Prevent accidental horizontal page scrolling */
+body {
+    overflow-x: hidden;
+}
+
+
+/* ============================================================
+   03. HEADER
+============================================================ */
+
+.app-header {
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(212, 160, 23, 0.18),
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #111827,
+            #1d2635
+        );
+
+    color: white;
+
+    padding:
+        calc(28px + env(safe-area-inset-top))
+        18px
+        32px;
+
+}
+
+
+/* Decorative background circles */
+
+.app-header::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 170px;
+    height: 170px;
+
+    border-radius: 50%;
+
+    right: -70px;
+    top: -80px;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.07);
+
+}
+
+
+.app-header::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 110px;
+    height: 110px;
+
+    border-radius: 50%;
+
+    right: 20px;
+    bottom: -70px;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.05);
+
+}
+
+
+.header-inner {
+
+    position: relative;
+    z-index: 2;
+
+    max-width: var(--content-max-width);
+
+    margin: 0 auto;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+}
+
+
+.header-eyebrow {
+
+    margin-bottom: 7px;
+
+    color: var(--accent-light);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.8px;
+
+}
+
+
+.header-text h1 {
+
+    font-size: 29px;
+
+    line-height: 1.1;
+
+    font-weight: 800;
+
+    letter-spacing: -0.7px;
+
+}
+
+
+.current-month {
+
+    margin-top: 7px;
+
+    color: rgba(255, 255, 255, 0.7);
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+}
+
+
+/* Header Playing Card Logo */
+
+.header-logo {
+
+    position: relative;
+
+    flex-shrink: 0;
+
+    width: 65px;
+    height: 65px;
+
+}
+
+
+.card-icon {
+
+    position: absolute;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 56px;
+
+    border-radius: 8px;
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 8px 18px rgba(0, 0, 0, 0.18);
+
+}
+
+
+.card-icon-back {
+
+    left: 4px;
+    top: 3px;
+
+    transform: rotate(-10deg);
+
+    background: var(--accent);
+
+    color: var(--primary);
+
+}
+
+
+.card-icon-front {
+
+    right: 2px;
+    bottom: 1px;
+
+    transform: rotate(9deg);
+
+    background: white;
+
+    color: #d54444;
+
+}
+
+
+/* ============================================================
+   04. MAIN LAYOUT
+============================================================ */
+
+.main-container {
+
+    width: 100%;
+
+    max-width: var(--content-max-width);
+
+    margin: 0 auto;
+
+    padding: 16px;
+
+}
+
+
+/* ============================================================
+   05. START GAME CARD
+============================================================ */
+
+.start-game-section {
+
+    margin-top: -2px;
+
+    margin-bottom: 14px;
+
+}
+
+
+.start-game-card {
+
+    min-height: 96px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 17px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d7a51f,
+            #f0c849
+        );
+
+    border-radius: var(--radius-large);
+
+    box-shadow:
+        0 9px 25px rgba(177, 130, 14, 0.21);
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+
+}
+
+
+.start-game-card:active {
+
+    transform: scale(0.985);
+
+}
+
+
+.start-game-icon {
+
+    width: 52px;
+    height: 52px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background: rgba(17, 24, 39, 0.93);
+
+    color: white;
+
+    font-size: 27px;
+
+}
+
+
+.start-game-content {
+
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.start-game-small {
+
+    margin-bottom: 3px;
+
+    color: rgba(17, 24, 39, 0.7);
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.3px;
+
+}
+
+
+.start-game-content strong {
+
+    color: var(--primary);
+
+    font-size: 19px;
+
+    line-height: 1.2;
+
+    font-weight: 800;
+
+}
+
+
+.start-game-description {
+
+    margin-top: 4px;
+
+    color: rgba(17, 24, 39, 0.68);
+
+    font-size: 11px;
+
+    line-height: 1.35;
+
+}
+
+
+.start-game-arrow {
+
+    flex-shrink: 0;
+
+    color: var(--primary);
+
+    font-size: 28px;
+
+    font-weight: 400;
+
+}
+
+/* ============================================================
+   CONTINUE ACTIVE GAME CARD
+============================================================ */
+
+.continue-game-card {
+
+    min-height: 96px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 14px;
+
+    padding: 17px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #111827,
+            #1f2937
+        );
+
+    color: white;
+
+    border:
+        2px solid var(--accent);
+
+    border-radius:
+        var(--radius-large);
+
+    box-shadow:
+        0 9px 25px
+        rgba(17, 24, 39, 0.18);
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+
+}
+
+
+.continue-game-card:active {
+
+    transform:
+        scale(0.985);
+
+}
+
+
+.continue-game-icon {
+
+    width: 52px;
+    height: 52px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent-light),
+            var(--accent)
+        );
+
+    color:
+        var(--primary);
+
+    font-size: 21px;
+
+    font-weight: 800;
+
+}
+
+
+.continue-game-content {
+
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.continue-game-small {
+
+    margin-bottom: 3px;
+
+    color:
+        var(--accent-light);
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.3px;
+
+}
+
+
+.continue-game-content strong {
+
+    color: white;
+
+    font-size: 19px;
+
+    line-height: 1.2;
+
+    font-weight: 800;
+
+}
+
+
+.continue-game-description {
+
+    margin-top: 4px;
+
+    color:
+        rgba(255, 255, 255, 0.66);
+
+    font-size: 11px;
+
+    line-height: 1.35;
+
+}
+
+
+.continue-game-arrow {
+
+    flex-shrink: 0;
+
+    color:
+        var(--accent-light);
+
+    font-size: 28px;
+
+}
+
+/* ============================================================
+   06. QUICK STATISTICS
+============================================================ */
+
+.quick-stats-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 9px;
+
+    margin-bottom: 14px;
+
+}
+
+
+.quick-stat-card {
+
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 12px 10px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    box-shadow: var(--shadow-small);
+
+}
+
+
+.quick-stat-icon {
+
+    display: none;
+
+    flex-shrink: 0;
+
+    font-size: 20px;
+
+}
+
+
+.quick-stat-card > div:last-child {
+
+    min-width: 0;
+
+}
+
+
+.quick-stat-label {
+
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: var(--text-secondary);
+
+    font-size: 9px;
+
+    line-height: 1.2;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+}
+
+
+.quick-stat-card strong {
+
+    display: block;
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+}
+
+
+/* ============================================================
+   07. COMMON CONTENT CARDS
+============================================================ */
+
+.content-card {
+
+    margin-bottom: 14px;
+
+    padding: 18px;
+
+    background: var(--surface);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius-medium);
+
+    box-shadow: var(--shadow-small);
+
+}
+
+
+.section-heading {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 14px;
+
+    margin-bottom: 16px;
+
+}
+
+
+.section-kicker {
+
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--accent);
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.3px;
+
+}
+
+
+.section-heading h2 {
+
+    font-size: 19px;
+
+    line-height: 1.25;
+
+    font-weight: 800;
+
+    letter-spacing: -0.35px;
+
+}
+
+
+/* LIVE badge */
+
+.live-badge {
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 6px 9px;
+
+    background:
+        var(--success-background);
+
+    color: var(--success);
+
+    border-radius: 100px;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.7px;
+
+}
+
+
+.live-dot {
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: var(--success);
+
+    box-shadow:
+        0 0 0 3px rgba(22, 160, 93, 0.12);
+
+}
+
+
+/* ============================================================
+   08. RANKING TABLE
+============================================================ */
+
+.ranking-table-wrapper {
+
+    width: 100%;
+
+    overflow-x: auto;
+
+    -webkit-overflow-scrolling: touch;
+
+}
+
+
+.ranking-table {
+
+    width: 100%;
+
+    min-width: 510px;
+
+    border-collapse: collapse;
+
+}
+
+
+.ranking-table th {
+
+    padding:
+        9px
+        8px
+        10px;
+
+    color: var(--text-light);
+
+    border-bottom:
+        1px solid var(--border);
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.3px;
+
+    text-align: left;
+
+    text-transform: uppercase;
+
+}
+
+
+.ranking-table td {
+
+    padding:
+        13px
+        8px;
+
+    border-bottom:
+        1px solid var(--border);
+
+    font-size: 12px;
+
+}
+
+
+.ranking-table tbody tr:last-child td {
+
+    border-bottom: none;
+
+}
+
+
+.rank-column {
+
+    width: 34px;
+
+}
+
+
+.points-column {
+
+    text-align: right !important;
+
+}
+
+
+.ranking-table td:last-child {
+
+    text-align: right;
+
+    font-weight: 800;
+
+}
+
+
+/* ============================================================
+   09. EMPTY STATES
+============================================================ */
+
+.empty-state {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding:
+        25px
+        15px
+        18px;
+
+    text-align: center;
+
+}
+
+
+.empty-state-icon {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 54px;
+    height: 54px;
+
+    margin-bottom: 10px;
+
+    background:
+        var(--surface-soft);
+
+    border-radius: 17px;
+
+    font-size: 25px;
+
+}
+
+
+.empty-state strong {
+
+    margin-bottom: 5px;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+}
+
+
+.empty-state p {
+
+    max-width: 260px;
+
+    color: var(--text-secondary);
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+}
+
+
+/* ============================================================
+   10. MONTHLY RECORDS
+============================================================ */
+
+.records-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 9px;
+
+}
+
+
+.record-card {
+
+    min-width: 0;
+
+    padding: 14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #f9fafb,
+            #f5f7fa
+        );
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 14px;
+
+}
+
+
+.record-card-top {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 11px;
+
+}
+
+
+.record-icon {
+
+    flex-shrink: 0;
+
+    font-size: 16px;
+
+}
+
+
+.record-label {
+
+    min-width: 0;
+
+    color: var(--text-secondary);
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+}
+
+
+.record-value {
+
+    margin-bottom: 4px;
+
+    font-size: 24px;
+
+    font-weight: 800;
+
+    line-height: 1;
+
+    letter-spacing: -0.5px;
+
+}
+
+
+.record-player {
+
+    overflow: hidden;
+
+    margin-bottom: 3px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+}
+
+
+.record-detail {
+
+    overflow: hidden;
+
+    color: var(--text-light);
+
+    font-size: 9px;
+
+    line-height: 1.4;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+}
+
+
+/* ============================================================
+   11. CATEGORIES
+============================================================ */
+
+.categories-section {
+
+    margin-top: 3px;
+
+}
+
+
+.category-section-heading {
+
+    padding:
+        0
+        3px;
+
+}
+
+
+.categories-grid {
+
+    display: grid;
+
+    grid-template-columns: 1fr;
+
+    gap: 12px;
+
+}
+
+
+.category-card {
+
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 18px;
+
+    border-radius: var(--radius-medium);
+
+    box-shadow: var(--shadow-small);
+
+}
+
+
+/* Category 1 */
+
+.category-one {
+
+    background:
+        linear-gradient(
+            145deg,
+            #151d2a,
+            #222c3a
+        );
+
+    color: white;
+
+}
+
+
+/* Category 2 */
+
+.category-two {
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text-primary);
+
+    border:
+        1px solid var(--border);
+
+}
+
+
+.category-header {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 9px;
+
+}
+
+
+.category-number {
+
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--accent);
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.2px;
+
+}
+
+
+.category-card h3 {
+
+    font-size: 18px;
+
+    font-weight: 800;
+
+}
+
+
+.category-symbol {
+
+    color: var(--accent);
+
+    font-size: 29px;
+
+    opacity: 0.9;
+
+}
+
+
+.category-description {
+
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 390px;
+
+    margin-bottom: 16px;
+
+    font-size: 10px;
+
+    line-height: 1.55;
+
+}
+
+
+.category-one .category-description {
+
+    color:
+        rgba(255, 255, 255, 0.62);
+
+}
+
+
+.category-two .category-description {
+
+    color:
+        var(--text-secondary);
+
+}
+
+/* Full current category standings */
+
+.category-current-standings {
+
+    margin-bottom: 14px;
+
+    padding:
+        10px
+        12px;
+
+    border-radius:
+        10px;
+
+    font-size:
+        10px;
+
+    font-weight:
+        600;
+
+    line-height:
+        1.6;
+
+}
+
+
+.category-one
+.category-current-standings {
+
+    background:
+        rgba(255, 255, 255, 0.06);
+
+    color:
+        rgba(255, 255, 255, 0.72);
+
+}
+
+
+.category-two
+.category-current-standings {
+
+    background:
+        var(--surface-soft);
+
+    color:
+        var(--text-secondary);
+
+}
+
+/* Podium */
+
+.podium-list {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+}
+
+
+.podium-row {
+
+    min-height: 50px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding:
+        9px
+        11px;
+
+    border-radius:
+        11px;
+
+}
+
+
+.category-one .podium-row {
+
+    background:
+        rgba(255, 255, 255, 0.06);
+
+}
+
+
+.category-two .podium-row {
+
+    background:
+        var(--surface-soft);
+
+}
+
+
+.category-one .first-place {
+
+    background:
+        rgba(212, 160, 23, 0.15);
+
+    border:
+        1px solid rgba(212, 160, 23, 0.18);
+
+}
+
+
+.category-two .first-place {
+
+    background:
+        #fff9e8;
+
+}
+
+
+.podium-rank {
+
+    flex-shrink: 0;
+
+    width: 18px;
+
+    color: var(--text-light);
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+}
+
+
+.category-one .podium-rank {
+
+    color:
+        rgba(255, 255, 255, 0.35);
+
+}
+
+
+.podium-medal {
+
+    flex-shrink: 0;
+
+    width: 25px;
+
+    font-size: 18px;
+
+}
+
+
+.podium-player {
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.podium-player strong {
+
+    overflow: hidden;
+
+    margin-bottom: 2px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+}
+
+
+.podium-player span {
+
+    color:
+        var(--text-light);
+
+    font-size: 8px;
+
+}
+
+
+.category-one .podium-player span {
+
+    color:
+        rgba(255, 255, 255, 0.4);
+
+}
+
+
+/* Decorative background card symbols */
+
+.category-one::after {
+
+    content: "♣";
+
+    position: absolute;
+
+    right: -16px;
+    bottom: -48px;
+
+    color:
+        rgba(255, 255, 255, 0.025);
+
+    font-size: 170px;
+
+    transform: rotate(-10deg);
+
+}
+
+
+/* ============================================================
+   12. BOTTOM NAVIGATION
+============================================================ */
+
+.bottom-navigation {
+
+    position: fixed;
+
+    z-index: 1000;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height:
+        calc(66px + env(safe-area-inset-bottom));
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    align-items: start;
+
+    padding:
+        7px
+        4px
+        env(safe-area-inset-bottom);
+
+    background:
+        rgba(255, 255, 255, 0.96);
+
+    border-top:
+        1px solid var(--border);
+
+    box-shadow:
+        0 -5px 18px rgba(15, 23, 42, 0.05);
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+}
+
+
+.nav-item {
+
+    position: relative;
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 3px;
+
+    padding: 4px 1px;
+
+    color:
+        var(--text-light);
+
+    font-size: 8px;
+
+    font-weight: 600;
+
+}
+
+
+.nav-icon {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 27px;
+    height: 27px;
+
+    border-radius: 9px;
+
+    font-size: 17px;
+
+}
+
+
+.nav-item.active {
+
+    color:
+        var(--primary);
+
+}
+
+
+.nav-item.active .nav-icon {
+
+    background:
+        #fff4cc;
+
+    color:
+        #af8010;
+
+}
+
+
+.nav-item.active::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: -7px;
+
+    width: 25px;
+    height: 2px;
+
+    border-radius:
+        0 0 4px 4px;
+
+    background:
+        var(--accent);
+
+}
+
+
+/* ============================================================
+   13. UTILITIES
+============================================================ */
+
+.hidden {
+
+    display: none !important;
+
+}
+
+
+.bottom-spacing {
+
+    height: 7px;
+
+}
+
+
+/* ============================================================
+   14. TABLET / DESKTOP RESPONSIVE STYLES
+============================================================ */
+
+
+/* Slightly larger phones */
+@media (min-width: 420px) {
+
+    .main-container {
+
+        padding: 18px;
+
+    }
+
+
+    .quick-stat-card {
+
+        padding:
+            13px
+            12px;
+
+    }
+
+
+    .quick-stat-icon {
+
+        display: block;
+
+    }
+
+
+    .quick-stat-label {
+
+        font-size: 10px;
+
+    }
+
+
+    .nav-item {
+
+        font-size: 9px;
+
+    }
+
+}
+
+
+/* Tablets */
+@media (min-width: 650px) {
+
+    body {
+
+        padding-bottom: 95px;
+
+    }
+
+
+    .app-header {
+
+        padding:
+            38px
+            28px
+            42px;
+
+    }
+
+
+    .header-text h1 {
+
+        font-size: 36px;
+
+    }
+
+
+    .main-container {
+
+        padding:
+            24px
+            28px;
+
+    }
+
+
+    .start-game-card {
+
+        padding:
+            22px;
+
+    }
+
+
+    .records-grid {
+
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+
+    }
+
+
+    .categories-grid {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+    }
+
+
+    .content-card,
+    .category-card {
+
+        padding:
+            22px;
+
+    }
+
+
+    .section-heading h2 {
+
+        font-size:
+            22px;
+
+    }
+
+
+    .bottom-navigation {
+
+        left: 50%;
+
+        right: auto;
+
+        bottom: 14px;
+
+        width: min(600px, calc(100% - 32px));
+
+        height: 67px;
+
+        transform:
+            translateX(-50%);
+
+        border:
+            1px solid var(--border);
+
+        border-radius:
+            20px;
+
+        padding:
+            8px
+            9px;
+
+        box-shadow:
+            0 10px 35px rgba(15, 23, 42, 0.12);
+
+    }
+
+}
+
+
+/* Desktop */
+@media (min-width: 900px) {
+
+    .app-header {
+
+        padding:
+            45px
+            36px
+            48px;
+
+    }
+
+
+    .main-container {
+
+        padding:
+            28px
+            36px;
+
+    }
+
+
+    .start-game-section {
+
+        max-width:
+            680px;
+
+    }
+
+
+    .quick-stats-grid {
+
+        max-width:
+            680px;
+
+    }
+
+
+    .ranking-table th {
+
+        font-size:
+            11px;
+
+    }
+
+
+    .ranking-table td {
+
+        font-size:
+            14px;
+
+    }
+
+
+    .record-label {
+
+        font-size:
+            11px;
+
+    }
+
+
+    .record-value {
+
+        font-size:
+            27px;
+
+    }
+
+}

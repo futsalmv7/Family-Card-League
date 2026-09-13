@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- =========================================================
+         BASIC PAGE SETTINGS
+    ========================================================== -->
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#111827"
+    >
+
+    <title>Players | Family Card League</title>
+
+
+    <!-- =========================================================
+         FONT
+    ========================================================== -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =========================================================
+         SHARED WEBSITE CSS
+    ========================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="../style.css"
+    >
+
+
+    <!-- =========================================================
+         PLAYERS PAGE CSS
+    ========================================================== -->
+
+    <style>
+
+        /* ========================================================
+           PLAYERS PAGE
+           01. Header
+           02. Player Summary
+           03. Add Player Form
+           04. Player List
+           05. Player Status
+           06. Player Actions
+           07. Empty State
+           08. Messages
+           09. Responsive
+        ======================================================== */
+
+
+        /* ========================================================
+           01. PAGE HEADER
+        ======================================================== */
+
+        .page-header {
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(212, 160, 23, 0.18),
+                    transparent 38%
+                ),
+                linear-gradient(
+                    135deg,
+                    #111827,
+                    #1f2937
+                );
+
+            color: white;
+
+            padding:
+                calc(24px + env(safe-area-inset-top))
+                18px
+                28px;
+
+        }
+
+
+        .page-header-inner {
+
+            max-width: 1100px;
+
+            margin: 0 auto;
+
+        }
+
+
+        .back-link {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            margin-bottom: 18px;
+
+            color:
+                rgba(255, 255, 255, 0.7);
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+        }
+
+
+        .page-header-eyebrow {
+
+            margin-bottom: 6px;
+
+            color: #f5d56b;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            letter-spacing: 1.5px;
+
+        }
+
+
+        .page-header h1 {
+
+            font-size: 28px;
+
+            font-weight: 800;
+
+            letter-spacing: -0.7px;
+
+        }
+
+
+        .page-header-description {
+
+            max-width: 500px;
+
+            margin-top: 7px;
+
+            color:
+                rgba(255, 255, 255, 0.63);
+
+            font-size: 12px;
+
+            line-height: 1.5;
+
+        }
+
+
+
+        /* ========================================================
+           02. PLAYER SUMMARY
+        ======================================================== */
+
+        .player-summary-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 9px;
+
+            margin-bottom: 14px;
+
+        }
+
+
+        .player-summary-card {
+
+            padding: 14px 10px;
+
+            background: white;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
+            box-shadow:
+                var(--shadow-small);
+
+            text-align: center;
+
+        }
+
+
+        .player-summary-card strong {
+
+            display: block;
+
+            margin-bottom: 4px;
+
+            font-size: 21px;
+
+            font-weight: 800;
+
+        }
+
+
+        .player-summary-card span {
+
+            display: block;
+
+            color:
+                var(--text-secondary);
+
+            font-size: 9px;
+
+            line-height: 1.3;
+
+        }
+
+
+
+        /* ========================================================
+           03. ADD PLAYER FORM
+        ======================================================== */
+
+        .add-player-card {
+
+            margin-bottom: 14px;
+
+            padding: 18px;
+
+            background: white;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                var(--radius-medium);
+
+            box-shadow:
+                var(--shadow-small);
+
+        }
+
+
+        .add-player-title {
+
+            margin-bottom: 4px;
+
+            font-size: 18px;
+
+            font-weight: 800;
+
+        }
+
+
+        .add-player-description {
+
+            margin-bottom: 16px;
+
+            color:
+                var(--text-secondary);
+
+            font-size: 11px;
+
+            line-height: 1.5;
+
+        }
+
+
+        .player-form {
+
+            display: flex;
+
+            gap: 9px;
+
+        }
+
+
+        .player-name-input {
+
+            min-width: 0;
+
+            flex: 1;
+
+            height: 48px;
+
+            padding:
+                0
+                14px;
+
+            outline: none;
+
+            background:
+                var(--surface-soft);
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                12px;
+
+            color:
+                var(--text-primary);
+
+            font-size: 14px;
+
+            transition:
+                border-color 0.15s ease,
+                box-shadow 0.15s ease;
+
+        }
+
+
+        .player-name-input:focus {
+
+            border-color:
+                #d4a017;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(212, 160, 23, 0.11);
+
+        }
+
+
+        .player-name-input::placeholder {
+
+            color:
+                var(--text-light);
+
+        }
+
+
+        .add-player-button {
+
+            flex-shrink: 0;
+
+            min-width: 85px;
+
+            height: 48px;
+
+            padding:
+                0
+                15px;
+
+            border: none;
+
+            border-radius:
+                12px;
+
+            background:
+                var(--primary);
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+        }
+
+
+        .add-player-button:active {
+
+            transform:
+                scale(0.98);
+
+        }
+
+
+        .add-player-button:disabled {
+
+            cursor: not-allowed;
+
+            opacity: 0.6;
+
+        }
+
+
+
+        /* ========================================================
+           04. PLAYER LIST
+        ======================================================== */
+
+        .players-card {
+
+            padding: 18px;
+
+            background: white;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                var(--radius-medium);
+
+            box-shadow:
+                var(--shadow-small);
+
+        }
+
+
+        .players-heading {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 10px;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .players-heading h2 {
+
+            font-size: 18px;
+
+            font-weight: 800;
+
+        }
+
+
+        .live-label {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+            padding:
+                5px
+                8px;
+
+            background:
+                var(--success-background);
+
+            color:
+                var(--success);
+
+            border-radius: 100px;
+
+            font-size: 9px;
+
+            font-weight: 800;
+
+        }
+
+
+        .live-label-dot {
+
+            width: 6px;
+
+            height: 6px;
+
+            background:
+                var(--success);
+
+            border-radius: 50%;
+
+        }
+
+
+        .players-list {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 9px;
+
+        }
+
+
+        .player-row {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            padding: 12px;
+
+            background:
+                var(--surface-soft);
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                13px;
+
+        }
+
+
+        .player-avatar {
+
+            width: 42px;
+
+            height: 42px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #111827,
+                    #293447
+                );
+
+            color:
+                #f5d56b;
+
+            border-radius:
+                13px;
+
+            font-size: 16px;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+        }
+
+
+        .player-info {
+
+            min-width: 0;
+
+            flex: 1;
+
+        }
+
+
+        .player-name {
+
+            overflow: hidden;
+
+            margin-bottom: 5px;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+
+        }
+
+
+        .player-meta {
+
+            display: flex;
+
+            align-items: center;
+
+            flex-wrap: wrap;
+
+            gap: 7px;
+
+            color:
+                var(--text-light);
+
+            font-size: 9px;
+
+        }
+
+
+
+        /* ========================================================
+           05. PLAYER STATUS
+        ======================================================== */
+
+        .status-badge {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 4px;
+
+            padding:
+                4px
+                7px;
+
+            border-radius: 100px;
+
+            font-size: 8px;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+        }
+
+
+        .status-active {
+
+            background:
+                #eaf8f1;
+
+            color:
+                #178c54;
+
+        }
+
+
+        .status-inactive {
+
+            background:
+                #f1f3f5;
+
+            color:
+                #7c8796;
+
+        }
+
+
+
+        /* ========================================================
+           06. PLAYER ACTIONS
+        ======================================================== */
+
+        .player-actions {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            flex-shrink: 0;
+
+        }
+
+
+        .player-action-button {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-width: 34px;
+
+            height: 34px;
+
+            padding:
+                0
+                9px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                9px;
+
+            background: white;
+
+            color:
+                var(--text-secondary);
+
+            cursor: pointer;
+
+            font-size: 9px;
+
+            font-weight: 700;
+
+        }
+
+
+        .player-action-button:active {
+
+            transform:
+                scale(0.96);
+
+        }
+
+
+        .player-action-button.activate {
+
+            color:
+                #178c54;
+
+        }
+
+
+        .player-action-button.deactivate {
+
+            color:
+                #9b7417;
+
+        }
+
+
+
+        /* ========================================================
+           07. EMPTY STATE
+        ======================================================== */
+
+        .players-empty-state {
+
+            padding:
+                32px
+                15px;
+
+            text-align: center;
+
+        }
+
+
+        .players-empty-icon {
+
+            margin-bottom: 10px;
+
+            font-size: 31px;
+
+        }
+
+
+        .players-empty-state strong {
+
+            display: block;
+
+            margin-bottom: 5px;
+
+            font-size: 14px;
+
+        }
+
+
+        .players-empty-state p {
+
+            color:
+                var(--text-secondary);
+
+            font-size: 10px;
+
+            line-height: 1.5;
+
+        }
+
+
+
+        /* ========================================================
+           08. MESSAGE BOX
+        ======================================================== */
+
+        .form-message {
+
+            display: none;
+
+            margin-top: 11px;
+
+            padding:
+                9px
+                11px;
+
+            border-radius:
+                9px;
+
+            font-size: 10px;
+
+            line-height: 1.4;
+
+        }
+
+
+        .form-message.success {
+
+            display: block;
+
+            background:
+                #eaf8f1;
+
+            color:
+                #17794a;
+
+        }
+
+
+        .form-message.error {
+
+            display: block;
+
+            background:
+                #fcecec;
+
+            color:
+                #bd3939;
+
+        }
+
+
+
+        /* ========================================================
+           09. RESPONSIVE
+        ======================================================== */
+
+        @media (max-width: 390px) {
+
+            .player-form {
+
+                flex-direction: column;
+
+            }
+
+
+            .add-player-button {
+
+                width: 100%;
+
+            }
+
+
+            .player-action-button {
+
+                padding:
+                    0
+                    7px;
+
+            }
+
+        }
+
+
+        @media (min-width: 650px) {
+
+            .page-header {
+
+                padding:
+                    36px
+                    28px
+                    38px;
+
+            }
+
+
+            .page-header h1 {
+
+                font-size: 34px;
+
+            }
+
+
+            .player-summary-card {
+
+                padding:
+                    17px;
+
+            }
+
+
+            .player-summary-card span {
+
+                font-size: 10px;
+
+            }
+
+
+            .add-player-card,
+            .players-card {
+
+                padding: 22px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
+
+    <header class="page-header">
+
+        <div class="page-header-inner">
+
+            <a
+                href="../index.html"
+                class="back-link"
+            >
+                ← Dashboard
+            </a>
+
+
+            <div class="page-header-eyebrow">
+                FAMILY CARD LEAGUE
+            </div>
+
+
+            <h1>
+                Players
+            </h1>
+
+
+            <p class="page-header-description">
+                Manage family members who can take part in league games.
+            </p>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         MAIN PAGE CONTENT
+    ========================================================== -->
+
+    <main class="main-container">
+
+
+        <!-- =====================================================
+             PLAYER SUMMARY
+        ====================================================== -->
+
+        <section class="player-summary-grid">
+
+            <div class="player-summary-card">
+
+                <strong id="totalPlayersCount">
+                    0
+                </strong>
+
+                <span>
+                    Total Players
+                </span>
+
+            </div>
+
+
+            <div class="player-summary-card">
+
+                <strong id="activePlayersCount">
+                    0
+                </strong>
+
+                <span>
+                    Active
+                </span>
+
+            </div>
+
+
+            <div class="player-summary-card">
+
+                <strong id="inactivePlayersCount">
+                    0
+                </strong>
+
+                <span>
+                    Inactive
+                </span>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             ADD PLAYER
+        ====================================================== -->
+
+        <section class="add-player-card">
+
+            <h2 class="add-player-title">
+                Add Player
+            </h2>
+
+
+            <p class="add-player-description">
+                Add a family member to the league. New players are active automatically.
+            </p>
+
+
+            <form
+                class="player-form"
+                id="addPlayerForm"
+            >
+
+                <input
+                    type="text"
+                    id="playerNameInput"
+                    class="player-name-input"
+                    placeholder="Player name"
+                    autocomplete="off"
+                    maxlength="40"
+                    required
+                >
+
+
+                <button
+                    type="submit"
+                    class="add-player-button"
+                    id="addPlayerButton"
+                >
+                    Add Player
+                </button>
+
+            </form>
+
+
+            <div
+                class="form-message"
+                id="formMessage"
+            ></div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             PLAYERS LIST
+        ====================================================== -->
+
+        <section class="players-card">
+
+            <div class="players-heading">
+
+                <h2>
+                    All Players
+                </h2>
+
+
+                <div class="live-label">
+
+                    <span class="live-label-dot"></span>
+
+                    LIVE
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Loading -->
+            <div
+                class="players-empty-state"
+                id="playersLoadingState"
+            >
+
+                <div class="players-empty-icon">
+                    ♠
+                </div>
+
+                <strong>
+                    Loading players...
+                </strong>
+
+            </div>
+
+
+
+            <!-- Empty -->
+            <div
+                class="players-empty-state hidden"
+                id="playersEmptyState"
+            >
+
+                <div class="players-empty-icon">
+                    👥
+                </div>
+
+                <strong>
+                    No players yet
+                </strong>
+
+                <p>
+                    Add your first family member above.
+                </p>
+
+            </div>
+
+
+
+            <!-- Player rows inserted by JavaScript -->
+            <div
+                class="players-list hidden"
+                id="playersList"
+            ></div>
+
+        </section>
+
+
+
+        <div class="bottom-spacing"></div>
+
+    </main>
+
+
+
+    <!-- =========================================================
+         BOTTOM NAVIGATION
+    ========================================================== -->
+
+    <nav class="bottom-navigation">
+
+        <a
+            href="../index.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ⌂
+            </span>
+
+            <span>
+                Home
+            </span>
+
+        </a>
+
+
+        <a
+            href="players.html"
+            class="nav-item active"
+        >
+
+            <span class="nav-icon">
+                ♟
+            </span>
+
+            <span>
+                Players
+            </span>
+
+        </a>
+
+
+        <a
+            href="history.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ◷
+            </span>
+
+            <span>
+                History
+            </span>
+
+        </a>
+
+
+        <a
+            href="hall-of-fame.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ★
+            </span>
+
+            <span>
+                Records
+            </span>
+
+        </a>
+
+
+        <a
+            href="admin.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ⚙
+            </span>
+
+            <span>
+                Admin
+            </span>
+
+        </a>
+
+    </nav>
+
+
+
+    <!-- =========================================================
+         PLAYERS JAVASCRIPT
+    ========================================================== -->
+
+    <script
+        type="module"
+        src="players.js"
+    ></script>
+
+
+</body>
+
+</html>
