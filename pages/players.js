@@ -79,7 +79,28 @@ const activePlayersCount =
 const inactivePlayersCount =
     document.getElementById("inactivePlayersCount");
 
+const playerStatsMonthLabel =
+    document.getElementById(
+        "playerStatsMonthLabel"
+    );
 
+
+const playerStatsLoadingState =
+    document.getElementById(
+        "playerStatsLoadingState"
+    );
+
+
+const playerStatsEmptyState =
+    document.getElementById(
+        "playerStatsEmptyState"
+    );
+
+
+const monthlyPlayerStatsList =
+    document.getElementById(
+        "monthlyPlayerStatsList"
+    );
 
 /* ============================================================
    03. LOCAL PAGE DATA
@@ -87,7 +108,13 @@ const inactivePlayersCount =
 
 let currentPlayers = [];
 
+let activeMonth = null;
 
+let currentMonthGames = [];
+
+let monthlyPlayerStats = [];
+
+let monthGamesUnsubscribe = null;
 
 /* ============================================================
    04. DATABASE REFERENCES
@@ -96,7 +123,88 @@ let currentPlayers = [];
 const playersRef =
     ref(database, "players");
 
+const activeMonthRef =
+    ref(
+        database,
+        "settings/activeMonth"
+    );
 
+    /* ============================================================
+   ACTIVE MONTH LISTENER
+============================================================ */
+
+onValue(
+
+    activeMonthRef,
+
+    (snapshot) => {
+
+        if (
+            !snapshot.exists()
+        ) {
+
+            activeMonth =
+                null;
+
+
+            currentMonthGames =
+                [];
+
+
+            playerStatsMonthLabel.textContent =
+                "No active month";
+
+
+            return;
+
+        }
+
+
+        activeMonth =
+            snapshot.val();
+
+
+        if (
+            !activeMonth
+            ||
+            !activeMonth.id
+        ) {
+
+            playerStatsMonthLabel.textContent =
+                "No active month";
+
+
+            return;
+
+        }
+
+
+        playerStatsMonthLabel.textContent =
+            activeMonth.label
+            ||
+            activeMonth.id;
+
+
+        listenToCurrentMonthGames(
+            activeMonth.id
+        );
+
+    },
+
+    (error) => {
+
+        console.error(
+            "Unable to load active month:",
+            error
+        );
+
+
+        playerStatsMonthLabel.textContent =
+            "Month unavailable";
+
+    }
+
+);
 
 /* ============================================================
    05. LIVE PLAYER LISTENER
@@ -142,9 +250,13 @@ onValue(
 
         sortPlayers();
 
-        renderPlayers();
+renderPlayers();
 
-        updatePlayerSummary();
+updatePlayerSummary();
+
+calculateMonthlyPlayerStats();
+
+renderMonthlyPlayerStats();
 
     },
 
@@ -443,11 +555,23 @@ function renderPlayers() {
 function createPlayerRow(player) {
 
     const row =
-        document.createElement("div");
+    document.createElement("div");
 
 
-    row.className =
-        "player-row";
+row.className =
+    "player-row player-row-clickable";
+
+
+row.setAttribute(
+    "role",
+    "link"
+);
+
+
+row.setAttribute(
+    "tabindex",
+    "0"
+);
 
 
     /* --------------------------------------------
@@ -593,7 +717,80 @@ function createPlayerRow(player) {
         statusButton
     );
 
+/* --------------------------------------------
+   Open Player Profile
+--------------------------------------------- */
 
+const profileLink =
+    `player-profile.html?player=${encodeURIComponent(
+        player.id
+    )}`;
+
+
+row.addEventListener(
+
+    "click",
+
+    (event) => {
+
+        /*
+           If the user clicked the Activate /
+           Deactivate button, do not open profile.
+        */
+
+        if (
+            event.target.closest(
+                ".player-action-button"
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        window.location.href =
+            profileLink;
+
+    }
+
+);
+
+
+row.addEventListener(
+
+    "keydown",
+
+    (event) => {
+
+        if (
+            event.key === "Enter"
+            ||
+            event.key === " "
+        ) {
+
+            if (
+                event.target.closest(
+                    ".player-action-button"
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            event.preventDefault();
+
+
+            window.location.href =
+                profileLink;
+
+        }
+
+    }
+
+);
 
     /* --------------------------------------------
        Assemble Player Row
@@ -891,5 +1088,1036 @@ function clearMessage() {
 
     formMessage.className =
         "form-message";
+
+}
+
+/* ============================================================
+   18. CURRENT MONTH GAMES LISTENER
+============================================================ */
+
+function listenToCurrentMonthGames(
+    monthId
+) {
+
+    /*
+       Stop listening to an older month
+       if the active month changes.
+    */
+
+    if (
+        monthGamesUnsubscribe
+    ) {
+
+        monthGamesUnsubscribe();
+
+        monthGamesUnsubscribe =
+            null;
+
+    }
+
+
+    currentMonthGames =
+        [];
+
+
+    const gamesRef =
+        ref(
+            database,
+            `months/${monthId}/games`
+        );
+
+
+    monthGamesUnsubscribe =
+        onValue(
+
+            gamesRef,
+
+            (snapshot) => {
+
+                currentMonthGames =
+                    [];
+
+
+                if (
+                    snapshot.exists()
+                ) {
+
+                    snapshot.forEach(
+
+                        (childSnapshot) => {
+
+                            currentMonthGames.push({
+
+                                id:
+                                    childSnapshot.key,
+
+                                ...childSnapshot.val()
+
+                            });
+
+                        }
+
+                    );
+
+                }
+
+calculateMonthlyPlayerStats();
+
+renderMonthlyPlayerStats();
+
+                console.log(
+                    "Current month games loaded:",
+                    currentMonthGames.length
+                );
+
+            },
+
+            (error) => {
+
+                console.error(
+                    "Unable to load current month games:",
+                    error
+                );
+
+            }
+
+        );
+
+}
+
+/* ============================================================
+   19. CALCULATE MONTHLY PLAYER STATISTICS
+
+   Only COMPLETED games count.
+
+   ACTIVE and CANCELLED games are ignored.
+============================================================ */
+
+function calculateMonthlyPlayerStats() {
+
+    const completedGames =
+        currentMonthGames.filter(
+
+            (game) =>
+                game.status === "COMPLETED"
+
+        );
+
+
+    /*
+       Start with every player.
+
+       This allows players with zero completed games
+       to still exist in the statistics data.
+    */
+
+    monthlyPlayerStats =
+        currentPlayers.map(
+
+            (player) => ({
+
+                id:
+                    player.id,
+
+                name:
+                    player.name,
+
+                active:
+                    player.active,
+
+                gamesPlayed:
+                    0,
+
+                gamesWon:
+                    0,
+
+                totalPoints:
+                    0,
+
+                winPercentage:
+                    0,
+
+                rank:
+                    null
+
+            })
+
+        );
+
+
+    const statsByPlayerId =
+        new Map();
+
+
+    monthlyPlayerStats.forEach(
+
+        (player) => {
+
+            statsByPlayerId.set(
+                player.id,
+                player
+            );
+
+        }
+
+    );
+
+
+    /*
+       Process every completed game.
+    */
+
+    completedGames.forEach(
+
+        (game) => {
+
+            const gamePlayers =
+                getGamePlayersForStats(game);
+
+
+            const gameTotals =
+                getGameTotalsForStats(
+                    game,
+                    gamePlayers
+                );
+
+
+            const winnerIds =
+                getWinnerIdsForStats(
+                    game,
+                    gamePlayers,
+                    gameTotals
+                );
+
+
+            gamePlayers.forEach(
+
+                (gamePlayer) => {
+
+                    const playerStats =
+                        statsByPlayerId.get(
+                            gamePlayer.id
+                        );
+
+
+                    if (!playerStats) {
+                        return;
+                    }
+
+
+                    playerStats.gamesPlayed +=
+                        1;
+
+
+                    playerStats.totalPoints +=
+                        Number(
+                            gameTotals[
+                                gamePlayer.id
+                            ]
+                            || 0
+                        );
+
+
+                    if (
+                        winnerIds.includes(
+                            gamePlayer.id
+                        )
+                    ) {
+
+                        playerStats.gamesWon +=
+                            1;
+
+                    }
+
+                }
+
+            );
+
+        }
+
+    );
+
+
+    /*
+       Calculate Win %
+    */
+
+    monthlyPlayerStats.forEach(
+
+        (player) => {
+
+            player.winPercentage =
+                player.gamesPlayed > 0
+                    ? (
+                        player.gamesWon
+                        /
+                        player.gamesPlayed
+                        *
+                        100
+                    )
+                    : 0;
+
+        }
+
+    );
+
+
+    /*
+       Ranking rules:
+
+       1. Total points
+       2. Win %
+       3. Games won
+       4. Same values = joint rank
+
+       Players with zero games are shown after
+       players who have completed games.
+    */
+
+    monthlyPlayerStats.sort(
+
+        (playerA, playerB) => {
+
+            if (
+                playerA.gamesPlayed === 0
+                &&
+                playerB.gamesPlayed > 0
+            ) {
+
+                return 1;
+
+            }
+
+
+            if (
+                playerB.gamesPlayed === 0
+                &&
+                playerA.gamesPlayed > 0
+            ) {
+
+                return -1;
+
+            }
+
+
+            if (
+                playerB.totalPoints
+                !==
+                playerA.totalPoints
+            ) {
+
+                return (
+                    playerB.totalPoints
+                    -
+                    playerA.totalPoints
+                );
+
+            }
+
+
+            if (
+                playerB.winPercentage
+                !==
+                playerA.winPercentage
+            ) {
+
+                return (
+                    playerB.winPercentage
+                    -
+                    playerA.winPercentage
+                );
+
+            }
+
+
+            if (
+                playerB.gamesWon
+                !==
+                playerA.gamesWon
+            ) {
+
+                return (
+                    playerB.gamesWon
+                    -
+                    playerA.gamesWon
+                );
+
+            }
+
+
+            return playerA.name.localeCompare(
+                playerB.name
+            );
+
+        }
+
+    );
+
+
+    assignMonthlyPlayerRanks();
+
+}
+
+
+
+/* ============================================================
+   20. ASSIGN MONTHLY PLAYER RANKS
+
+   Competition ranking:
+
+   1, 1, 1, 4
+============================================================ */
+
+function assignMonthlyPlayerRanks() {
+
+    let previousPlayer =
+        null;
+
+
+    monthlyPlayerStats.forEach(
+
+        (player, index) => {
+
+            if (
+                player.gamesPlayed === 0
+            ) {
+
+                player.rank =
+                    null;
+
+                return;
+
+            }
+
+
+            if (
+                !previousPlayer
+            ) {
+
+                player.rank =
+                    1;
+
+            }
+
+            else if (
+                hasSameMonthlyRankingValues(
+                    player,
+                    previousPlayer
+                )
+            ) {
+
+                player.rank =
+                    previousPlayer.rank;
+
+            }
+
+            else {
+
+                player.rank =
+                    index + 1;
+
+            }
+
+
+            previousPlayer =
+                player;
+
+        }
+
+    );
+
+}
+
+
+
+/* ============================================================
+   21. SAME RANK CHECK
+============================================================ */
+
+function hasSameMonthlyRankingValues(
+    playerA,
+    playerB
+) {
+
+    return (
+        playerA.totalPoints
+        ===
+        playerB.totalPoints
+
+        &&
+
+        playerA.winPercentage
+        ===
+        playerB.winPercentage
+
+        &&
+
+        playerA.gamesWon
+        ===
+        playerB.gamesWon
+    );
+
+}
+
+
+
+/* ============================================================
+   22. RENDER MONTHLY PLAYER STATISTICS
+============================================================ */
+
+function renderMonthlyPlayerStats() {
+
+    playerStatsLoadingState.classList.add(
+        "hidden"
+    );
+
+
+    monthlyPlayerStatsList.innerHTML =
+        "";
+
+
+    const playersWithCompletedGames =
+        monthlyPlayerStats.filter(
+
+            (player) =>
+                player.gamesPlayed > 0
+
+        );
+
+
+    if (
+        playersWithCompletedGames.length === 0
+    ) {
+
+        playerStatsEmptyState.classList.remove(
+            "hidden"
+        );
+
+
+        monthlyPlayerStatsList.classList.add(
+            "hidden"
+        );
+
+
+        return;
+
+    }
+
+
+    playerStatsEmptyState.classList.add(
+        "hidden"
+    );
+
+
+    monthlyPlayerStatsList.classList.remove(
+        "hidden"
+    );
+
+
+    playersWithCompletedGames.forEach(
+
+        (player) => {
+
+            const row =
+                createMonthlyPlayerStatRow(
+                    player
+                );
+
+
+            monthlyPlayerStatsList.appendChild(
+                row
+            );
+
+        }
+
+    );
+
+}
+
+
+
+/* ============================================================
+   23. CREATE MONTHLY PLAYER STAT ROW
+============================================================ */
+
+function createMonthlyPlayerStatRow(
+    player
+) {
+
+    const row =
+        document.createElement("div");
+
+
+    row.className =
+        "monthly-player-stat-row";
+
+
+    const winPercentageText =
+        `${formatWinPercentage(
+            player.winPercentage
+        )}%`;
+
+
+    row.innerHTML = `
+
+        <div class="monthly-player-stat-top">
+
+            <div class="monthly-player-stat-name">
+                ${escapePlayerStatsHTML(
+                    player.name
+                )}
+            </div>
+
+
+            <div class="monthly-player-stat-rank">
+                #${player.rank}
+            </div>
+
+        </div>
+
+
+        <div class="monthly-player-stat-grid">
+
+            <div class="monthly-player-stat-item">
+
+                <strong>
+                    ${player.gamesPlayed}
+                </strong>
+
+                <span>
+                    Played
+                </span>
+
+            </div>
+
+
+            <div class="monthly-player-stat-item">
+
+                <strong>
+                    ${player.gamesWon}
+                </strong>
+
+                <span>
+                    Won
+                </span>
+
+            </div>
+
+
+            <div class="monthly-player-stat-item">
+
+                <strong>
+                    ${winPercentageText}
+                </strong>
+
+                <span>
+                    Win %
+                </span>
+
+            </div>
+
+
+            <div class="monthly-player-stat-item">
+
+                <strong>
+                    ${player.totalPoints}
+                </strong>
+
+                <span>
+                    Points
+                </span>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    return row;
+
+}
+
+
+
+/* ============================================================
+   24. GET GAME PLAYERS FOR STATS
+============================================================ */
+
+function getGamePlayersForStats(
+    game
+) {
+
+    if (!game.players) {
+
+        return [];
+
+    }
+
+
+    if (
+        Array.isArray(
+            game.players
+        )
+    ) {
+
+        return game.players
+            .filter(Boolean)
+            .map(
+
+                (player, index) => ({
+
+                    id:
+                        player.id
+                        ||
+                        player.playerId
+                        ||
+                        String(index),
+
+                    name:
+                        player.name
+                        ||
+                        `Player ${index + 1}`
+
+                })
+
+            );
+
+    }
+
+
+    return Object.entries(
+        game.players
+    ).map(
+
+        ([key, player]) => ({
+
+            id:
+                player?.id
+                ||
+                player?.playerId
+                ||
+                key,
+
+            name:
+                player?.name
+                ||
+                key
+
+        })
+
+    );
+
+}
+
+
+
+/* ============================================================
+   25. GET GAME TOTALS FOR STATS
+
+   Prefer saved finalTotals.
+
+   If unavailable, calculate from individual matches.
+============================================================ */
+
+function getGameTotalsForStats(
+    game,
+    gamePlayers
+) {
+
+    const totals =
+        {};
+
+
+    gamePlayers.forEach(
+
+        (player) => {
+
+            totals[player.id] =
+                0;
+
+        }
+
+    );
+
+
+    if (
+        game.finalTotals
+        &&
+        typeof game.finalTotals === "object"
+    ) {
+
+        Object.entries(
+            game.finalTotals
+        ).forEach(
+
+            ([playerId, score]) => {
+
+                totals[playerId] =
+                    Number(score || 0);
+
+            }
+
+        );
+
+
+        return totals;
+
+    }
+
+
+    if (!game.matches) {
+
+        return totals;
+
+    }
+
+
+    Object.values(
+        game.matches
+    ).forEach(
+
+        (match) => {
+
+            if (!match) {
+                return;
+            }
+
+
+            gamePlayers.forEach(
+
+                (player) => {
+
+                    totals[player.id] +=
+                        getMatchScoreForPlayer(
+                            match,
+                            player
+                        );
+
+                }
+
+            );
+
+        }
+
+    );
+
+
+    return totals;
+
+}
+
+
+
+/* ============================================================
+   26. GET MATCH SCORE FOR PLAYER
+============================================================ */
+
+function getMatchScoreForPlayer(
+    match,
+    player
+) {
+
+    /*
+       Current game structure normally stores scores
+       inside match.scores.
+
+       This also supports direct score objects as fallback.
+    */
+
+    const scores =
+        match.scores
+        &&
+        typeof match.scores === "object"
+            ? match.scores
+            : match;
+
+
+    if (
+        scores[player.id]
+        !==
+        undefined
+    ) {
+
+        return Number(
+            scores[player.id]
+            ||
+            0
+        );
+
+    }
+
+
+    return 0;
+
+}
+
+
+
+/* ============================================================
+   27. GET WINNER IDS
+
+   Prefer the saved winners array.
+
+   If unavailable, derive winners from the highest total.
+============================================================ */
+
+function getWinnerIdsForStats(
+    game,
+    gamePlayers,
+    gameTotals
+) {
+
+    if (
+        Array.isArray(
+            game.winners
+        )
+        &&
+        game.winners.length > 0
+    ) {
+
+        return game.winners
+            .map(
+
+                (winner) => {
+
+                    if (
+                        typeof winner === "string"
+                    ) {
+
+                        return winner;
+
+                    }
+
+
+                    return (
+                        winner.id
+                        ||
+                        winner.playerId
+                        ||
+                        null
+                    );
+
+                }
+
+            )
+            .filter(Boolean);
+
+    }
+
+
+    if (
+        gamePlayers.length === 0
+    ) {
+
+        return [];
+
+    }
+
+
+    const scores =
+        gamePlayers.map(
+
+            (player) =>
+                Number(
+                    gameTotals[player.id]
+                    ||
+                    0
+                )
+
+        );
+
+
+    const highestScore =
+        Math.max(
+            ...scores
+        );
+
+
+    return gamePlayers
+        .filter(
+
+            (player) =>
+
+                Number(
+                    gameTotals[player.id]
+                    ||
+                    0
+                )
+                ===
+                highestScore
+
+        )
+        .map(
+            (player) => player.id
+        );
+
+}
+
+
+
+/* ============================================================
+   28. FORMAT WIN %
+============================================================ */
+
+function formatWinPercentage(
+    percentage
+) {
+
+    if (
+        Number.isInteger(
+            percentage
+        )
+    ) {
+
+        return String(
+            percentage
+        );
+
+    }
+
+
+    return percentage.toFixed(1);
+
+}
+
+
+
+/* ============================================================
+   29. SAFE HTML FOR PLAYER STAT NAMES
+============================================================ */
+
+function escapePlayerStatsHTML(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+
+    .replaceAll(
+        "'",
+        "&#039;"
+    );
 
 }

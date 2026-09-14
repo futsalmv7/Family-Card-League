@@ -101,51 +101,59 @@
 
 
     <!-- =====================================================
-         CONTINUE ACTIVE GAME
+         ACTIVE GAMES
 
-         Hidden automatically when there is no ACTIVE game.
+         Hidden automatically when there are no unfinished
+         ACTIVE games.
+
+         More than one ACTIVE game can exist.
     ====================================================== -->
-    <a
-        href="#"
-        class="continue-game-card hidden"
-        id="continueGameCard"
+    <div
+        class="active-games-panel hidden"
+        id="activeGamesPanel"
     >
 
-        <div class="continue-game-icon">
-            ▶
-        </div>
+        <div class="active-games-heading">
 
+            <div>
 
-        <div class="continue-game-content">
+                <span class="active-games-small">
+                    UNFINISHED
+                </span>
 
-            <span class="continue-game-small">
-                ACTIVE GAME
-            </span>
+                <strong>
+                    Active Games
+                </strong>
 
-            <strong id="continueGameTitle">
-                Game
-            </strong>
+            </div>
+
 
             <span
-                class="continue-game-description"
-                id="continueGameDescription"
+                class="active-games-count"
+                id="activeGamesCount"
             >
-                Continue scoring
+                0
             </span>
 
         </div>
 
 
-        <div class="continue-game-arrow">
-            →
+        <div
+            class="active-games-list"
+            id="activeGamesList"
+        >
+            <!-- JavaScript creates active-game cards here -->
         </div>
 
-    </a>
+    </div>
 
 
 
     <!-- =====================================================
          START NEW GAME
+
+         This always remains available, even when another
+         game is unfinished.
     ====================================================== -->
     <a
         href="pages/game.html"
@@ -180,6 +188,7 @@
         </div>
 
     </a>
+
 
 </section>
 

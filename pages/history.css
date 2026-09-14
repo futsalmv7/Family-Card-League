@@ -1,0 +1,1521 @@
+/* ============================================================
+   FAMILY CARD LEAGUE
+   GAME HISTORY
+============================================================ */
+
+
+/* ============================================================
+   01. VARIABLES
+============================================================ */
+
+:root {
+
+    --primary:
+        #111827;
+
+    --primary-soft:
+        #1f2937;
+
+    --accent:
+        #d4a017;
+
+    --accent-light:
+        #f5d56b;
+
+    --background:
+        #f4f6f9;
+
+    --surface:
+        #ffffff;
+
+    --surface-soft:
+        #f8fafc;
+
+    --text-primary:
+        #161b26;
+
+    --text-secondary:
+        #687386;
+
+    --text-light:
+        #94a0b2;
+
+    --border:
+        #e8ecf1;
+
+    --success:
+        #16a05d;
+
+    --success-soft:
+        #eaf8f1;
+
+    --warning:
+        #d4a017;
+
+    --warning-soft:
+        #fff7dd;
+
+    --danger:
+        #d64545;
+
+    --danger-soft:
+        #fff0f0;
+
+}
+
+
+/* ============================================================
+   02. RESET
+============================================================ */
+
+* {
+
+    box-sizing:
+        border-box;
+
+    margin:
+        0;
+
+    padding:
+        0;
+
+}
+
+
+html {
+
+    scroll-behavior:
+        smooth;
+
+}
+
+
+body {
+
+    min-height:
+        100vh;
+
+    overflow-x:
+        hidden;
+
+    padding-bottom:
+        calc(
+            82px
+            +
+            env(safe-area-inset-bottom)
+        );
+
+    background:
+        var(--background);
+
+    color:
+        var(--text-primary);
+
+    font-family:
+        "Inter",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    -webkit-font-smoothing:
+        antialiased;
+
+}
+
+
+a {
+
+    color:
+        inherit;
+
+    text-decoration:
+        none;
+
+}
+
+
+button {
+
+    font:
+        inherit;
+
+}
+
+
+/* ============================================================
+   03. HEADER
+============================================================ */
+
+.history-header {
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(212, 160, 23, 0.18),
+            transparent 38%
+        ),
+        linear-gradient(
+            135deg,
+            #111827,
+            #1d2635
+        );
+
+    color:
+        white;
+
+    padding:
+        calc(
+            28px
+            +
+            env(safe-area-inset-top)
+        )
+        18px
+        31px;
+
+}
+
+
+.header-inner {
+
+    max-width:
+        950px;
+
+    margin:
+        0 auto;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+}
+
+
+.header-eyebrow {
+
+    display:
+        block;
+
+    margin-bottom:
+        6px;
+
+    color:
+        var(--accent-light);
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1.5px;
+
+}
+
+
+.history-header h1 {
+
+    font-size:
+        29px;
+
+    line-height:
+        1.15;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.6px;
+
+}
+
+
+.history-header p {
+
+    margin-top:
+        6px;
+
+    color:
+        rgba(255, 255, 255, 0.65);
+
+    font-size:
+        13px;
+
+}
+
+
+.header-icon {
+
+    width:
+        58px;
+
+    height:
+        58px;
+
+    flex-shrink:
+        0;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    border-radius:
+        17px;
+
+    background:
+        rgba(255, 255, 255, 0.06);
+
+    color:
+        var(--accent-light);
+
+    font-size:
+        29px;
+
+}
+
+
+/* ============================================================
+   04. MAIN
+============================================================ */
+
+.history-container {
+
+    width:
+        100%;
+
+    max-width:
+        950px;
+
+    margin:
+        0 auto;
+
+    padding:
+        16px;
+
+}
+
+
+/* ============================================================
+   05. SUMMARY
+============================================================ */
+
+.history-summary {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap:
+        9px;
+
+    margin-bottom:
+        14px;
+
+}
+
+
+.summary-card {
+
+    min-width:
+        0;
+
+    padding:
+        13px
+        10px;
+
+    background:
+        var(--surface);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        14px;
+
+}
+
+
+.summary-card span {
+
+    display:
+        block;
+
+    margin-bottom:
+        5px;
+
+    overflow:
+        hidden;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        9px;
+
+    white-space:
+        nowrap;
+
+    text-overflow:
+        ellipsis;
+
+}
+
+
+.summary-card strong {
+
+    display:
+        block;
+
+    font-size:
+        20px;
+
+    font-weight:
+        800;
+
+}
+
+
+/* ============================================================
+   06. FILTERS
+============================================================ */
+
+.filter-section {
+
+    display:
+        flex;
+
+    gap:
+        7px;
+
+    margin-bottom:
+        18px;
+
+    overflow-x:
+        auto;
+
+    scrollbar-width:
+        none;
+
+}
+
+
+.filter-section::-webkit-scrollbar {
+
+    display:
+        none;
+
+}
+
+
+.filter-button {
+
+    flex-shrink:
+        0;
+
+    padding:
+        9px
+        13px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        100px;
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        10px;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+}
+
+
+.filter-button.active {
+
+    border-color:
+        var(--primary);
+
+    background:
+        var(--primary);
+
+    color:
+        white;
+
+}
+
+
+/* ============================================================
+   07. SECTION
+============================================================ */
+
+.games-section {
+
+    padding:
+        17px;
+
+    background:
+        var(--surface);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        17px;
+
+}
+
+
+.section-heading {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+
+    margin-bottom:
+        15px;
+
+}
+
+
+.section-kicker {
+
+    display:
+        block;
+
+    margin-bottom:
+        3px;
+
+    color:
+        var(--accent);
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1.2px;
+
+}
+
+
+.section-heading h2 {
+
+    font-size:
+        20px;
+
+    font-weight:
+        800;
+
+}
+
+
+.result-count {
+
+    color:
+        var(--text-light);
+
+    font-size:
+        10px;
+
+    font-weight:
+        600;
+
+}
+
+
+/* ============================================================
+   08. MESSAGES
+============================================================ */
+
+.history-message {
+
+    min-height:
+        190px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        25px
+        15px;
+
+    text-align:
+        center;
+
+}
+
+
+.message-icon {
+
+    width:
+        54px;
+
+    height:
+        54px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    margin-bottom:
+        11px;
+
+    border-radius:
+        16px;
+
+    background:
+        var(--surface-soft);
+
+    color:
+        var(--accent);
+
+    font-size:
+        25px;
+
+}
+
+
+.history-message strong {
+
+    font-size:
+        14px;
+
+}
+
+
+.history-message p {
+
+    max-width:
+        260px;
+
+    margin-top:
+        5px;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        11px;
+
+    line-height:
+        1.5;
+
+}
+
+
+/* ============================================================
+   09. GAME HISTORY LIST
+
+   Individual cards will be added in Step 7B.
+============================================================ */
+
+.game-history-list {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        10px;
+
+}
+
+
+/* ============================================================
+   10. BOTTOM NAVIGATION
+============================================================ */
+
+.bottom-navigation {
+
+    position:
+        fixed;
+
+    z-index:
+        1000;
+
+    left:
+        0;
+
+    right:
+        0;
+
+    bottom:
+        0;
+
+    height:
+        calc(
+            66px
+            +
+            env(safe-area-inset-bottom)
+        );
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    align-items:
+        start;
+
+    padding:
+        7px
+        4px
+        env(safe-area-inset-bottom);
+
+    background:
+        rgba(255, 255, 255, 0.96);
+
+    border-top:
+        1px solid
+        var(--border);
+
+    box-shadow:
+        0 -5px 18px
+        rgba(15, 23, 42, 0.05);
+
+}
+
+
+.nav-item {
+
+    position:
+        relative;
+
+    min-width:
+        0;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        3px;
+
+    padding:
+        4px
+        1px;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        8px;
+
+    font-weight:
+        600;
+
+}
+
+
+.nav-icon {
+
+    width:
+        27px;
+
+    height:
+        27px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        9px;
+
+    font-size:
+        17px;
+
+}
+
+
+.nav-item.active {
+
+    color:
+        var(--primary);
+
+}
+
+
+.nav-item.active .nav-icon {
+
+    background:
+        #fff4cc;
+
+    color:
+        #af8010;
+
+}
+
+
+.nav-item.active::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    top:
+        -7px;
+
+    width:
+        25px;
+
+    height:
+        2px;
+
+    background:
+        var(--accent);
+
+    border-radius:
+        0 0 4px 4px;
+
+}
+
+
+/* ============================================================
+   11. UTILITIES
+============================================================ */
+
+.hidden {
+
+    display:
+        none !important;
+
+}
+
+
+.bottom-space {
+
+    height:
+        8px;
+
+}
+
+
+/* ============================================================
+   12. LARGER SCREENS
+============================================================ */
+
+@media (min-width: 650px) {
+
+    .history-header {
+
+        padding:
+            38px
+            28px
+            40px;
+
+    }
+
+
+    .history-container {
+
+        padding:
+            24px
+            28px;
+
+    }
+
+
+    .games-section {
+
+        padding:
+            22px;
+
+    }
+
+
+    .bottom-navigation {
+
+        left:
+            50%;
+
+        right:
+            auto;
+
+        bottom:
+            14px;
+
+        width:
+            min(
+                600px,
+                calc(100% - 32px)
+            );
+
+        height:
+            67px;
+
+        transform:
+            translateX(-50%);
+
+        border:
+            1px solid
+            var(--border);
+
+        border-radius:
+            20px;
+
+    }
+
+}
+
+/* ============================================================
+   13. HISTORY GAME CARDS
+============================================================ */
+
+.history-game-card {
+
+    overflow:
+        hidden;
+
+    background:
+        var(--surface);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        15px;
+
+}
+
+
+/* ============================================================
+   GAME CARD HEADER
+============================================================ */
+
+.game-card-header {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+
+    padding:
+        13px
+        14px;
+
+    background:
+        var(--surface-soft);
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+}
+
+
+.game-card-header > div {
+
+    min-width:
+        0;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+}
+
+
+.game-number {
+
+    color:
+        var(--text-primary);
+
+    font-size:
+        14px;
+
+    font-weight:
+        800;
+
+}
+
+
+.game-date {
+
+    margin-top:
+        2px;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        9px;
+
+    font-weight:
+        500;
+
+}
+
+
+/* ============================================================
+   STATUS BADGES
+============================================================ */
+
+.game-status {
+
+    flex-shrink:
+        0;
+
+    padding:
+        5px
+        8px;
+
+    border-radius:
+        100px;
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.5px;
+
+}
+
+
+.status-active {
+
+    background:
+        var(--warning-soft);
+
+    color:
+        #9b7105;
+
+}
+
+
+.status-completed {
+
+    background:
+        var(--success-soft);
+
+    color:
+        var(--success);
+
+}
+
+
+.status-cancelled {
+
+    background:
+        var(--danger-soft);
+
+    color:
+        var(--danger);
+
+}
+
+
+.status-unknown {
+
+    background:
+        #eef1f5;
+
+    color:
+        var(--text-secondary);
+
+}
+
+
+/* ============================================================
+   ACTIVE GAME
+============================================================ */
+
+.active-game-body {
+
+    padding:
+        14px;
+
+}
+
+
+.active-progress-row {
+
+    display:
+        flex;
+
+    align-items:
+        flex-end;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+
+}
+
+
+.detail-label {
+
+    display:
+        block;
+
+    margin-bottom:
+        3px;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.9px;
+
+}
+
+
+.active-progress {
+
+    display:
+        block;
+
+    font-size:
+        16px;
+
+    font-weight:
+        800;
+
+}
+
+
+.matches-completed {
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        9px;
+
+    font-weight:
+        600;
+
+}
+
+
+.active-player-list {
+
+    margin-top:
+        12px;
+
+    padding:
+        10px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        10px;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        10px;
+
+    font-weight:
+        600;
+
+    line-height:
+        1.5;
+
+}
+
+
+.continue-game-button {
+
+    width:
+        100%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    margin-top:
+        11px;
+
+    padding:
+        11px
+        13px;
+
+    background:
+        var(--primary);
+
+    color:
+        white;
+
+    border-radius:
+        11px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+}
+
+
+.continue-game-button span {
+
+    color:
+        var(--accent-light);
+
+    font-size:
+        17px;
+
+}
+
+
+/* ============================================================
+   COMPLETED GAME
+============================================================ */
+
+.completed-game-body {
+
+    padding:
+        14px;
+
+}
+
+
+.score-list {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+}
+
+
+.game-score-row {
+
+    min-height:
+        37px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+}
+
+
+.game-score-row:last-child {
+
+    border-bottom:
+        none;
+
+}
+
+
+.score-player {
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        11px;
+
+    font-weight:
+        600;
+
+}
+
+
+.score-total {
+
+    color:
+        var(--text-primary);
+
+    font-size:
+        13px;
+
+    font-weight:
+        800;
+
+}
+
+
+.winner-box {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    margin-top:
+        11px;
+
+    padding:
+        10px
+        11px;
+
+    background:
+        var(--warning-soft);
+
+    border:
+        1px solid
+        #f1df9a;
+
+    border-radius:
+        10px;
+
+    color:
+        #85610a;
+
+}
+
+
+.winner-symbol {
+
+    color:
+        var(--accent);
+
+    font-size:
+        15px;
+
+}
+
+
+.winner-box strong {
+
+    font-size:
+        10px;
+
+    line-height:
+        1.4;
+
+}
+
+
+/* ============================================================
+   CANCELLED GAME
+============================================================ */
+
+.cancelled-game-body {
+
+    padding:
+        14px;
+
+}
+
+
+.cancelled-player-list {
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        10px;
+
+    font-weight:
+        600;
+
+    line-height:
+        1.5;
+
+}
+
+
+.cancelled-progress {
+
+    margin-top:
+        10px;
+
+    padding:
+        9px
+        10px;
+
+    background:
+        var(--danger-soft);
+
+    border-radius:
+        9px;
+
+    color:
+        #a83a3a;
+
+    font-size:
+        9px;
+
+    line-height:
+        1.5;
+
+}
+
+
+/* ============================================================
+   FALLBACK GAME
+============================================================ */
+
+.basic-game-body {
+
+    padding:
+        14px;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        10px;
+
+    line-height:
+        1.5;
+
+}
+
+/* ============================================================
+   CLICKABLE COMPLETED GAME
+============================================================ */
+
+.clickable-game-card {
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+
+}
+
+
+.clickable-game-card:active {
+
+    transform:
+        scale(0.99);
+
+}
+
+
+@media (hover: hover) {
+
+    .clickable-game-card:hover {
+
+        box-shadow:
+            0 7px 20px
+            rgba(15, 23, 42, 0.08);
+
+    }
+
+}

@@ -91,21 +91,21 @@ const rankingTableBody =
    ACTIVE GAME ELEMENTS
 ============================================================ */
 
-const continueGameCard =
+const activeGamesPanel =
     document.getElementById(
-        "continueGameCard"
+        "activeGamesPanel"
     );
 
 
-const continueGameTitle =
+const activeGamesList =
     document.getElementById(
-        "continueGameTitle"
+        "activeGamesList"
     );
 
 
-const continueGameDescription =
+const activeGamesCount =
     document.getElementById(
-        "continueGameDescription"
+        "activeGamesCount"
     );
 
 
@@ -486,7 +486,7 @@ function calculateDashboard() {
     getActiveGames();
 
 
-renderActiveGame(
+renderActiveGames(
     activeGames
 );
 
@@ -613,14 +613,23 @@ function getActiveGames() {
    ACTIVE GAME / CONTINUE GAME CARD
 ============================================================ */
 
-function renderActiveGame(
+/* ============================================================
+   ACTIVE GAMES DISPLAY
+
+   More than one ACTIVE game may exist.
+
+   ACTIVE games do NOT affect monthly rankings until they
+   become COMPLETED.
+============================================================ */
+
+function renderActiveGames(
     activeGames
 ) {
 
     if (
-        !continueGameCard
+        !activeGamesPanel
         ||
-        !startNewGameCard
+        !activeGamesList
     ) {
 
         return;
@@ -629,23 +638,44 @@ function renderActiveGame(
 
 
     /*
-       No active game:
-       hide Continue Game
-       show Start New Game normally.
+       Start New Game must always stay available.
+
+       Players are allowed to start another game even if
+       unfinished games already exist.
+    */
+
+    if (startNewGameCard) {
+
+        startNewGameCard.classList.remove(
+            "hidden"
+        );
+
+    }
+
+
+    /*
+       No unfinished games.
     */
 
     if (
         activeGames.length === 0
     ) {
 
-        continueGameCard.classList.add(
+        activeGamesPanel.classList.add(
             "hidden"
         );
 
 
-        startNewGameCard.classList.remove(
-            "hidden"
-        );
+        activeGamesList.innerHTML =
+            "";
+
+
+        if (activeGamesCount) {
+
+            activeGamesCount.textContent =
+                "0";
+
+        }
 
 
         return;
@@ -654,71 +684,169 @@ function renderActiveGame(
 
 
     /*
-       For now we allow only ONE active game.
-
-       If old data somehow contains multiple active games,
-       we show the first one by game number.
+       Show active games section.
     */
 
-    const game =
-        activeGames[0];
-
-
-    const completedMatches =
-        Number(
-            game.completedMatches
-        ) || 0;
-
-
-    const nextMatch =
-        Math.min(
-            completedMatches + 1,
-            10
-        );
-
-
-    if (continueGameTitle) {
-
-        continueGameTitle.textContent =
-            `Continue Game #${game.gameNumber}`;
-
-    }
-
-
-    if (continueGameDescription) {
-
-        continueGameDescription.textContent =
-            `Match ${nextMatch} of 10 · ${game.monthLabel || activeMonth?.label || ""}`;
-
-    }
-
-
-    continueGameCard.href =
-        `pages/live-game.html?month=${encodeURIComponent(
-            game.monthId
-            ||
-            activeMonth.id
-        )}&game=${encodeURIComponent(
-            game.id
-        )}`;
-
-
-    continueGameCard.classList.remove(
+    activeGamesPanel.classList.remove(
         "hidden"
     );
 
 
-    /*
-       IMPORTANT:
+    if (activeGamesCount) {
 
-       We hide Start New Game while another game
-       is active.
+        activeGamesCount.textContent =
+            activeGames.length;
 
-       This prevents accidental duplicate games.
-    */
+    }
 
-    startNewGameCard.classList.add(
-        "hidden"
+
+    activeGamesList.innerHTML =
+        "";
+
+
+    activeGames.forEach(
+
+        game => {
+
+            /*
+               Prefer actual saved matches when calculating
+               progress.
+
+               completedMatches remains as a fallback.
+            */
+
+            const savedMatches =
+                Object.keys(
+                    game.matches || {}
+                ).length;
+
+
+            const completedMatches =
+                Math.max(
+
+                    savedMatches,
+
+                    Number(
+                        game.completedMatches
+                    ) || 0
+
+                );
+
+
+            const nextMatch =
+                Math.min(
+                    completedMatches + 1,
+                    10
+                );
+
+
+            /*
+               Player names are stored inside every game,
+               so old games remain readable even if player
+               profiles later change.
+            */
+
+            const players =
+                Object.values(
+                    game.players || {}
+                )
+                .sort(
+
+                    (a, b) =>
+
+                        Number(
+                            a.seat
+                        )
+                        -
+                        Number(
+                            b.seat
+                        )
+
+                );
+
+
+            const playerNames =
+                players
+                    .map(
+                        player =>
+                            player.name
+                    )
+                    .filter(Boolean)
+                    .join(" • ");
+
+
+            const gameLink =
+                `pages/live-game.html?month=${encodeURIComponent(
+                    game.monthId
+                    ||
+                    activeMonth.id
+                )}&game=${encodeURIComponent(
+                    game.id
+                )}`;
+
+
+            const card =
+                document.createElement(
+                    "a"
+                );
+
+
+            card.className =
+                "active-game-card";
+
+
+            card.href =
+                gameLink;
+
+
+            card.innerHTML = `
+
+                <div class="active-game-icon">
+                    ▶
+                </div>
+
+
+                <div class="active-game-content">
+
+                    <strong class="active-game-title">
+                        Game #${escapeHTML(
+                            String(
+                                game.gameNumber
+                                ?? "?"
+                            )
+                        )}
+                    </strong>
+
+
+                    <span class="active-game-progress">
+                        Match ${nextMatch} of 10
+                    </span>
+
+
+                    <span class="active-game-players">
+                        ${escapeHTML(
+                            playerNames
+                            ||
+                            "Players unavailable"
+                        )}
+                    </span>
+
+                </div>
+
+
+                <div class="active-game-arrow">
+                    →
+                </div>
+
+            `;
+
+
+            activeGamesList.appendChild(
+                card
+            );
+
+        }
+
     );
 
 }

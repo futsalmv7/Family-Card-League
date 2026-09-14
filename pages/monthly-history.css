@@ -1,0 +1,886 @@
+/* ============================================================
+   FAMILY CARD LEAGUE
+   MONTHLY HISTORY PAGE
+
+   Sections:
+   01. Header
+   02. Cards / Section Headings
+   03. Month Selector
+   04. Loading / Empty States
+   05. Month Summary
+   06. Lists / Standings
+   07. Records
+   08. Responsive
+============================================================ */
+
+
+/* ============================================================
+   01. HEADER
+============================================================ */
+
+.monthly-history-header {
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(212, 160, 23, 0.18),
+            transparent 38%
+        ),
+        linear-gradient(
+            135deg,
+            #111827,
+            #1f2937
+        );
+
+    color:
+        white;
+
+    padding:
+        calc(28px + env(safe-area-inset-top))
+        18px
+        30px;
+
+}
+
+
+.monthly-history-header-inner {
+
+    max-width:
+        1100px;
+
+    margin:
+        0 auto;
+
+}
+
+
+.monthly-history-eyebrow {
+
+    margin-bottom:
+        6px;
+
+    color:
+        #f5d56b;
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1.4px;
+
+}
+
+
+.monthly-history-header h1 {
+
+    margin:
+        0;
+
+    font-size:
+        27px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.6px;
+
+}
+
+
+.monthly-history-header p {
+
+    max-width:
+        520px;
+
+    margin:
+        8px 0 0;
+
+    color:
+        rgba(255, 255, 255, 0.72);
+
+    font-size:
+        10px;
+
+    line-height:
+        1.55;
+
+}
+
+
+
+/* ============================================================
+   02. CARDS / SECTION HEADINGS
+============================================================ */
+
+.monthly-history-card {
+
+    margin-bottom:
+        14px;
+
+    padding:
+        18px;
+
+    background:
+        white;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        var(--radius-medium);
+
+    box-shadow:
+        var(--shadow-small);
+
+}
+
+
+.monthly-history-section-heading {
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+
+    margin-bottom:
+        15px;
+
+}
+
+
+.monthly-history-kicker {
+
+    display:
+        block;
+
+    margin-bottom:
+        4px;
+
+    color:
+        var(--accent);
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1.2px;
+
+}
+
+
+.monthly-history-section-heading h2 {
+
+    margin:
+        0;
+
+    font-size:
+        18px;
+
+    font-weight:
+        800;
+
+}
+
+
+.monthly-history-section-heading p {
+
+    margin:
+        4px 0 0;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        9px;
+
+    line-height:
+        1.45;
+
+}
+
+
+
+/* ============================================================
+   03. MONTH SELECTOR
+============================================================ */
+
+.monthly-history-select-wrap {
+
+    position:
+        relative;
+
+}
+
+
+.monthly-history-select {
+
+    width:
+        100%;
+
+    min-height:
+        44px;
+
+    padding:
+        0 42px 0 13px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        11px;
+
+    color:
+        var(--text-primary);
+
+    font-family:
+        inherit;
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    appearance:
+        none;
+
+    -webkit-appearance:
+        none;
+
+}
+
+
+.monthly-history-select-wrap::after {
+
+    content:
+        "⌄";
+
+    position:
+        absolute;
+
+    top:
+        50%;
+
+    right:
+        14px;
+
+    transform:
+        translateY(-53%);
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        15px;
+
+    pointer-events:
+        none;
+
+}
+
+
+.monthly-history-select:focus {
+
+    outline:
+        none;
+
+    border-color:
+        #d4a017;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(212, 160, 23, 0.1);
+
+}
+
+
+
+/* ============================================================
+   04. LOADING / EMPTY STATES
+============================================================ */
+
+.monthly-history-message-card {
+
+    padding:
+        34px 18px;
+
+    background:
+        white;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        var(--radius-medium);
+
+    box-shadow:
+        var(--shadow-small);
+
+    text-align:
+        center;
+
+}
+
+
+.monthly-history-message-icon {
+
+    margin-bottom:
+        9px;
+
+    color:
+        var(--accent);
+
+    font-size:
+        30px;
+
+}
+
+
+.monthly-history-message-card strong {
+
+    display:
+        block;
+
+    margin-bottom:
+        5px;
+
+    font-size:
+        14px;
+
+    font-weight:
+        800;
+
+}
+
+
+.monthly-history-message-card p {
+
+    max-width:
+        320px;
+
+    margin:
+        0 auto;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        9px;
+
+    line-height:
+        1.5;
+
+}
+
+
+
+/* ============================================================
+   05. MONTH SUMMARY
+============================================================ */
+
+.monthly-history-summary-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap:
+        7px;
+
+}
+
+
+.monthly-history-summary-item {
+
+    min-width:
+        0;
+
+    padding:
+        11px 7px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        10px;
+
+    text-align:
+        center;
+
+}
+
+
+.monthly-history-summary-item span {
+
+    display:
+        block;
+
+    margin-bottom:
+        4px;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        7px;
+
+    font-weight:
+        700;
+
+    line-height:
+        1.3;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.monthly-history-summary-item strong {
+
+    display:
+        block;
+
+    overflow:
+        hidden;
+
+    font-size:
+        16px;
+
+    font-weight:
+        800;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+}
+
+
+
+/* ============================================================
+   06. LISTS / STANDINGS
+============================================================ */
+
+.monthly-history-list {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        8px;
+
+}
+
+
+.monthly-history-row {
+
+    padding:
+        12px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        12px;
+
+}
+
+
+.monthly-history-row-top {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+
+    margin-bottom:
+        9px;
+
+}
+
+
+.monthly-history-player {
+
+    min-width:
+        0;
+
+    overflow:
+        hidden;
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.monthly-history-rank {
+
+    flex-shrink:
+        0;
+
+    min-width:
+        32px;
+
+    height:
+        26px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        0 7px;
+
+    background:
+        white;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        8px;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+}
+
+
+.monthly-history-row-stats {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap:
+        6px;
+
+}
+
+
+.monthly-history-row-stat {
+
+    min-width:
+        0;
+
+    padding:
+        7px 4px;
+
+    background:
+        white;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        8px;
+
+    text-align:
+        center;
+
+}
+
+
+.monthly-history-row-stat strong {
+
+    display:
+        block;
+
+    overflow:
+        hidden;
+
+    margin-bottom:
+        3px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        800;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.monthly-history-row-stat span {
+
+    display:
+        block;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        6px;
+
+    font-weight:
+        700;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.monthly-history-empty-list {
+
+    padding:
+        22px 10px;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        9px;
+
+    line-height:
+        1.5;
+
+    text-align:
+        center;
+
+}
+
+
+
+/* ============================================================
+   07. RECORDS
+============================================================ */
+
+.monthly-history-records-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap:
+        8px;
+
+}
+
+
+.monthly-history-record-card {
+
+    min-width:
+        0;
+
+    padding:
+        12px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        11px;
+
+}
+
+
+.monthly-history-record-label {
+
+    display:
+        block;
+
+    margin-bottom:
+        7px;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        7px;
+
+    font-weight:
+        800;
+
+    line-height:
+        1.4;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.monthly-history-record-score {
+
+    display:
+        block;
+
+    margin-bottom:
+        4px;
+
+    font-size:
+        20px;
+
+    font-weight:
+        800;
+
+}
+
+
+.monthly-history-record-player {
+
+    overflow:
+        hidden;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        9px;
+
+    font-weight:
+        600;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.monthly-history-record-meta {
+
+    margin-top:
+        4px;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        7px;
+
+    line-height:
+        1.4;
+
+}
+
+
+
+/* ============================================================
+   08. RESPONSIVE
+============================================================ */
+
+@media (min-width: 650px) {
+
+    .monthly-history-header {
+
+        padding:
+            38px 28px 40px;
+
+    }
+
+
+    .monthly-history-header h1 {
+
+        font-size:
+            32px;
+
+    }
+
+
+    .monthly-history-card {
+
+        padding:
+            22px;
+
+    }
+
+
+    .monthly-history-section-heading h2 {
+
+        font-size:
+            21px;
+
+    }
+
+
+    .monthly-history-records-grid {
+
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+
+    }
+
+}

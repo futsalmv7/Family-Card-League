@@ -1,0 +1,1015 @@
+/* ============================================================
+   FAMILY CARD LEAGUE
+   GAME DETAILS
+============================================================ */
+
+
+/* ============================================================
+   01. VARIABLES
+============================================================ */
+
+:root {
+
+    --primary: #111827;
+    --primary-soft: #1f2937;
+
+    --accent: #d4a017;
+    --accent-light: #f5d56b;
+
+    --background: #f4f6f9;
+
+    --surface: #ffffff;
+    --surface-soft: #f8fafc;
+
+    --text-primary: #161b26;
+    --text-secondary: #687386;
+    --text-light: #94a0b2;
+
+    --border: #e8ecf1;
+
+    --success: #16a05d;
+    --success-soft: #eaf8f1;
+
+    --warning: #d4a017;
+    --warning-soft: #fff7dd;
+
+    --danger: #d64545;
+    --danger-soft: #fff0f0;
+
+}
+
+
+/* ============================================================
+   02. RESET
+============================================================ */
+
+* {
+
+    box-sizing: border-box;
+
+    margin: 0;
+    padding: 0;
+
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    background:
+        var(--background);
+
+    color:
+        var(--text-primary);
+
+    font-family:
+        "Inter",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    -webkit-font-smoothing:
+        antialiased;
+
+}
+
+
+a {
+
+    color: inherit;
+    text-decoration: none;
+
+}
+
+
+/* ============================================================
+   03. HEADER
+============================================================ */
+
+.details-header {
+
+    padding:
+        calc(
+            24px
+            +
+            env(safe-area-inset-top)
+        )
+        16px
+        28px;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(212, 160, 23, 0.18),
+            transparent 40%
+        ),
+        linear-gradient(
+            135deg,
+            #111827,
+            #1d2635
+        );
+
+    color: white;
+
+}
+
+
+.header-inner {
+
+    width: 100%;
+    max-width: 950px;
+
+    margin: 0 auto;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+}
+
+
+.back-button {
+
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.09);
+
+    border-radius: 12px;
+
+    background:
+        rgba(255,255,255,0.06);
+
+    color:
+        var(--accent-light);
+
+    font-size: 21px;
+
+    font-weight: 700;
+
+}
+
+
+.header-content {
+
+    min-width: 0;
+
+    flex: 1;
+
+}
+
+
+.header-eyebrow {
+
+    display: block;
+
+    margin-bottom: 4px;
+
+    color:
+        var(--accent-light);
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.3px;
+
+}
+
+
+.header-content h1 {
+
+    overflow: hidden;
+
+    font-size: 24px;
+
+    font-weight: 800;
+
+    line-height: 1.15;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+}
+
+
+.header-content p {
+
+    margin-top: 4px;
+
+    color:
+        rgba(255,255,255,0.58);
+
+    font-size: 10px;
+
+}
+
+
+.header-icon {
+
+    width: 44px;
+    height: 44px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background:
+        rgba(255,255,255,0.06);
+
+    color:
+        var(--accent-light);
+
+    font-size: 21px;
+
+}
+
+
+/* ============================================================
+   04. MAIN
+============================================================ */
+
+.details-container {
+
+    width: 100%;
+    max-width: 950px;
+
+    margin: 0 auto;
+
+    padding: 16px;
+
+}
+
+
+/* ============================================================
+   05. MESSAGE
+============================================================ */
+
+.page-message {
+
+    min-height: 280px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+}
+
+
+.message-icon {
+
+    width: 55px;
+    height: 55px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 12px;
+
+    border-radius: 16px;
+
+    background:
+        white;
+
+    color:
+        var(--accent);
+
+    font-size: 24px;
+
+}
+
+
+.page-message strong {
+
+    font-size: 14px;
+
+}
+
+
+.page-message p {
+
+    max-width: 270px;
+
+    margin-top: 6px;
+
+    color:
+        var(--text-secondary);
+
+    font-size: 10px;
+
+    line-height: 1.5;
+
+}
+
+
+/* ============================================================
+   06. GAME SUMMARY
+============================================================ */
+
+.summary-card {
+
+    overflow: hidden;
+
+    margin-bottom: 14px;
+
+    background:
+        var(--surface);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 17px;
+
+}
+
+
+.summary-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 15px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+}
+
+
+.section-label {
+
+    display: block;
+
+    margin-bottom: 3px;
+
+    color:
+        var(--accent);
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.1px;
+
+}
+
+
+.summary-header strong {
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+}
+
+
+.status-badge {
+
+    flex-shrink: 0;
+
+    padding: 6px 9px;
+
+    border-radius: 100px;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+
+}
+
+
+.status-completed {
+
+    background:
+        var(--success-soft);
+
+    color:
+        var(--success);
+
+}
+
+
+.status-active {
+
+    background:
+        var(--warning-soft);
+
+    color:
+        #986d00;
+
+}
+
+
+.status-cancelled {
+
+    background:
+        var(--danger-soft);
+
+    color:
+        var(--danger);
+
+}
+
+
+.summary-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+}
+
+
+.summary-item {
+
+    min-width: 0;
+
+    padding: 13px 10px;
+
+    text-align: center;
+
+    border-right:
+        1px solid
+        var(--border);
+
+}
+
+
+.summary-item:last-child {
+
+    border-right: none;
+
+}
+
+
+.summary-item span {
+
+    display: block;
+
+    margin-bottom: 4px;
+
+    color:
+        var(--text-light);
+
+    font-size: 8px;
+
+    font-weight: 600;
+
+}
+
+
+.summary-item strong {
+
+    display: block;
+
+    overflow: hidden;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+}
+
+
+.winner-banner {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin: 12px;
+
+    padding: 11px;
+
+    background:
+        var(--warning-soft);
+
+    border:
+        1px solid
+        #f2dfa0;
+
+    border-radius: 11px;
+
+}
+
+
+.winner-icon {
+
+    width: 37px;
+    height: 37px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        white;
+
+    border-radius: 10px;
+
+    color:
+        var(--accent);
+
+    font-size: 18px;
+
+}
+
+
+.winner-banner div {
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.winner-banner div span {
+
+    margin-bottom: 2px;
+
+    color:
+        #99710d;
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+}
+
+
+.winner-banner strong {
+
+    color:
+        #745509;
+
+    font-size: 10px;
+
+    line-height: 1.4;
+
+}
+
+
+/* ============================================================
+   07. SECTIONS
+============================================================ */
+
+.details-section {
+
+    margin-bottom: 14px;
+
+    padding: 15px;
+
+    background:
+        var(--surface);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 17px;
+
+}
+
+
+.section-heading {
+
+    margin-bottom: 13px;
+
+}
+
+
+.section-heading h2 {
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+}
+
+
+/* ============================================================
+   08. FINAL STANDINGS
+============================================================ */
+
+.final-standings {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.standing-row {
+
+    min-height: 49px;
+
+    display: grid;
+
+    grid-template-columns:
+        32px
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 9px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+}
+
+
+.standing-row:last-child {
+
+    border-bottom: none;
+
+}
+
+
+.standing-rank {
+
+    width: 29px;
+    height: 29px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        var(--surface-soft);
+
+    border-radius: 9px;
+
+    color:
+        var(--text-secondary);
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+}
+
+
+.standing-row.winner .standing-rank {
+
+    background:
+        var(--warning-soft);
+
+    color:
+        #96700e;
+
+}
+
+
+.standing-player {
+
+    overflow: hidden;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+}
+
+
+.standing-total {
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+}
+
+
+/* ============================================================
+   09. MATCH TABLE
+============================================================ */
+
+.match-table-wrapper {
+
+    width: 100%;
+
+    overflow-x: auto;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 11px;
+
+}
+
+
+.match-table {
+
+    width: 100%;
+
+    min-width: 470px;
+
+    border-collapse: collapse;
+
+}
+
+
+.match-table th {
+
+    padding: 10px 8px;
+
+    background:
+        var(--primary);
+
+    color:
+        white;
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    text-align: center;
+
+}
+
+
+.match-table th:first-child {
+
+    text-align: left;
+
+}
+
+
+.match-table td {
+
+    padding: 10px 8px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+    color:
+        var(--text-secondary);
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    text-align: center;
+
+}
+
+
+.match-table td:first-child {
+
+    color:
+        var(--text-primary);
+
+    font-weight: 800;
+
+    text-align: left;
+
+}
+
+
+.match-table tr:last-child td {
+
+    border-bottom: none;
+
+}
+
+
+.match-total-row td {
+
+    background:
+        var(--surface-soft);
+
+    color:
+        var(--text-primary);
+
+    font-weight: 800;
+
+}
+
+
+/* ============================================================
+   10. PLAYER TOTALS
+============================================================ */
+
+.player-total-list {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 8px;
+
+}
+
+
+.player-total-card {
+
+    min-width: 0;
+
+    padding: 11px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 11px;
+
+}
+
+
+.player-total-card span {
+
+    display: block;
+
+    overflow: hidden;
+
+    margin-bottom: 4px;
+
+    color:
+        var(--text-secondary);
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+}
+
+
+.player-total-card strong {
+
+    display: block;
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+}
+
+
+/* ============================================================
+   11. HISTORY BUTTON
+============================================================ */
+
+.history-button {
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 13px;
+
+    background:
+        var(--primary);
+
+    color:
+        white;
+
+    border-radius: 12px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+}
+
+
+/* ============================================================
+   12. UTILITIES
+============================================================ */
+
+.hidden {
+
+    display: none !important;
+
+}
+
+
+.bottom-space {
+
+    height: 12px;
+
+}
+
+
+/* ============================================================
+   13. LARGE SCREENS
+============================================================ */
+
+@media (min-width: 650px) {
+
+    .details-container {
+
+        padding: 24px 28px;
+
+    }
+
+
+    .details-header {
+
+        padding:
+            35px
+            28px
+            36px;
+
+    }
+
+
+    .details-section {
+
+        padding: 20px;
+
+    }
+
+
+    .player-total-list {
+
+        grid-template-columns:
+            repeat(
+                4,
+                minmax(0, 1fr)
+            );
+
+    }
+
+}

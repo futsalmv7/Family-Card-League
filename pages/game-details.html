@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#111827"
+    >
+
+    <title>Game Details | Family Card League</title>
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <link
+        rel="stylesheet"
+        href="game-details.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <header class="details-header">
+
+        <div class="header-inner">
+
+            <a
+                href="history.html"
+                class="back-button"
+                aria-label="Back to history"
+            >
+                ←
+            </a>
+
+
+            <div class="header-content">
+
+                <span class="header-eyebrow">
+                    GAME DETAILS
+                </span>
+
+                <h1 id="gameTitle">
+                    Loading...
+                </h1>
+
+                <p id="gameSubtitle">
+                    Please wait
+                </p>
+
+            </div>
+
+
+            <div
+                class="header-icon"
+                aria-hidden="true"
+            >
+                ♠
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         MAIN
+    ========================================================== -->
+
+    <main class="details-container">
+
+
+        <!-- =====================================================
+             LOADING
+        ====================================================== -->
+
+        <section
+            class="page-message"
+            id="loadingState"
+        >
+
+            <div class="message-icon">
+                ♠
+            </div>
+
+            <strong>
+                Loading game...
+            </strong>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             ERROR
+        ====================================================== -->
+
+        <section
+            class="page-message hidden"
+            id="errorState"
+        >
+
+            <div class="message-icon">
+                !
+            </div>
+
+            <strong>
+                Game could not be loaded
+            </strong>
+
+            <p id="errorMessage">
+                Please return to History and try again.
+            </p>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             GAME CONTENT
+        ====================================================== -->
+
+        <div
+            class="game-details-content hidden"
+            id="gameDetailsContent"
+        >
+
+
+            <!-- ===============================================
+                 STATUS / SUMMARY
+            ================================================ -->
+
+            <section class="summary-card">
+
+                <div class="summary-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            GAME SUMMARY
+                        </span>
+
+                        <strong id="summaryGameNumber">
+                            Game
+                        </strong>
+
+                    </div>
+
+
+                    <span
+                        class="status-badge"
+                        id="gameStatusBadge"
+                    >
+                        COMPLETED
+                    </span>
+
+                </div>
+
+
+                <div class="summary-grid">
+
+                    <div class="summary-item">
+
+                        <span>
+                            Date
+                        </span>
+
+                        <strong id="summaryDate">
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="summary-item">
+
+                        <span>
+                            Matches
+                        </span>
+
+                        <strong id="summaryMatches">
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="summary-item">
+
+                        <span>
+                            Winning Score
+                        </span>
+
+                        <strong id="summaryWinningScore">
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="winner-banner"
+                    id="winnerBanner"
+                >
+
+                    <span class="winner-icon">
+                        ★
+                    </span>
+
+
+                    <div>
+
+                        <span>
+                            WINNER
+                        </span>
+
+                        <strong id="winnerText">
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ===============================================
+                 FINAL STANDINGS
+            ================================================ -->
+
+            <section class="details-section">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            FINAL RESULT
+                        </span>
+
+                        <h2>
+                            Final Standings
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="final-standings"
+                    id="finalStandings"
+                >
+                </div>
+
+            </section>
+
+
+
+            <!-- ===============================================
+                 MATCH SCORES
+            ================================================ -->
+
+            <section class="details-section">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            SCORE BREAKDOWN
+                        </span>
+
+                        <h2>
+                            Match Scores
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="match-table-wrapper"
+                    id="matchTableWrapper"
+                >
+
+                    <table class="match-table">
+
+                        <thead id="matchTableHead">
+                        </thead>
+
+                        <tbody id="matchTableBody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ===============================================
+                 PLAYER TOTALS
+            ================================================ -->
+
+            <section class="details-section">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            TOTALS
+                        </span>
+
+                        <h2>
+                            Player Totals
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="player-total-list"
+                    id="playerTotalList"
+                >
+                </div>
+
+            </section>
+
+
+
+            <a
+                href="history.html"
+                class="history-button"
+            >
+                ← Back to Game History
+            </a>
+
+
+        </div>
+
+
+        <div class="bottom-space"></div>
+
+
+    </main>
+
+
+
+    <script
+        type="module"
+        src="game-details.js"
+    ></script>
+
+
+</body>
+
+</html>

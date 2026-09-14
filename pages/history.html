@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- =========================================================
+         BASIC PAGE SETTINGS
+    ========================================================== -->
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#111827"
+    >
+
+    <title>Game History | Family Card League</title>
+
+
+    <!-- =========================================================
+         GOOGLE FONT
+    ========================================================== -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =========================================================
+         PAGE CSS
+    ========================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="history.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <header class="history-header">
+
+        <div class="header-inner">
+
+            <div>
+
+                <span class="header-eyebrow">
+                    FAMILY CARD LEAGUE
+                </span>
+
+                <h1>
+                    Game History
+                </h1>
+
+                <p id="historyMonthLabel">
+                    Current Month
+                </p>
+
+            </div>
+
+
+            <div
+                class="header-icon"
+                aria-hidden="true"
+            >
+                ◷
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         MAIN PAGE
+    ========================================================== -->
+
+    <main class="history-container">
+
+
+        <!-- =====================================================
+             SUMMARY
+        ====================================================== -->
+
+        <section class="history-summary">
+
+
+            <article class="summary-card">
+
+                <span>
+                    Total Games
+                </span>
+
+                <strong id="historyTotalGames">
+                    0
+                </strong>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span>
+                    Completed
+                </span>
+
+                <strong id="historyCompletedGames">
+                    0
+                </strong>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <span>
+                    Active
+                </span>
+
+                <strong id="historyActiveGames">
+                    0
+                </strong>
+
+            </article>
+
+
+        </section>
+
+
+
+        <!-- =====================================================
+             FILTERS
+        ====================================================== -->
+
+        <section class="filter-section">
+
+            <button
+                type="button"
+                class="filter-button active"
+                data-filter="ALL"
+            >
+                All
+            </button>
+
+
+            <button
+                type="button"
+                class="filter-button"
+                data-filter="ACTIVE"
+            >
+                Active
+            </button>
+
+
+            <button
+                type="button"
+                class="filter-button"
+                data-filter="COMPLETED"
+            >
+                Completed
+            </button>
+
+
+            <button
+                type="button"
+                class="filter-button"
+                data-filter="CANCELLED"
+            >
+                Cancelled
+            </button>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             GAMES HEADING
+        ====================================================== -->
+
+        <section class="games-section">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-kicker">
+                        CURRENT MONTH
+                    </span>
+
+                    <h2>
+                        Games
+                    </h2>
+
+                </div>
+
+
+                <span
+                    class="result-count"
+                    id="historyResultCount"
+                >
+                    0 games
+                </span>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 LOADING
+            ================================================== -->
+
+            <div
+                class="history-message"
+                id="historyLoading"
+            >
+
+                <div class="message-icon">
+                    ♠
+                </div>
+
+                <strong>
+                    Loading games...
+                </strong>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 EMPTY STATE
+            ================================================== -->
+
+            <div
+                class="history-message hidden"
+                id="historyEmpty"
+            >
+
+                <div class="message-icon">
+                    ◷
+                </div>
+
+                <strong>
+                    No games found
+                </strong>
+
+                <p>
+                    Games will appear here after they are created.
+                </p>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 GAME LIST
+
+                 JavaScript will create all game cards here.
+            ================================================== -->
+
+            <div
+                class="game-history-list hidden"
+                id="gameHistoryList"
+            >
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =====================================================
+             BOTTOM SPACE
+        ====================================================== -->
+
+        <div class="bottom-space"></div>
+
+
+    </main>
+
+
+
+    <!-- =========================================================
+         BOTTOM NAVIGATION
+    ========================================================== -->
+
+    <nav class="bottom-navigation">
+
+
+        <a
+            href="../index.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ⌂
+            </span>
+
+            <span>
+                Home
+            </span>
+
+        </a>
+
+
+
+        <a
+            href="players.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ♟
+            </span>
+
+            <span>
+                Players
+            </span>
+
+        </a>
+
+
+
+        <a
+            href="history.html"
+            class="nav-item active"
+        >
+
+            <span class="nav-icon">
+                ◷
+            </span>
+
+            <span>
+                History
+            </span>
+
+        </a>
+
+
+
+        <a
+            href="hall-of-fame.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ★
+            </span>
+
+            <span>
+                Records
+            </span>
+
+        </a>
+
+
+
+        <a
+            href="admin.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ⚙
+            </span>
+
+            <span>
+                Admin
+            </span>
+
+        </a>
+
+
+    </nav>
+
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+
+         Firebase connection comes in Step 7B.
+    ========================================================== -->
+
+    <script
+        type="module"
+        src="history.js"
+    ></script>
+
+
+</body>
+
+</html>
