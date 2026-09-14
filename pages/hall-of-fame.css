@@ -1,0 +1,1436 @@
+/* ============================================================
+   FAMILY CARD LEAGUE
+   HALL OF FAME PAGE
+
+   Sections:
+   01. Base
+   02. Header
+   03. Main Layout
+   04. Loading / Empty States
+   05. Section Cards
+   06. Lifetime Leader Cards
+   07. All-Time Records
+   08. Category Achievements
+   09. Monthly Champions
+   10. Lifetime Standings
+   11. Bottom Navigation
+   12. Responsive
+============================================================ */
+
+
+/* ============================================================
+   01. BASE
+============================================================ */
+
+:root {
+
+    --page-bg:
+        #f5f6f8;
+
+    --surface:
+        #ffffff;
+
+    --surface-soft:
+        #f9fafb;
+
+    --text-primary:
+        #111827;
+
+    --text-secondary:
+        #6b7280;
+
+    --text-light:
+        #9ca3af;
+
+    --border:
+        #e5e7eb;
+
+    --accent:
+        #d4a017;
+
+    --radius-medium:
+        14px;
+
+    --shadow-small:
+        0 4px 14px rgba(17, 24, 39, 0.05);
+
+}
+
+
+* {
+
+    box-sizing:
+        border-box;
+
+}
+
+
+html {
+
+    background:
+        var(--page-bg);
+
+}
+
+
+body {
+
+    margin:
+        0;
+
+    background:
+        var(--page-bg);
+
+    color:
+        var(--text-primary);
+
+    font-family:
+        "Inter",
+        sans-serif;
+
+    -webkit-font-smoothing:
+        antialiased;
+
+}
+
+
+.hidden {
+
+    display:
+        none !important;
+
+}
+
+
+
+/* ============================================================
+   02. HEADER
+============================================================ */
+
+.hall-header {
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(212, 160, 23, 0.20),
+            transparent 38%
+        ),
+        linear-gradient(
+            135deg,
+            #111827,
+            #1f2937
+        );
+
+    color:
+        white;
+
+    padding:
+        calc(28px + env(safe-area-inset-top))
+        18px
+        30px;
+
+}
+
+
+.hall-header-inner {
+
+    max-width:
+        1100px;
+
+    margin:
+        0 auto;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+}
+
+
+.hall-header-eyebrow {
+
+    display:
+        block;
+
+    margin-bottom:
+        6px;
+
+    color:
+        #f5d56b;
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1.4px;
+
+}
+
+
+.hall-header h1 {
+
+    margin:
+        0;
+
+    font-size:
+        27px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.6px;
+
+}
+
+
+.hall-header p {
+
+    max-width:
+        520px;
+
+    margin:
+        8px 0 0;
+
+    color:
+        rgba(255, 255, 255, 0.72);
+
+    font-size:
+        10px;
+
+    line-height:
+        1.55;
+
+}
+
+
+.hall-header-icon {
+
+    flex-shrink:
+        0;
+
+    width:
+        48px;
+
+    height:
+        48px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    background:
+        rgba(255, 255, 255, 0.08);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.12);
+
+    border-radius:
+        14px;
+
+    color:
+        #f5d56b;
+
+    font-size:
+        22px;
+
+}
+
+
+
+/* ============================================================
+   03. MAIN LAYOUT
+============================================================ */
+
+.hall-container {
+
+    width:
+        min(100% - 24px, 1100px);
+
+    margin:
+        16px auto 0;
+
+}
+
+
+.bottom-spacing {
+
+    height:
+        100px;
+
+}
+
+
+
+/* ============================================================
+   04. LOADING / EMPTY STATES
+============================================================ */
+
+.hall-message-card {
+
+    padding:
+        34px 18px;
+
+    background:
+        white;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        var(--radius-medium);
+
+    box-shadow:
+        var(--shadow-small);
+
+    text-align:
+        center;
+
+}
+
+
+.hall-message-icon {
+
+    margin-bottom:
+        9px;
+
+    color:
+        var(--accent);
+
+    font-size:
+        30px;
+
+}
+
+
+.hall-message-card strong {
+
+    display:
+        block;
+
+    margin-bottom:
+        5px;
+
+    font-size:
+        14px;
+
+    font-weight:
+        800;
+
+}
+
+
+.hall-message-card p {
+
+    max-width:
+        320px;
+
+    margin:
+        0 auto;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        9px;
+
+    line-height:
+        1.5;
+
+}
+
+
+
+/* ============================================================
+   05. SECTION CARDS
+============================================================ */
+
+.hall-card {
+
+    margin-bottom:
+        14px;
+
+    padding:
+        18px;
+
+    background:
+        white;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        var(--radius-medium);
+
+    box-shadow:
+        var(--shadow-small);
+
+}
+
+
+.hall-section-heading {
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+
+    margin-bottom:
+        15px;
+
+}
+
+
+.hall-section-kicker {
+
+    display:
+        block;
+
+    margin-bottom:
+        4px;
+
+    color:
+        var(--accent);
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1.2px;
+
+}
+
+
+.hall-section-heading h2 {
+
+    margin:
+        0;
+
+    font-size:
+        18px;
+
+    font-weight:
+        800;
+
+}
+
+
+.hall-section-heading p {
+
+    margin:
+        4px 0 0;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        9px;
+
+    line-height:
+        1.45;
+
+}
+
+
+
+/* ============================================================
+   06. LIFETIME LEADER CARDS
+============================================================ */
+
+.hall-leader-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap:
+        8px;
+
+}
+
+
+.hall-leader-card {
+
+    min-width:
+        0;
+
+    padding:
+        13px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        11px;
+
+}
+
+
+.hall-leader-label {
+
+    display:
+        block;
+
+    margin-bottom:
+        8px;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        7px;
+
+    font-weight:
+        800;
+
+    line-height:
+        1.4;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.hall-leader-value {
+
+    display:
+        block;
+
+    margin-bottom:
+        4px;
+
+    font-size:
+        20px;
+
+    font-weight:
+        800;
+
+}
+
+
+.hall-leader-player {
+
+    display:
+        block;
+
+    overflow:
+        hidden;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        9px;
+
+    font-weight:
+        700;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+}
+
+
+
+/* ============================================================
+   07. ALL-TIME RECORDS
+============================================================ */
+
+.hall-record-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap:
+        8px;
+
+}
+
+
+.hall-record-card {
+
+    min-width:
+        0;
+
+    padding:
+        13px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        11px;
+
+}
+
+
+.hall-record-label {
+
+    display:
+        block;
+
+    margin-bottom:
+        8px;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        7px;
+
+    font-weight:
+        800;
+
+    line-height:
+        1.4;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.hall-record-value {
+
+    display:
+        block;
+
+    margin-bottom:
+        4px;
+
+    font-size:
+        20px;
+
+    font-weight:
+        800;
+
+}
+
+
+.hall-record-player {
+
+    display:
+        block;
+
+    overflow:
+        hidden;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        9px;
+
+    font-weight:
+        700;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.hall-record-meta {
+
+    display:
+        block;
+
+    margin-top:
+        4px;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        7px;
+
+    line-height:
+        1.4;
+
+}
+
+
+
+/* ============================================================
+   08. CATEGORY ACHIEVEMENTS
+============================================================ */
+
+.hall-category-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr;
+
+    gap:
+        10px;
+
+}
+
+
+.hall-category-card {
+
+    padding:
+        13px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        11px;
+
+}
+
+
+.hall-category-title {
+
+    margin-bottom:
+        10px;
+
+}
+
+
+.hall-category-title span {
+
+    display:
+        block;
+
+    margin-bottom:
+        3px;
+
+    color:
+        var(--accent);
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1px;
+
+}
+
+
+.hall-category-title strong {
+
+    display:
+        block;
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+
+}
+
+
+.hall-category-list {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        7px;
+
+}
+
+
+.hall-category-row {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+
+    padding:
+        9px 10px;
+
+    background:
+        white;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        8px;
+
+}
+
+
+.hall-category-row span {
+
+    min-width:
+        0;
+
+    overflow:
+        hidden;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        9px;
+
+    font-weight:
+        700;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.hall-category-row strong {
+
+    flex-shrink:
+        0;
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+}
+
+
+
+/* ============================================================
+   09. MONTHLY CHAMPIONS
+============================================================ */
+
+.hall-list {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        8px;
+
+}
+
+
+.hall-champion-row {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+
+    padding:
+        12px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        11px;
+
+}
+
+
+.hall-champion-info {
+
+    min-width:
+        0;
+
+}
+
+
+.hall-champion-month {
+
+    display:
+        block;
+
+    margin-bottom:
+        3px;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        7px;
+
+    font-weight:
+        800;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.hall-champion-name {
+
+    display:
+        block;
+
+    overflow:
+        hidden;
+
+    font-size:
+        11px;
+
+    font-weight:
+        800;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.hall-champion-points {
+
+    flex-shrink:
+        0;
+
+    min-width:
+        48px;
+
+    padding:
+        7px 8px;
+
+    background:
+        white;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        8px;
+
+    text-align:
+        center;
+
+}
+
+
+.hall-champion-points strong {
+
+    display:
+        block;
+
+    font-size:
+        11px;
+
+    font-weight:
+        800;
+
+}
+
+
+.hall-champion-points span {
+
+    display:
+        block;
+
+    margin-top:
+        2px;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        6px;
+
+    font-weight:
+        700;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+
+/* ============================================================
+   10. LIFETIME STANDINGS
+============================================================ */
+
+.hall-lifetime-list {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        8px;
+
+}
+
+
+.hall-lifetime-row {
+
+    padding:
+        12px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        11px;
+
+}
+
+
+.hall-lifetime-row-top {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+
+    margin-bottom:
+        9px;
+
+}
+
+
+.hall-lifetime-player {
+
+    min-width:
+        0;
+
+    overflow:
+        hidden;
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.hall-lifetime-rank {
+
+    flex-shrink:
+        0;
+
+    min-width:
+        32px;
+
+    height:
+        26px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        0 7px;
+
+    background:
+        white;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        8px;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+}
+
+
+.hall-lifetime-stats {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap:
+        6px;
+
+}
+
+
+.hall-lifetime-stat {
+
+    min-width:
+        0;
+
+    padding:
+        7px 4px;
+
+    background:
+        white;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        8px;
+
+    text-align:
+        center;
+
+}
+
+
+.hall-lifetime-stat strong {
+
+    display:
+        block;
+
+    overflow:
+        hidden;
+
+    margin-bottom:
+        3px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        800;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.hall-lifetime-stat span {
+
+    display:
+        block;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        6px;
+
+    font-weight:
+        700;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.hall-empty-list {
+
+    padding:
+        22px 10px;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        9px;
+
+    line-height:
+        1.5;
+
+    text-align:
+        center;
+
+}
+
+
+
+/* ============================================================
+   11. BOTTOM NAVIGATION
+============================================================ */
+
+.bottom-navigation {
+
+    position:
+        fixed;
+
+    right:
+        0;
+
+    bottom:
+        0;
+
+    left:
+        0;
+
+    z-index:
+        100;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    padding:
+        7px 8px
+        calc(7px + env(safe-area-inset-bottom));
+
+    background:
+        rgba(255, 255, 255, 0.97);
+
+    border-top:
+        1px solid
+        var(--border);
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+}
+
+
+.nav-item {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        2px;
+
+    min-height:
+        44px;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        7px;
+
+    font-weight:
+        700;
+
+    text-decoration:
+        none;
+
+}
+
+
+.nav-icon {
+
+    font-size:
+        16px;
+
+    line-height:
+        1;
+
+}
+
+
+.nav-item.active {
+
+    color:
+        var(--accent);
+
+}
+
+
+
+/* ============================================================
+   12. RESPONSIVE
+============================================================ */
+
+@media (min-width: 650px) {
+
+    .hall-header {
+
+        padding:
+            38px 28px 40px;
+
+    }
+
+
+    .hall-header h1 {
+
+        font-size:
+            32px;
+
+    }
+
+
+    .hall-container {
+
+        margin-top:
+            20px;
+
+    }
+
+
+    .hall-card {
+
+        padding:
+            22px;
+
+    }
+
+
+    .hall-section-heading h2 {
+
+        font-size:
+            21px;
+
+    }
+
+
+    .hall-leader-grid {
+
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+
+    }
+
+
+    .hall-record-grid {
+
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+
+    }
+
+
+    .hall-category-grid {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+    }
+
+}

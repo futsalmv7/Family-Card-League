@@ -1519,3 +1519,163 @@ button {
     }
 
 }
+
+/* ============================================================
+   MONTHLY HISTORY ENTRY
+============================================================ */
+
+.monthly-history-entry {
+
+    margin-bottom:
+        14px;
+
+}
+
+
+.monthly-history-entry-link {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        14px;
+
+    padding:
+        14px;
+
+    background:
+        white;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        12px;
+
+    color:
+        var(--text-primary);
+
+    text-decoration:
+        none;
+
+    box-shadow:
+        var(--shadow-small);
+
+    transition:
+        transform 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+
+}
+
+
+.monthly-history-entry-link:active {
+
+    transform:
+        scale(0.99);
+
+}
+
+
+.monthly-history-entry-link:focus-visible {
+
+    outline:
+        none;
+
+    border-color:
+        #d4a017;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(212, 160, 23, 0.11);
+
+}
+
+
+.monthly-history-entry-text {
+
+    min-width:
+        0;
+
+}
+
+
+.monthly-history-entry-kicker {
+
+    display:
+        block;
+
+    margin-bottom:
+        4px;
+
+    color:
+        var(--accent);
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1px;
+
+}
+
+
+.monthly-history-entry-link strong {
+
+    display:
+        block;
+
+    margin-bottom:
+        4px;
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+
+}
+
+
+.monthly-history-entry-link p {
+
+    margin:
+        0;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        8px;
+
+    line-height:
+        1.45;
+
+}
+
+
+.monthly-history-entry-arrow {
+
+    flex-shrink:
+        0;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        24px;
+
+    line-height:
+        1;
+
+}

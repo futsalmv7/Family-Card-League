@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Admin | Family Card League
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="../style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="admin.css"
+    >
+
+</head>
+
+
+<body>
+
+    <!-- =====================================================
+         ADMIN HEADER
+    ====================================================== -->
+
+    <header class="admin-header">
+
+        <div class="admin-header-inner">
+
+            <div>
+
+                <span class="admin-header-eyebrow">
+                    FAMILY CARD LEAGUE
+                </span>
+
+                <h1>
+                    Admin
+                </h1>
+
+                <p>
+                    Manage the league, months, games and players.
+                </p>
+
+            </div>
+
+
+            <div
+                class="admin-header-icon"
+                aria-hidden="true"
+            >
+                ⚙
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         ADMIN LOGIN
+    ====================================================== -->
+
+    <main class="admin-container">
+
+
+        <section
+            id="adminLoginSection"
+            class="admin-card"
+        >
+
+            <div class="admin-section-heading">
+
+                <span class="admin-section-kicker">
+                    SECURITY
+                </span>
+
+                <h2>
+                    Admin Access
+                </h2>
+
+                <p>
+                    Enter the admin password to continue.
+                </p>
+
+            </div>
+
+
+            <form
+                id="adminLoginForm"
+                class="admin-login-form"
+            >
+
+                <label
+                    for="adminPasswordInput"
+                    class="admin-label"
+                >
+                    Admin Password
+                </label>
+
+
+                <input
+                    id="adminPasswordInput"
+                    class="admin-input"
+                    type="password"
+                    autocomplete="current-password"
+                    placeholder="Enter password"
+                    required
+                >
+
+
+                <button
+                    type="submit"
+                    class="admin-primary-button"
+                >
+                    Unlock Admin
+                </button>
+
+
+                <p
+                    id="adminLoginError"
+                    class="admin-error hidden"
+                >
+                    Incorrect password.
+                </p>
+
+            </form>
+
+        </section>
+
+
+
+        <!-- =================================================
+             ADMIN DASHBOARD
+
+             Hidden until password is accepted.
+        ================================================== -->
+
+        <div
+            id="adminDashboard"
+            class="hidden"
+        >
+
+
+            <!-- =============================================
+                 ACTIVE MONTH
+            ============================================== -->
+
+            <section class="admin-card">
+
+                <div class="admin-section-heading">
+
+                    <span class="admin-section-kicker">
+                        CURRENT MONTH
+                    </span>
+
+                    <h2>
+                        Active Month
+                    </h2>
+
+                </div>
+
+
+                <div class="admin-month-summary">
+
+                    <div class="admin-summary-item">
+
+                        <span>
+                            Month
+                        </span>
+
+                        <strong id="adminActiveMonthLabel">
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="admin-summary-item">
+
+                        <span>
+                            Status
+                        </span>
+
+                        <strong id="adminActiveMonthStatus">
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="admin-summary-item">
+
+                        <span>
+                            Completed Games
+                        </span>
+
+                        <strong id="adminCompletedGamesCount">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="admin-summary-item">
+
+                        <span>
+                            Active Games
+                        </span>
+
+                        <strong id="adminActiveGamesCount">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 MONTH MANAGEMENT
+            ============================================== -->
+
+            <section class="admin-card">
+
+                <div class="admin-section-heading">
+
+                    <span class="admin-section-kicker">
+                        MONTH CONTROL
+                    </span>
+
+                    <h2>
+                        Month Management
+                    </h2>
+
+                    <p>
+                        Finalize the current month or manage archived months.
+                    </p>
+
+                </div>
+
+
+                <div class="admin-action-list">
+
+
+                    <button
+                        id="adminFinalizeMonthButton"
+                        type="button"
+                        class="admin-action-button"
+                    >
+
+                        <span>
+
+                            <strong>
+                                Finalize Current Month
+                            </strong>
+
+                            <small>
+                                Freeze standings, categories and records.
+                            </small>
+
+                        </span>
+
+                        <span aria-hidden="true">
+                            →
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        id="adminStartNextMonthButton"
+                        type="button"
+                        class="admin-action-button"
+                    >
+
+                        <span>
+
+                            <strong>
+                                Start Next Month
+                            </strong>
+
+                            <small>
+                                Create and activate the next league month.
+                            </small>
+
+                        </span>
+
+                        <span aria-hidden="true">
+                            →
+                        </span>
+
+                    </button>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 GAME MANAGEMENT
+            ============================================== -->
+
+            <section class="admin-card">
+
+                <div class="admin-section-heading">
+
+                    <span class="admin-section-kicker">
+                        GAMES
+                    </span>
+
+                    <h2>
+                        Game Management
+                    </h2>
+
+                    <p>
+                        Review completed, active and cancelled games.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="history.html"
+                    class="admin-action-link"
+                >
+
+                    <span>
+
+                        <strong>
+                            Open Games History
+                        </strong>
+
+                        <small>
+                            View all games for the active month.
+                        </small>
+
+                    </span>
+
+                    <span aria-hidden="true">
+                        →
+                    </span>
+
+                </a>
+
+<div class="admin-game-management">
+
+    <div class="admin-game-management-heading">
+
+        <strong>
+            Active Games
+        </strong>
+
+        <small>
+            Games that have not been completed yet.
+        </small>
+
+    </div>
+
+
+    <div
+        id="adminActiveGamesList"
+        class="admin-active-games-list"
+    >
+
+        <div class="admin-empty-state">
+            Loading active games...
+        </div>
+
+    </div>
+
+</div>
+
+<div class="admin-game-management">
+
+    <div class="admin-game-management-heading">
+
+        <strong>
+            Completed Games
+        </strong>
+
+        <small>
+            Completed games in the current month.
+        </small>
+
+    </div>
+
+
+    <div
+        id="adminCompletedGamesList"
+        class="admin-completed-games-list"
+    >
+
+        <div class="admin-empty-state">
+            Loading completed games...
+        </div>
+
+    </div>
+
+</div>
+
+            </section>
+
+
+
+            <!-- =============================================
+     PLAYER MANAGEMENT
+============================================== -->
+
+<section class="admin-card">
+
+    <div class="admin-section-heading">
+
+        <span class="admin-section-kicker">
+            PLAYERS
+        </span>
+
+        <h2>
+            Player Management
+        </h2>
+
+        <p>
+            Manage the family members who can participate in games.
+        </p>
+
+    </div>
+
+
+    <!-- PLAYER SUMMARY -->
+
+    <div class="admin-player-summary">
+
+        <div class="admin-summary-item">
+
+            <span>
+                Total Players
+            </span>
+
+            <strong id="adminTotalPlayersCount">
+                —
+            </strong>
+
+        </div>
+
+
+        <div class="admin-summary-item">
+
+            <span>
+                Active Players
+            </span>
+
+            <strong id="adminActivePlayersCount">
+                —
+            </strong>
+
+        </div>
+
+
+        <div class="admin-summary-item">
+
+            <span>
+                Inactive Players
+            </span>
+
+            <strong id="adminInactivePlayersCount">
+                —
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- ADD PLAYER -->
+
+    <div class="admin-player-management-block">
+
+        <div class="admin-game-management-heading">
+
+            <strong>
+                Add Player
+            </strong>
+
+            <small>
+                 Add a new family member to the league.
+            </small>
+
+        </div>
+
+
+        <div class="admin-player-add-row">
+
+            <input
+    id="adminPlayerNameInput"
+    class="admin-input"
+    type="text"
+    placeholder="Player name"
+    autocomplete="off"
+    maxlength="40"
+>
+
+
+            <button
+    id="adminAddPlayerButton"
+    type="button"
+    class="admin-primary-button"
+>
+    Add Player
+</button>
+
+        </div>
+
+    </div>
+
+
+    <!-- EXISTING PLAYERS -->
+
+    <div class="admin-player-management-block">
+
+        <div class="admin-game-management-heading">
+
+            <strong>
+                Existing Players
+            </strong>
+
+            <small>
+                Active and inactive players stored in Firebase.
+            </small>
+
+        </div>
+
+
+        <div
+            id="adminPlayersList"
+            class="admin-players-list"
+        >
+
+            <div class="admin-empty-state">
+                Loading players...
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+            <!-- =============================================
+                 FINALIZED MONTHS
+            ============================================== -->
+
+            <section class="admin-card">
+
+                <div class="admin-section-heading">
+
+                    <span class="admin-section-kicker">
+                        ARCHIVE
+                    </span>
+
+                    <h2>
+    Historical Months
+</h2>
+
+<p>
+    Review finalized months and months temporarily reopened for correction.
+</p>
+
+                </div>
+
+                <!-- =============================================
+     HISTORICAL MONTH CORRECTION
+============================================== -->
+
+<section
+    id="adminHistoricalCorrectionSection"
+    class="admin-card hidden"
+>
+
+    <div class="admin-section-heading">
+
+        <span class="admin-section-kicker">
+            HISTORICAL CORRECTION
+        </span>
+
+        <h2 id="adminHistoricalCorrectionTitle">
+            Historical Month
+        </h2>
+
+        <p id="adminHistoricalCorrectionSubtitle">
+            Review games stored in this reopened month.
+        </p>
+
+    </div>
+
+
+    <div class="admin-historical-correction-summary">
+
+        <div class="admin-summary-item">
+
+            <span>
+                Status
+            </span>
+
+            <strong id="adminHistoricalCorrectionStatus">
+                —
+            </strong>
+
+        </div>
+
+
+        <div class="admin-summary-item">
+
+            <span>
+                Completed Games
+            </span>
+
+            <strong id="adminHistoricalCompletedCount">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="admin-summary-item">
+
+            <span>
+                Cancelled Games
+            </span>
+
+            <strong id="adminHistoricalCancelledCount">
+                0
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="admin-game-management">
+
+        <div class="admin-game-management-heading">
+
+            <strong>
+                Historical Completed Games
+            </strong>
+
+            <small>
+                Completed games available for correction.
+            </small>
+
+        </div>
+
+
+        <div
+            id="adminHistoricalCompletedGamesList"
+            class="admin-completed-games-list"
+        >
+
+            <div class="admin-empty-state">
+                Select a reopened month.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="admin-game-management">
+
+        <div class="admin-game-management-heading">
+
+            <strong>
+                Cancelled Games
+            </strong>
+
+            <small>
+                Cancelled games remain stored for history.
+            </small>
+
+        </div>
+
+
+        <div
+            id="adminHistoricalCancelledGamesList"
+            class="admin-historical-cancelled-games-list"
+        >
+
+            <div class="admin-empty-state">
+                No cancelled games.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="admin-historical-correction-actions">
+
+    <button
+        id="adminHistoricalRefinalizeButton"
+        type="button"
+        class="admin-primary-button"
+    >
+        Re-finalize Month
+    </button>
+
+
+    <button
+        id="adminHistoricalCorrectionCloseButton"
+        type="button"
+        class="admin-secondary-button"
+    >
+        Close Historical Month
+    </button>
+
+</div>
+
+</section>
+
+                <div
+                    id="adminFinalizedMonthsList"
+                    class="admin-finalized-months"
+                >
+
+                    <div class="admin-empty-state">
+                        No finalized months yet.
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 LOG OUT
+            ============================================== -->
+
+            <!-- =============================================
+     GAME SCORE EDITOR
+============================================== -->
+
+<section
+    id="adminGameEditorSection"
+    class="admin-card hidden"
+>
+
+    <div class="admin-section-heading">
+
+        <span class="admin-section-kicker">
+            GAME CORRECTION
+        </span>
+
+        <h2 id="adminGameEditorTitle">
+            Edit Game Scores
+        </h2>
+
+        <p id="adminGameEditorSubtitle">
+            Review the recorded scores before making corrections.
+        </p>
+
+    </div>
+
+
+    <div
+        id="adminGameEditorPlayers"
+        class="admin-game-editor-players"
+    ></div>
+
+
+    <div
+        id="adminGameEditorMatches"
+        class="admin-game-editor-matches"
+    ></div>
+
+
+    <div class="admin-game-editor-actions">
+
+    <button
+        id="adminGameEditorSaveButton"
+        type="button"
+        class="admin-primary-button"
+    >
+        Save Correction
+    </button>
+
+
+    <button
+        id="adminGameEditorCloseButton"
+        type="button"
+        class="admin-secondary-button"
+    >
+        Close Editor
+    </button>
+
+</div>
+
+</section>
+
+            <section class="admin-card">
+
+                <button
+                    id="adminLogoutButton"
+                    type="button"
+                    class="admin-secondary-button"
+                >
+                    Lock Admin
+                </button>
+
+            </section>
+
+
+        </div>
+
+
+        <div class="bottom-spacing"></div>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         BOTTOM NAVIGATION
+    ====================================================== -->
+
+    <nav class="bottom-nav">
+
+        <a
+            href="../index.html"
+            class="bottom-nav-item"
+        >
+            <span>⌂</span>
+            <small>Home</small>
+        </a>
+
+
+        <a
+            href="history.html"
+            class="bottom-nav-item"
+        >
+            <span>☰</span>
+            <small>Games</small>
+        </a>
+
+
+        <a
+            href="players.html"
+            class="bottom-nav-item"
+        >
+            <span>♙</span>
+            <small>Players</small>
+        </a>
+
+
+        <a
+            href="hall-of-fame.html"
+            class="bottom-nav-item"
+        >
+            <span>★</span>
+            <small>Records</small>
+        </a>
+
+
+        <a
+            href="admin.html"
+            class="bottom-nav-item active"
+        >
+            <span>⚙</span>
+            <small>Admin</small>
+        </a>
+
+    </nav>
+
+
+
+    <!-- =====================================================
+         ADMIN SCRIPT
+    ====================================================== -->
+
+    <script
+        type="module"
+        src="admin.js"
+    ></script>
+
+</body>
+
+</html>

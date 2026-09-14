@@ -884,3 +884,286 @@
     }
 
 }
+
+/* ============================================================
+   09. COMPLETED GAME CARDS
+============================================================ */
+
+.monthly-history-game-card {
+
+    display:
+        block;
+
+    padding:
+        13px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        12px;
+
+    color:
+        var(--text-primary);
+
+    text-decoration:
+        none;
+
+    transition:
+        transform 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+
+}
+
+
+.monthly-history-game-card:active {
+
+    transform:
+        scale(0.99);
+
+}
+
+
+.monthly-history-game-card:focus-visible {
+
+    outline:
+        none;
+
+    border-color:
+        #d4a017;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(212, 160, 23, 0.11);
+
+}
+
+
+.monthly-history-game-top {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+
+    margin-bottom:
+        10px;
+
+}
+
+
+.monthly-history-game-number {
+
+    display:
+        block;
+
+    margin-bottom:
+        3px;
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+
+}
+
+
+.monthly-history-game-date {
+
+    display:
+        block;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        8px;
+
+    font-weight:
+        600;
+
+}
+
+
+.monthly-history-game-arrow {
+
+    flex-shrink:
+        0;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        21px;
+
+    line-height:
+        1;
+
+}
+
+
+.monthly-history-game-winner {
+
+    margin-bottom:
+        10px;
+
+    padding:
+        9px 10px;
+
+    background:
+        white;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        9px;
+
+}
+
+
+.monthly-history-game-winner span {
+
+    display:
+        block;
+
+    margin-bottom:
+        3px;
+
+    color:
+        var(--text-light);
+
+    font-size:
+        7px;
+
+    font-weight:
+        800;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.monthly-history-game-winner strong {
+
+    display:
+        block;
+
+    overflow:
+        hidden;
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.monthly-history-game-players {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap:
+        6px;
+
+}
+
+
+.monthly-history-game-player {
+
+    min-width:
+        0;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        6px;
+
+    padding:
+        8px;
+
+    background:
+        white;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        8px;
+
+}
+
+
+.monthly-history-game-player span {
+
+    min-width:
+        0;
+
+    overflow:
+        hidden;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        8px;
+
+    font-weight:
+        700;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.monthly-history-game-player strong {
+
+    flex-shrink:
+        0;
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+}

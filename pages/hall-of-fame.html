@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- =========================================================
+         BASIC PAGE SETTINGS
+    ========================================================== -->
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#111827"
+    >
+
+    <title>Hall of Fame | Family Card League</title>
+
+
+    <!-- =========================================================
+         GOOGLE FONT
+    ========================================================== -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =========================================================
+         PAGE CSS
+    ========================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="hall-of-fame.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <header class="hall-header">
+
+        <div class="hall-header-inner">
+
+            <div>
+
+                <span class="hall-header-eyebrow">
+                    FAMILY CARD LEAGUE
+                </span>
+
+                <h1>
+                    Hall of Fame
+                </h1>
+
+                <p>
+                    Champions, lifetime leaders and all-time records.
+                </p>
+
+            </div>
+
+
+            <div
+                class="hall-header-icon"
+                aria-hidden="true"
+            >
+                ★
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         MAIN PAGE
+    ========================================================== -->
+
+    <main class="hall-container">
+
+
+        <!-- =====================================================
+             LOADING STATE
+        ====================================================== -->
+
+        <section
+            class="hall-message-card"
+            id="hallLoadingState"
+        >
+
+            <div class="hall-message-icon">
+                ★
+            </div>
+
+            <strong>
+                Loading Hall of Fame...
+            </strong>
+
+            <p>
+                League history is being calculated.
+            </p>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             EMPTY STATE
+        ====================================================== -->
+
+        <section
+            class="hall-message-card hidden"
+            id="hallEmptyState"
+        >
+
+            <div class="hall-message-icon">
+                ♠
+            </div>
+
+            <strong>
+                No completed games yet
+            </strong>
+
+            <p>
+                Hall of Fame records will appear after games are completed.
+            </p>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             MAIN HALL CONTENT
+        ====================================================== -->
+
+        <div
+            class="hidden"
+            id="hallContent"
+        >
+
+
+            <!-- =================================================
+                 MONTHLY CHAMPIONS
+            ================================================== -->
+
+            <section class="hall-card">
+
+                <div class="hall-section-heading">
+
+                    <div>
+
+                        <span class="hall-section-kicker">
+                            CHAMPIONS
+                        </span>
+
+                        <h2>
+                            Monthly Champions
+                        </h2>
+
+                        <p>
+                            Overall monthly winners across league history.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="hall-list"
+                    id="hallMonthlyChampions"
+                >
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 LIFETIME LEADERS
+            ================================================== -->
+
+            <section class="hall-card">
+
+                <div class="hall-section-heading">
+
+                    <div>
+
+                        <span class="hall-section-kicker">
+                            LIFETIME
+                        </span>
+
+                        <h2>
+                            Lifetime Leaders
+                        </h2>
+
+                        <p>
+                            Leaders across all completed games.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="hall-leader-grid">
+
+
+                    <!-- Most Points -->
+
+                    <article class="hall-leader-card">
+
+                        <span class="hall-leader-label">
+                            Most Points
+                        </span>
+
+                        <strong
+                            class="hall-leader-value"
+                            id="hallMostPointsValue"
+                        >
+                            —
+                        </strong>
+
+                        <span
+                            class="hall-leader-player"
+                            id="hallMostPointsPlayer"
+                        >
+                            —
+                        </span>
+
+                    </article>
+
+
+
+                    <!-- Most Wins -->
+
+                    <article class="hall-leader-card">
+
+                        <span class="hall-leader-label">
+                            Most Games Won
+                        </span>
+
+                        <strong
+                            class="hall-leader-value"
+                            id="hallMostWinsValue"
+                        >
+                            —
+                        </strong>
+
+                        <span
+                            class="hall-leader-player"
+                            id="hallMostWinsPlayer"
+                        >
+                            —
+                        </span>
+
+                    </article>
+
+
+
+                    <!-- Most Games Played -->
+
+                    <article class="hall-leader-card">
+
+                        <span class="hall-leader-label">
+                            Most Games Played
+                        </span>
+
+                        <strong
+                            class="hall-leader-value"
+                            id="hallMostGamesValue"
+                        >
+                            —
+                        </strong>
+
+                        <span
+                            class="hall-leader-player"
+                            id="hallMostGamesPlayer"
+                        >
+                            —
+                        </span>
+
+                    </article>
+
+
+
+                    <!-- Best Win Percentage -->
+
+                    <article class="hall-leader-card">
+
+                        <span class="hall-leader-label">
+                            Best Win %
+                        </span>
+
+                        <strong
+                            class="hall-leader-value"
+                            id="hallBestWinPercentageValue"
+                        >
+                            —
+                        </strong>
+
+                        <span
+                            class="hall-leader-player"
+                            id="hallBestWinPercentagePlayer"
+                        >
+                            —
+                        </span>
+
+                    </article>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 ALL-TIME RECORDS
+            ================================================== -->
+
+            <section class="hall-card">
+
+                <div class="hall-section-heading">
+
+                    <div>
+
+                        <span class="hall-section-kicker">
+                            RECORD BOOK
+                        </span>
+
+                        <h2>
+                            All-Time Records
+                        </h2>
+
+                        <p>
+                            Best and lowest scores recorded in completed games.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="hall-record-grid"
+                    id="hallRecordGrid"
+                >
+
+
+                    <!-- Highest Single Match -->
+
+                    <article class="hall-record-card">
+
+                        <span class="hall-record-label">
+                            Highest Single Match
+                        </span>
+
+                        <strong
+                            class="hall-record-value"
+                            id="hallHighestMatchValue"
+                        >
+                            —
+                        </strong>
+
+                        <span
+                            class="hall-record-player"
+                            id="hallHighestMatchPlayer"
+                        >
+                            —
+                        </span>
+
+                        <span
+                            class="hall-record-meta"
+                            id="hallHighestMatchMeta"
+                        >
+                            —
+                        </span>
+
+                    </article>
+
+
+
+                    <!-- Lowest Single Match -->
+
+                    <article class="hall-record-card">
+
+                        <span class="hall-record-label">
+                            Lowest Single Match
+                        </span>
+
+                        <strong
+                            class="hall-record-value"
+                            id="hallLowestMatchValue"
+                        >
+                            —
+                        </strong>
+
+                        <span
+                            class="hall-record-player"
+                            id="hallLowestMatchPlayer"
+                        >
+                            —
+                        </span>
+
+                        <span
+                            class="hall-record-meta"
+                            id="hallLowestMatchMeta"
+                        >
+                            —
+                        </span>
+
+                    </article>
+
+
+
+                    <!-- Highest Game Total -->
+
+                    <article class="hall-record-card">
+
+                        <span class="hall-record-label">
+                            Highest Game Total
+                        </span>
+
+                        <strong
+                            class="hall-record-value"
+                            id="hallHighestGameValue"
+                        >
+                            —
+                        </strong>
+
+                        <span
+                            class="hall-record-player"
+                            id="hallHighestGamePlayer"
+                        >
+                            —
+                        </span>
+
+                        <span
+                            class="hall-record-meta"
+                            id="hallHighestGameMeta"
+                        >
+                            —
+                        </span>
+
+                    </article>
+
+
+
+                    <!-- Lowest Game Total -->
+
+                    <article class="hall-record-card">
+
+                        <span class="hall-record-label">
+                            Lowest Game Total
+                        </span>
+
+                        <strong
+                            class="hall-record-value"
+                            id="hallLowestGameValue"
+                        >
+                            —
+                        </strong>
+
+                        <span
+                            class="hall-record-player"
+                            id="hallLowestGamePlayer"
+                        >
+                            —
+                        </span>
+
+                        <span
+                            class="hall-record-meta"
+                            id="hallLowestGameMeta"
+                        >
+                            —
+                        </span>
+
+                    </article>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 CATEGORY ACHIEVEMENTS
+            ================================================== -->
+
+            <section class="hall-card">
+
+                <div class="hall-section-heading">
+
+                    <div>
+
+                        <span class="hall-section-kicker">
+                            CATEGORIES
+                        </span>
+
+                        <h2>
+                            Category Achievements
+                        </h2>
+
+                        <p>
+                            Monthly Category 1 and Category 2 winners.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="hall-category-grid">
+
+
+                    <!-- Category 1 -->
+
+                    <article class="hall-category-card">
+
+                        <div class="hall-category-title">
+
+                            <span>
+                                CATEGORY 1
+                            </span>
+
+                            <strong>
+                                Most 1st Places
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            class="hall-category-list"
+                            id="hallCategory1Leaders"
+                        >
+                        </div>
+
+                    </article>
+
+
+
+                    <!-- Category 2 -->
+
+                    <article class="hall-category-card">
+
+                        <div class="hall-category-title">
+
+                            <span>
+                                CATEGORY 2
+                            </span>
+
+                            <strong>
+                                Most 1st Places
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            class="hall-category-list"
+                            id="hallCategory2Leaders"
+                        >
+                        </div>
+
+                    </article>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 PLAYER LIFETIME TABLE
+            ================================================== -->
+
+            <section class="hall-card">
+
+                <div class="hall-section-heading">
+
+                    <div>
+
+                        <span class="hall-section-kicker">
+                            ALL PLAYERS
+                        </span>
+
+                        <h2>
+                            Lifetime Standings
+                        </h2>
+
+                        <p>
+                            Career totals from all completed games.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="hall-lifetime-list"
+                    id="hallLifetimeStandings"
+                >
+                </div>
+
+            </section>
+
+
+        </div>
+
+
+
+        <!-- =====================================================
+             BOTTOM SPACE
+        ====================================================== -->
+
+        <div class="bottom-spacing"></div>
+
+
+    </main>
+
+
+
+    <!-- =========================================================
+         BOTTOM NAVIGATION
+    ========================================================== -->
+
+    <nav class="bottom-navigation">
+
+
+        <a
+            href="../index.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ⌂
+            </span>
+
+            <span>
+                Home
+            </span>
+
+        </a>
+
+
+
+        <a
+            href="players.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ♟
+            </span>
+
+            <span>
+                Players
+            </span>
+
+        </a>
+
+
+
+        <a
+            href="history.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ◷
+            </span>
+
+            <span>
+                History
+            </span>
+
+        </a>
+
+
+
+        <a
+            href="hall-of-fame.html"
+            class="nav-item active"
+        >
+
+            <span class="nav-icon">
+                ★
+            </span>
+
+            <span>
+                Records
+            </span>
+
+        </a>
+
+
+
+        <a
+            href="admin.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ⚙
+            </span>
+
+            <span>
+                Admin
+            </span>
+
+        </a>
+
+
+    </nav>
+
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script
+        type="module"
+        src="hall-of-fame.js"
+    ></script>
+
+
+</body>
+
+</html>

@@ -105,6 +105,15 @@ const monthlyHistoryCategory2 =
         "monthlyHistoryCategory2"
     );
 
+    const monthlyHistoryRecords =
+    document.getElementById(
+        "monthlyHistoryRecords"
+    );
+
+const monthlyHistoryGames =
+    document.getElementById(
+        "monthlyHistoryGames"
+    );
 
 /* ============================================================
    03. PAGE STATE
@@ -702,12 +711,200 @@ function renderMonthOverview(
         games.filter(
 
             (game) =>
-                game.status
+
+                String(
+                    game.status
+                    ||
+                    ""
+                ).toUpperCase()
                 ===
                 "COMPLETED"
 
         );
 
+
+    const normalizedStatus =
+        String(
+            month.status
+            ||
+            ""
+        ).toUpperCase();
+
+
+    const finalizedSnapshot =
+        monthData?.finalizedSnapshot
+        ||
+        null;
+
+
+    /*
+       ---------------------------------------------------------
+       FINALIZED MONTH
+
+       Once a month is finalized, official standings,
+       categories, cutoff and records must come from
+       the frozen finalizedSnapshot.
+
+       They must NOT be recalculated from raw games.
+       ---------------------------------------------------------
+    */
+
+    if (
+        normalizedStatus ===
+        "FINALIZED"
+        &&
+        finalizedSnapshot
+    ) {
+
+        const frozenStandings =
+            normalizeFinalizedMonthlyStandings(
+                finalizedSnapshot.standings
+            );
+
+
+        const frozenCategory1 =
+            normalizeFinalizedMonthlyStandings(
+                finalizedSnapshot?.categories?.category1
+            );
+
+
+        const frozenCategory2 =
+            normalizeFinalizedMonthlyStandings(
+                finalizedSnapshot?.categories?.category2
+            );
+
+
+        const frozenRecords =
+            finalizedSnapshot.records
+            ||
+            {};
+
+
+        const frozenGameCount =
+            Number(
+                finalizedSnapshot.gameCount
+                ??
+                completedGames.length
+            );
+
+
+        const frozenPlayerCount =
+            Number(
+                finalizedSnapshot.playerCount
+                ??
+                0
+            );
+
+
+        const frozenCutoff =
+            Number(
+                finalizedSnapshot.categoryCutoff
+                ??
+                0
+            );
+
+
+        monthlyHistoryTitle.textContent =
+            finalizedSnapshot.monthLabel
+            ||
+            month.label;
+
+
+        monthlyHistoryStatus.textContent =
+            "Finalized";
+
+
+        monthlyHistoryGameCount.textContent =
+            frozenGameCount;
+
+
+        monthlyHistoryPlayerCount.textContent =
+            frozenPlayerCount;
+
+
+        monthlyHistoryCutoff.textContent =
+            frozenCutoff > 0
+                ? frozenCutoff
+                : "—";
+
+
+        renderMonthlyStandings(
+            frozenStandings
+        );
+
+
+        renderMonthlyCategory(
+            monthlyHistoryCategory1,
+            frozenCategory1,
+            "No players qualified for Category 1."
+        );
+
+
+        renderMonthlyCategory(
+            monthlyHistoryCategory2,
+            frozenCategory2,
+            "No players qualified for Category 2."
+        );
+
+
+        renderMonthlyRecords(
+            frozenRecords
+        );
+
+
+        /*
+           Individual completed games remain linked
+           to the original game data.
+
+           The official month results above are frozen.
+        */
+
+        renderMonthlyGames(
+            completedGames,
+            month.id
+        );
+
+
+        console.log(
+            "Finalized month loaded from frozen snapshot:",
+            month.id,
+            {
+                games:
+                    frozenGameCount,
+
+                players:
+                    frozenPlayerCount,
+
+                categoryCutoff:
+                    frozenCutoff,
+
+                standings:
+                    frozenStandings.length,
+
+                category1:
+                    frozenCategory1.length,
+
+                category2:
+                    frozenCategory2.length
+            }
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+       ---------------------------------------------------------
+       ACTIVE MONTH
+
+       Active months continue to calculate everything
+       dynamically from COMPLETED games.
+
+       ACTIVE games are excluded.
+       ---------------------------------------------------------
+    */
 
     const participantIds =
         getMonthlyParticipantIds(
@@ -724,6 +921,26 @@ function renderMonthOverview(
     const categoryCutoff =
         calculateCategoryCutoff(
             gamesPlayedByPlayer
+        );
+
+
+    const monthlyStandings =
+        buildMonthlyStandings(
+            completedGames
+        );
+
+
+    const monthlyCategories =
+        buildMonthlyCategories(
+            monthlyStandings,
+            categoryCutoff
+        );
+
+
+    const monthlyRecords =
+        buildMonthlyRecords(
+            completedGames,
+            monthlyStandings
         );
 
 
@@ -750,38 +967,39 @@ function renderMonthOverview(
             ? categoryCutoff
             : "—";
 
-            const monthlyStandings =
-    buildMonthlyStandings(
-        completedGames
+
+    renderMonthlyStandings(
+        monthlyStandings
     );
 
 
-renderMonthlyStandings(
-    monthlyStandings
-);
-
-const monthlyCategories =
-    buildMonthlyCategories(
-        monthlyStandings,
-        categoryCutoff
+    renderMonthlyCategory(
+        monthlyHistoryCategory1,
+        monthlyCategories.category1,
+        "No players qualify for Category 1 yet."
     );
 
 
-renderMonthlyCategory(
-    monthlyHistoryCategory1,
-    monthlyCategories.category1,
-    "No players qualify for Category 1 yet."
-);
+    renderMonthlyCategory(
+        monthlyHistoryCategory2,
+        monthlyCategories.category2,
+        "No players qualify for Category 2 yet."
+    );
 
 
-renderMonthlyCategory(
-    monthlyHistoryCategory2,
-    monthlyCategories.category2,
-    "No players qualify for Category 2 yet."
-);
+    renderMonthlyRecords(
+        monthlyRecords
+    );
+
+
+    renderMonthlyGames(
+        completedGames,
+        month.id
+    );
+
 
     console.log(
-        "Selected month:",
+        "Active month calculated from completed games:",
         month.id,
         {
             completedGames:
@@ -790,13 +1008,126 @@ renderMonthlyCategory(
             players:
                 participantIds.size,
 
-            categoryCutoff
+            categoryCutoff:
+                categoryCutoff
         }
     );
 
 }
 
+/* ============================================================
+   NORMALIZE FINALIZED MONTHLY STANDINGS
 
+   Firebase may return a saved array as:
+   - a JavaScript array
+   - an object with numeric keys
+
+   Also normalizes the Admin snapshot field names
+   into the field names Monthly History already uses.
+============================================================ */
+
+function normalizeFinalizedMonthlyStandings(
+    standings
+) {
+
+    let values =
+        [];
+
+
+    if (
+        Array.isArray(
+            standings
+        )
+    ) {
+
+        values =
+            standings.filter(
+                Boolean
+            );
+
+    }
+
+    else if (
+        standings
+        &&
+        typeof standings ===
+            "object"
+    ) {
+
+        values =
+            Object.values(
+                standings
+            ).filter(
+                Boolean
+            );
+
+    }
+
+
+    return values.map(
+
+        (player) => ({
+
+            id:
+                String(
+                    player.playerId
+                    ||
+                    player.id
+                    ||
+                    ""
+                ),
+
+            name:
+                String(
+                    player.playerName
+                    ||
+                    player.name
+                    ||
+                    "Unknown Player"
+                ),
+
+            gamesPlayed:
+                Number(
+                    player.gamesPlayed
+                    ||
+                    0
+                ),
+
+            gamesWon:
+                Number(
+                    player.gamesWon
+                    ||
+                    0
+                ),
+
+            winPercentage:
+                Number(
+                    player.winPercentage
+                    ||
+                    0
+                ),
+
+            totalPoints:
+                Number(
+                    player.totalPoints
+                    ??
+                    player.points
+                    ??
+                    0
+                ),
+
+            rank:
+                Number(
+                    player.rank
+                    ||
+                    0
+                )
+
+        })
+
+    );
+
+}
 
 /* ============================================================
    14. GET MONTH GAMES
@@ -2019,6 +2350,1124 @@ function renderMonthlyCategory(
             container.appendChild(
                 row
             );
+
+        }
+
+    );
+
+}
+
+/* ============================================================
+   33. BUILD MONTHLY RECORDS
+============================================================ */
+
+function buildMonthlyRecords(
+    completedGames,
+    monthlyStandings
+) {
+
+    const records = {
+
+        highestSingleMatch:
+            null,
+
+        lowestSingleMatch:
+            null,
+
+        highestGameTotal:
+            null,
+
+        lowestGameTotal:
+            null
+
+    };
+
+
+    const standingsByPlayer =
+        new Map();
+
+
+    monthlyStandings.forEach(
+
+        (player) => {
+
+            standingsByPlayer.set(
+                player.id,
+                player
+            );
+
+        }
+
+    );
+
+
+    completedGames.forEach(
+
+        (game) => {
+
+            const gamePlayers =
+                getGamePlayers(
+                    game
+                );
+
+
+            const totals =
+                getGameTotalsForStandings(
+                    game,
+                    gamePlayers
+                );
+
+
+            /*
+               COMPLETE GAME TOTAL RECORDS
+            */
+
+            gamePlayers.forEach(
+
+                (player) => {
+
+                    const score =
+                        Number(
+                            totals[player.id]
+                            || 0
+                        );
+
+
+                    const candidate = {
+
+                        playerId:
+                            player.id,
+
+                        playerName:
+                            player.name,
+
+                        score,
+
+                        gameNumber:
+                            game.gameNumber
+                            || "—",
+
+                        matchNumber:
+                            null,
+
+                        date:
+                            game.completedAt
+                            ||
+                            game.createdAt
+                            ||
+                            null
+
+                    };
+
+
+                    records.highestGameTotal =
+                        chooseRecordCandidate(
+                            records.highestGameTotal,
+                            candidate,
+                            "HIGH",
+                            standingsByPlayer
+                        );
+
+
+                    records.lowestGameTotal =
+                        chooseRecordCandidate(
+                            records.lowestGameTotal,
+                            candidate,
+                            "LOW",
+                            standingsByPlayer
+                        );
+
+                }
+
+            );
+
+
+            /*
+               SINGLE MATCH RECORDS
+            */
+
+            if (
+                !game.matches
+            ) {
+
+                return;
+
+            }
+
+
+            Object.entries(
+                game.matches
+            ).forEach(
+
+                ([matchKey, match]) => {
+
+                    if (
+                        !match
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const matchNumber =
+                        Number(
+                            match.matchNumber
+                            ||
+                            match.number
+                            ||
+                            matchKey
+                        );
+
+
+                    gamePlayers.forEach(
+
+                        (player) => {
+
+                            const score =
+                                getMatchScoreForStandings(
+                                    match,
+                                    player.id
+                                );
+
+
+                            const candidate = {
+
+                                playerId:
+                                    player.id,
+
+                                playerName:
+                                    player.name,
+
+                                score,
+
+                                gameNumber:
+                                    game.gameNumber
+                                    || "—",
+
+                                matchNumber:
+                                    Number.isFinite(
+                                        matchNumber
+                                    )
+                                        ? matchNumber
+                                        : matchKey,
+
+                                date:
+                                    game.completedAt
+                                    ||
+                                    game.createdAt
+                                    ||
+                                    null
+
+                            };
+
+
+                            records.highestSingleMatch =
+                                chooseRecordCandidate(
+                                    records.highestSingleMatch,
+                                    candidate,
+                                    "HIGH",
+                                    standingsByPlayer
+                                );
+
+
+                            records.lowestSingleMatch =
+                                chooseRecordCandidate(
+                                    records.lowestSingleMatch,
+                                    candidate,
+                                    "LOW",
+                                    standingsByPlayer
+                                );
+
+                        }
+
+                    );
+
+                }
+
+            );
+
+        }
+
+    );
+
+
+    return records;
+
+}
+
+
+
+/* ============================================================
+   34. CHOOSE RECORD CANDIDATE
+
+   Main comparison:
+   HIGH = bigger score wins
+   LOW  = smaller score wins
+
+   Tie-break:
+   1. Higher monthly Win %
+   2. More Games Won
+   3. Alphabetical player name
+============================================================ */
+
+function chooseRecordCandidate(
+    currentRecord,
+    candidate,
+    direction,
+    standingsByPlayer
+) {
+
+    if (
+        !currentRecord
+    ) {
+
+        return candidate;
+
+    }
+
+
+    if (
+        direction === "HIGH"
+    ) {
+
+        if (
+            candidate.score
+            >
+            currentRecord.score
+        ) {
+
+            return candidate;
+
+        }
+
+
+        if (
+            candidate.score
+            <
+            currentRecord.score
+        ) {
+
+            return currentRecord;
+
+        }
+
+    }
+
+    else {
+
+        if (
+            candidate.score
+            <
+            currentRecord.score
+        ) {
+
+            return candidate;
+
+        }
+
+
+        if (
+            candidate.score
+            >
+            currentRecord.score
+        ) {
+
+            return currentRecord;
+
+        }
+
+    }
+
+
+    return chooseRecordTieBreaker(
+        currentRecord,
+        candidate,
+        standingsByPlayer
+    );
+
+}
+
+
+
+/* ============================================================
+   35. RECORD TIE-BREAK
+============================================================ */
+
+function chooseRecordTieBreaker(
+    currentRecord,
+    candidate,
+    standingsByPlayer
+) {
+
+    const currentStats =
+        standingsByPlayer.get(
+            currentRecord.playerId
+        )
+        ||
+        {};
+
+
+    const candidateStats =
+        standingsByPlayer.get(
+            candidate.playerId
+        )
+        ||
+        {};
+
+
+    const currentWinPercentage =
+        Number(
+            currentStats.winPercentage
+            || 0
+        );
+
+
+    const candidateWinPercentage =
+        Number(
+            candidateStats.winPercentage
+            || 0
+        );
+
+
+    if (
+        candidateWinPercentage
+        >
+        currentWinPercentage
+    ) {
+
+        return candidate;
+
+    }
+
+
+    if (
+        candidateWinPercentage
+        <
+        currentWinPercentage
+    ) {
+
+        return currentRecord;
+
+    }
+
+
+    const currentWins =
+        Number(
+            currentStats.gamesWon
+            || 0
+        );
+
+
+    const candidateWins =
+        Number(
+            candidateStats.gamesWon
+            || 0
+        );
+
+
+    if (
+        candidateWins
+        >
+        currentWins
+    ) {
+
+        return candidate;
+
+    }
+
+
+    if (
+        candidateWins
+        <
+        currentWins
+    ) {
+
+        return currentRecord;
+
+    }
+
+
+    const nameComparison =
+        String(
+            candidate.playerName
+            || ""
+        ).localeCompare(
+            String(
+                currentRecord.playerName
+                || ""
+            )
+        );
+
+
+    if (
+        nameComparison < 0
+    ) {
+
+        return candidate;
+
+    }
+
+
+    return currentRecord;
+
+}
+
+
+
+/* ============================================================
+   36. RENDER MONTHLY RECORDS
+============================================================ */
+
+function renderMonthlyRecords(
+    records
+) {
+
+    monthlyHistoryRecords.innerHTML =
+        "";
+
+
+    const recordCards = [
+
+        {
+
+            label:
+                "Highest Single Match",
+
+            record:
+                records.highestSingleMatch,
+
+            includeMatch:
+                true
+
+        },
+
+        {
+
+            label:
+                "Lowest Single Match",
+
+            record:
+                records.lowestSingleMatch,
+
+            includeMatch:
+                true
+
+        },
+
+        {
+
+            label:
+                "Highest Game Total",
+
+            record:
+                records.highestGameTotal,
+
+            includeMatch:
+                false
+
+        },
+
+        {
+
+            label:
+                "Lowest Game Total",
+
+            record:
+                records.lowestGameTotal,
+
+            includeMatch:
+                false
+
+        }
+
+    ];
+
+
+    recordCards.forEach(
+
+        (recordInfo) => {
+
+            monthlyHistoryRecords.appendChild(
+
+                createMonthlyRecordCard(
+                    recordInfo.label,
+                    recordInfo.record,
+                    recordInfo.includeMatch
+                )
+
+            );
+
+        }
+
+    );
+
+}
+
+
+
+/* ============================================================
+   37. CREATE RECORD CARD
+============================================================ */
+
+function createMonthlyRecordCard(
+    label,
+    record,
+    includeMatch
+) {
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        "monthly-history-record-card";
+
+
+    if (
+        !record
+    ) {
+
+        card.innerHTML = `
+
+            <span class="monthly-history-record-label">
+                ${escapeMonthlyHistoryHTML(label)}
+            </span>
+
+            <strong class="monthly-history-record-score">
+                —
+            </strong>
+
+            <div class="monthly-history-record-player">
+                No record yet
+            </div>
+
+        `;
+
+
+        return card;
+
+    }
+
+
+    const gameText =
+        `Game #${record.gameNumber}`;
+
+
+    const matchText =
+        includeMatch
+        &&
+        record.matchNumber !== null
+
+            ? ` • Match #${record.matchNumber}`
+
+            : "";
+
+
+    const dateText =
+        formatMonthlyRecordDate(
+            record.date
+        );
+
+
+    card.innerHTML = `
+
+        <span class="monthly-history-record-label">
+
+            ${escapeMonthlyHistoryHTML(
+                label
+            )}
+
+        </span>
+
+
+        <strong class="monthly-history-record-score">
+
+            ${record.score}
+
+        </strong>
+
+
+        <div class="monthly-history-record-player">
+
+            ${escapeMonthlyHistoryHTML(
+                record.playerName
+            )}
+
+        </div>
+
+
+        <div class="monthly-history-record-meta">
+
+            ${escapeMonthlyHistoryHTML(
+                gameText
+                +
+                matchText
+            )}
+
+            ${
+                dateText
+                    ? ` • ${escapeMonthlyHistoryHTML(
+                        dateText
+                    )}`
+                    : ""
+            }
+
+        </div>
+
+    `;
+
+
+    return card;
+
+}
+
+
+
+/* ============================================================
+   38. FORMAT RECORD DATE
+============================================================ */
+
+function formatMonthlyRecordDate(
+    timestamp
+) {
+
+    const numericTimestamp =
+        Number(
+            timestamp
+        );
+
+
+    if (
+        !numericTimestamp
+        ||
+        !Number.isFinite(
+            numericTimestamp
+        )
+    ) {
+
+        return "";
+
+    }
+
+
+    const date =
+        new Date(
+            numericTimestamp
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "";
+
+    }
+
+
+    return date.toLocaleDateString(
+
+        "en-GB",
+
+        {
+
+            day:
+                "2-digit",
+
+            month:
+                "short",
+
+            year:
+                "numeric"
+
+        }
+
+    );
+
+}
+
+/* ============================================================
+   39. RENDER MONTHLY COMPLETED GAMES
+============================================================ */
+
+function renderMonthlyGames(
+    completedGames,
+    monthId
+) {
+
+    monthlyHistoryGames.innerHTML =
+        "";
+
+
+    if (
+        completedGames.length === 0
+    ) {
+
+        monthlyHistoryGames.innerHTML = `
+
+            <div class="monthly-history-empty-list">
+
+                No completed games for this month.
+
+            </div>
+
+        `;
+
+
+        return;
+
+    }
+
+
+    /*
+       Newest / highest game number first.
+    */
+
+    const sortedGames =
+        [...completedGames]
+            .sort(
+
+                (gameA, gameB) => {
+
+                    const gameNumberA =
+                        Number(
+                            gameA.gameNumber || 0
+                        );
+
+
+                    const gameNumberB =
+                        Number(
+                            gameB.gameNumber || 0
+                        );
+
+
+                    if (
+                        gameNumberB
+                        !==
+                        gameNumberA
+                    ) {
+
+                        return (
+                            gameNumberB
+                            -
+                            gameNumberA
+                        );
+
+                    }
+
+
+                    return (
+
+                        Number(
+                            gameB.completedAt
+                            ||
+                            gameB.createdAt
+                            ||
+                            0
+                        )
+
+                        -
+
+                        Number(
+                            gameA.completedAt
+                            ||
+                            gameA.createdAt
+                            ||
+                            0
+                        )
+
+                    );
+
+                }
+
+            );
+
+
+    sortedGames.forEach(
+
+        (game) => {
+
+            monthlyHistoryGames.appendChild(
+
+                createMonthlyGameCard(
+                    game,
+                    monthId
+                )
+
+            );
+
+        }
+
+    );
+
+}
+
+
+
+/* ============================================================
+   40. CREATE MONTHLY GAME CARD
+============================================================ */
+
+function createMonthlyGameCard(
+    game,
+    monthId
+) {
+
+    const gamePlayers =
+        getGamePlayers(
+            game
+        );
+
+
+    const totals =
+        getGameTotalsForStandings(
+            game,
+            gamePlayers
+        );
+
+
+    const winnerIds =
+        getWinnerIdsForStandings(
+            game,
+            gamePlayers,
+            totals
+        );
+
+
+    const winnerNames =
+        gamePlayers
+            .filter(
+
+                (player) =>
+
+                    winnerIds.includes(
+                        player.id
+                    )
+
+            )
+            .map(
+                (player) =>
+                    player.name
+            );
+
+
+    const card =
+        document.createElement(
+            "a"
+        );
+
+
+    card.className =
+        "monthly-history-game-card";
+
+
+    card.href =
+        `game-details.html?month=${encodeURIComponent(
+            monthId
+        )}&game=${encodeURIComponent(
+            game.id
+        )}`;
+
+
+    const completedDate =
+        formatMonthlyGameDate(
+            game.completedAt
+            ||
+            game.createdAt
+        );
+
+
+    const playerScoresHTML =
+        gamePlayers
+            .map(
+
+                (player) => {
+
+                    const isWinner =
+                        winnerIds.includes(
+                            player.id
+                        );
+
+
+                    return `
+
+                        <div class="monthly-history-game-player">
+
+                            <span>
+
+                                ${isWinner ? "★ " : ""}
+
+                                ${escapeMonthlyHistoryHTML(
+                                    player.name
+                                )}
+
+                            </span>
+
+
+                            <strong>
+
+                                ${Number(
+                                    totals[player.id]
+                                    ||
+                                    0
+                                )}
+
+                            </strong>
+
+                        </div>
+
+                    `;
+
+                }
+
+            )
+            .join(
+                ""
+            );
+
+
+    card.innerHTML = `
+
+        <div class="monthly-history-game-top">
+
+            <div>
+
+                <span class="monthly-history-game-number">
+
+                    Game #${escapeMonthlyHistoryHTML(
+                        game.gameNumber
+                        ||
+                        "—"
+                    )}
+
+                </span>
+
+
+                <span class="monthly-history-game-date">
+
+                    ${escapeMonthlyHistoryHTML(
+                        completedDate
+                    )}
+
+                </span>
+
+            </div>
+
+
+            <span class="monthly-history-game-arrow">
+
+                ›
+
+            </span>
+
+        </div>
+
+
+        <div class="monthly-history-game-winner">
+
+            <span>
+                Winner${winnerNames.length > 1 ? "s" : ""}
+            </span>
+
+            <strong>
+
+                ${
+                    winnerNames.length > 0
+
+                        ? winnerNames
+                            .map(
+                                escapeMonthlyHistoryHTML
+                            )
+                            .join(
+                                " • "
+                            )
+
+                        : "—"
+                }
+
+            </strong>
+
+        </div>
+
+
+        <div class="monthly-history-game-players">
+
+            ${playerScoresHTML}
+
+        </div>
+
+    `;
+
+
+    return card;
+
+}
+
+
+
+/* ============================================================
+   41. FORMAT MONTHLY GAME DATE
+============================================================ */
+
+function formatMonthlyGameDate(
+    timestamp
+) {
+
+    const numericTimestamp =
+        Number(
+            timestamp
+        );
+
+
+    if (
+        !numericTimestamp
+        ||
+        !Number.isFinite(
+            numericTimestamp
+        )
+    ) {
+
+        return "Date unavailable";
+
+    }
+
+
+    const date =
+        new Date(
+            numericTimestamp
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "Date unavailable";
+
+    }
+
+
+    return date.toLocaleDateString(
+
+        "en-GB",
+
+        {
+
+            day:
+                "2-digit",
+
+            month:
+                "short",
+
+            year:
+                "numeric"
 
         }
 

@@ -1,0 +1,1794 @@
+/* ============================================================
+   FAMILY CARD LEAGUE
+   ADMIN PAGE
+
+   Step 11A-2
+
+   Sections:
+   01. Variables / Base
+   02. Header
+   03. Main Container
+   04. Cards / Headings
+   05. Login Form
+   06. Month Summary
+   07. Admin Actions
+   08. Finalized Months
+   09. Buttons
+   10. Bottom Navigation
+   11. Responsive
+============================================================ */
+
+
+/* ============================================================
+   01. VARIABLES / BASE
+============================================================ */
+
+:root {
+
+    --admin-bg:
+        #f5f6f8;
+
+    --admin-surface:
+        #ffffff;
+
+    --admin-surface-soft:
+        #f0f2f5;
+
+    --admin-text:
+        #16181d;
+
+    --admin-text-soft:
+        #6b7280;
+
+    --admin-border:
+        #e3e6eb;
+
+    --admin-accent:
+        #111827;
+
+    --admin-danger:
+        #b42318;
+
+    --admin-danger-soft:
+        #fef3f2;
+
+    --admin-radius:
+        18px;
+
+    --admin-radius-small:
+        12px;
+
+    --admin-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.06);
+
+}
+
+
+* {
+
+    box-sizing:
+        border-box;
+
+}
+
+
+body {
+
+    margin:
+        0;
+
+    background:
+        var(--admin-bg);
+
+    color:
+        var(--admin-text);
+
+}
+
+
+.hidden {
+
+    display:
+        none !important;
+
+}
+
+
+
+/* ============================================================
+   02. HEADER
+============================================================ */
+
+.admin-header {
+
+    background:
+        var(--admin-accent);
+
+    color:
+        #ffffff;
+
+    padding:
+        28px 18px 24px;
+
+}
+
+
+.admin-header-inner {
+
+    width:
+        min(100%, 980px);
+
+    margin:
+        0 auto;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        18px;
+
+}
+
+
+.admin-header-eyebrow {
+
+    display:
+        block;
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        1.8px;
+
+    opacity:
+        0.7;
+
+    margin-bottom:
+        7px;
+
+}
+
+
+.admin-header h1 {
+
+    margin:
+        0;
+
+    font-size:
+        31px;
+
+    line-height:
+        1.1;
+
+}
+
+
+.admin-header p {
+
+    margin:
+        8px 0 0;
+
+    font-size:
+        14px;
+
+    line-height:
+        1.45;
+
+    opacity:
+        0.78;
+
+}
+
+
+.admin-header-icon {
+
+    width:
+        48px;
+
+    height:
+        48px;
+
+    border-radius:
+        15px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    font-size:
+        23px;
+
+    background:
+        rgba(255, 255, 255, 0.11);
+
+    flex:
+        0 0 auto;
+
+}
+
+
+
+/* ============================================================
+   03. MAIN CONTAINER
+============================================================ */
+
+.admin-container {
+
+    width:
+        min(100%, 980px);
+
+    margin:
+        0 auto;
+
+    padding:
+        18px;
+
+}
+
+
+.bottom-spacing {
+
+    height:
+        110px;
+
+}
+
+
+
+/* ============================================================
+   04. CARDS / HEADINGS
+============================================================ */
+
+.admin-card {
+
+    background:
+        var(--admin-surface);
+
+    border:
+        1px solid var(--admin-border);
+
+    border-radius:
+        var(--admin-radius);
+
+    box-shadow:
+        var(--admin-shadow);
+
+    padding:
+        18px;
+
+    margin-bottom:
+        16px;
+
+}
+
+
+.admin-section-heading {
+
+    margin-bottom:
+        16px;
+
+}
+
+
+.admin-section-kicker {
+
+    display:
+        block;
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1.6px;
+
+    color:
+        var(--admin-text-soft);
+
+    margin-bottom:
+        5px;
+
+}
+
+
+.admin-section-heading h2 {
+
+    margin:
+        0;
+
+    font-size:
+        20px;
+
+    line-height:
+        1.2;
+
+}
+
+
+.admin-section-heading p {
+
+    margin:
+        7px 0 0;
+
+    color:
+        var(--admin-text-soft);
+
+    font-size:
+        13px;
+
+    line-height:
+        1.45;
+
+}
+
+
+
+/* ============================================================
+   05. LOGIN FORM
+============================================================ */
+
+.admin-login-form {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        12px;
+
+}
+
+
+.admin-label {
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+
+}
+
+
+.admin-input {
+
+    width:
+        100%;
+
+    height:
+        48px;
+
+    border:
+        1px solid var(--admin-border);
+
+    border-radius:
+        var(--admin-radius-small);
+
+    background:
+        #ffffff;
+
+    padding:
+        0 14px;
+
+    font-size:
+        15px;
+
+    color:
+        var(--admin-text);
+
+    outline:
+        none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+.admin-input:focus {
+
+    border-color:
+        #9ca3af;
+
+    box-shadow:
+        0 0 0 3px rgba(17, 24, 39, 0.08);
+
+}
+
+
+.admin-error {
+
+    margin:
+        0;
+
+    padding:
+        10px 12px;
+
+    border-radius:
+        10px;
+
+    background:
+        var(--admin-danger-soft);
+
+    color:
+        var(--admin-danger);
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+
+}
+
+
+
+/* ============================================================
+   06. MONTH SUMMARY
+============================================================ */
+
+.admin-month-summary {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap:
+        10px;
+
+}
+
+
+.admin-summary-item {
+
+    border:
+        1px solid var(--admin-border);
+
+    border-radius:
+        14px;
+
+    background:
+        var(--admin-surface-soft);
+
+    padding:
+        14px;
+
+    min-width:
+        0;
+
+}
+
+
+.admin-summary-item span {
+
+    display:
+        block;
+
+    font-size:
+        11px;
+
+    color:
+        var(--admin-text-soft);
+
+    margin-bottom:
+        6px;
+
+}
+
+
+.admin-summary-item strong {
+
+    display:
+        block;
+
+    font-size:
+        16px;
+
+    line-height:
+        1.25;
+
+    overflow-wrap:
+        anywhere;
+
+}
+
+
+
+/* ============================================================
+   07. ADMIN ACTIONS
+============================================================ */
+
+.admin-action-list {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        10px;
+
+}
+
+
+.admin-action-button,
+.admin-action-link {
+
+    width:
+        100%;
+
+    min-height:
+        68px;
+
+    border:
+        1px solid var(--admin-border);
+
+    border-radius:
+        14px;
+
+    background:
+        #ffffff;
+
+    padding:
+        13px 14px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        14px;
+
+    color:
+        var(--admin-text);
+
+    text-align:
+        left;
+
+    text-decoration:
+        none;
+
+    cursor:
+        pointer;
+
+    transition:
+        transform 0.15s ease,
+        background 0.15s ease,
+        border-color 0.15s ease;
+
+}
+
+
+.admin-action-button:hover,
+.admin-action-link:hover {
+
+    background:
+        #fafafa;
+
+    border-color:
+        #d2d6dc;
+
+}
+
+
+.admin-action-button:active,
+.admin-action-link:active {
+
+    transform:
+        scale(0.99);
+
+}
+
+
+.admin-action-button > span:first-child,
+.admin-action-link > span:first-child {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        4px;
+
+    min-width:
+        0;
+
+}
+
+
+.admin-action-button strong,
+.admin-action-link strong {
+
+    font-size:
+        14px;
+
+    line-height:
+        1.3;
+
+}
+
+
+.admin-action-button small,
+.admin-action-link small {
+
+    font-size:
+        12px;
+
+    color:
+        var(--admin-text-soft);
+
+    line-height:
+        1.4;
+
+}
+
+
+.admin-action-button > span:last-child,
+.admin-action-link > span:last-child {
+
+    font-size:
+        20px;
+
+    color:
+        var(--admin-text-soft);
+
+    flex:
+        0 0 auto;
+
+}
+
+
+
+/* ============================================================
+   08. FINALIZED MONTHS
+============================================================ */
+
+.admin-finalized-months {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        10px;
+
+}
+
+
+.admin-empty-state {
+
+    border:
+        1px dashed var(--admin-border);
+
+    border-radius:
+        14px;
+
+    padding:
+        18px 14px;
+
+    color:
+        var(--admin-text-soft);
+
+    font-size:
+        13px;
+
+    text-align:
+        center;
+
+}
+
+
+
+/* ============================================================
+   09. BUTTONS
+============================================================ */
+
+.admin-primary-button {
+
+    border:
+        none;
+
+    border-radius:
+        13px;
+
+    min-height:
+        48px;
+
+    padding:
+        0 16px;
+
+    background:
+        var(--admin-accent);
+
+    color:
+        #ffffff;
+
+    font-size:
+        14px;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+
+}
+
+
+.admin-primary-button:active {
+
+    transform:
+        scale(0.99);
+
+}
+
+
+.admin-secondary-button {
+
+    width:
+        100%;
+
+    min-height:
+        46px;
+
+    border:
+        1px solid var(--admin-border);
+
+    border-radius:
+        13px;
+
+    background:
+        #ffffff;
+
+    color:
+        var(--admin-text);
+
+    font-size:
+        14px;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+
+}
+
+
+.admin-secondary-button:hover {
+
+    background:
+        var(--admin-surface-soft);
+
+}
+
+
+
+/* ============================================================
+   10. BOTTOM NAVIGATION
+============================================================ */
+
+.bottom-nav {
+
+    position:
+        fixed;
+
+    left:
+        0;
+
+    right:
+        0;
+
+    bottom:
+        0;
+
+    z-index:
+        50;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    background:
+        rgba(255, 255, 255, 0.97);
+
+    border-top:
+        1px solid var(--admin-border);
+
+    backdrop-filter:
+        blur(10px);
+
+    padding:
+        7px 5px max(7px, env(safe-area-inset-bottom));
+
+}
+
+
+.bottom-nav-item {
+
+    min-height:
+        52px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        3px;
+
+    color:
+        #777d86;
+
+    text-decoration:
+        none;
+
+    border-radius:
+        11px;
+
+}
+
+
+.bottom-nav-item span {
+
+    font-size:
+        18px;
+
+    line-height:
+        1;
+
+}
+
+
+.bottom-nav-item small {
+
+    font-size:
+        10px;
+
+    font-weight:
+        700;
+
+}
+
+
+.bottom-nav-item.active {
+
+    color:
+        var(--admin-text);
+
+    background:
+        #f2f3f5;
+
+}
+
+
+
+/* ============================================================
+   11. RESPONSIVE
+============================================================ */
+
+@media (min-width: 650px) {
+
+    .admin-header {
+
+        padding:
+            36px 24px 30px;
+
+    }
+
+
+    .admin-header h1 {
+
+        font-size:
+            38px;
+
+    }
+
+
+    .admin-container {
+
+        padding:
+            24px;
+
+    }
+
+
+    .admin-card {
+
+        padding:
+            22px;
+
+    }
+
+
+    .admin-month-summary {
+
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+
+    }
+
+
+    .admin-login-form {
+
+        max-width:
+            480px;
+
+    }
+
+}
+
+/* ============================================================
+   ACTIVE GAME MANAGEMENT
+============================================================ */
+
+.admin-game-management {
+    margin-top: 20px;
+}
+
+.admin-game-management-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+
+.admin-game-management-heading strong {
+    font-size: 15px;
+}
+
+.admin-game-management-heading small {
+    opacity: 0.65;
+    line-height: 1.4;
+}
+
+.admin-active-games-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-active-game-card {
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.admin-active-game-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.admin-active-game-top > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.admin-active-game-number {
+    font-size: 16px;
+}
+
+.admin-active-game-top small {
+    opacity: 0.65;
+}
+
+.admin-active-game-status {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 5px 8px;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+}
+
+.admin-active-game-players {
+    margin-top: 14px;
+    font-size: 14px;
+    line-height: 1.5;
+    opacity: 0.85;
+}
+
+.admin-active-game-continue {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 14px;
+    min-height: 42px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+/* ============================================================
+   ACTIVE GAME ACTIONS
+============================================================ */
+
+.admin-active-game-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.admin-active-game-actions .admin-active-game-continue {
+    margin-top: 0;
+}
+
+.admin-active-game-cancel {
+    min-height: 42px;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 90, 90, 0.45);
+    background: rgba(255, 90, 90, 0.08);
+    color: inherit;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.admin-active-game-cancel:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* ============================================================
+   COMPLETED GAME MANAGEMENT
+============================================================ */
+
+.admin-completed-games-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+.admin-completed-game-card {
+    padding: 16px;
+    border: 1px solid var(--admin-border);
+    border-radius: 14px;
+    background: var(--admin-surface-soft);
+}
+
+
+.admin-completed-game-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+
+.admin-completed-game-top > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+
+.admin-completed-game-number {
+    font-size: 16px;
+}
+
+
+.admin-completed-game-top small {
+    color: var(--admin-text-soft);
+    font-size: 12px;
+}
+
+
+.admin-completed-game-status {
+    flex-shrink: 0;
+    padding: 5px 8px;
+    border: 1px solid var(--admin-border);
+    border-radius: 999px;
+    background: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+
+.admin-completed-winner {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 14px;
+    padding: 11px 12px;
+    border-radius: 10px;
+    background: #ffffff;
+    border: 1px solid var(--admin-border);
+}
+
+
+.admin-completed-winner span {
+    color: var(--admin-text-soft);
+    font-size: 11px;
+}
+
+
+.admin-completed-winner strong {
+    font-size: 14px;
+}
+
+
+.admin-completed-player-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 12px;
+}
+
+
+.admin-completed-player-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 13px;
+}
+
+
+.admin-completed-player-row strong {
+    font-size: 14px;
+}
+
+
+.admin-completed-game-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 42px;
+    margin-top: 14px;
+    border: 1px solid var(--admin-border);
+    border-radius: 10px;
+    background: #ffffff;
+    color: var(--admin-text);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+/* ============================================================
+   COMPLETED GAME ACTIONS
+============================================================ */
+
+.admin-completed-game-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+
+.admin-completed-game-actions .admin-completed-game-view {
+    margin-top: 0;
+}
+
+
+.admin-completed-game-cancel {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid rgba(180, 35, 24, 0.3);
+    border-radius: 10px;
+    background: var(--admin-danger-soft);
+    color: var(--admin-danger);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+
+.admin-completed-game-cancel:hover {
+    border-color: rgba(180, 35, 24, 0.5);
+}
+
+
+.admin-completed-game-cancel:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================================
+   COMPLETED GAME SCORE EDITOR
+============================================================ */
+
+.admin-completed-game-edit {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid var(--admin-border);
+    border-radius: 10px;
+    background: #ffffff;
+    color: var(--admin-text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+
+.admin-completed-game-edit:hover {
+    background: var(--admin-surface-soft);
+}
+
+
+.admin-game-editor-players {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+
+.admin-game-editor-player {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    padding: 10px;
+    border: 1px solid var(--admin-border);
+    border-radius: 10px;
+    background: var(--admin-surface-soft);
+}
+
+
+.admin-game-editor-player strong {
+    min-width: 0;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+
+.admin-game-editor-seat {
+    width: 24px;
+    height: 24px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--admin-accent);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+
+.admin-game-editor-matches {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+.admin-game-editor-match {
+    padding: 14px;
+    border: 1px solid var(--admin-border);
+    border-radius: 14px;
+    background: var(--admin-surface-soft);
+}
+
+
+.admin-game-editor-match-title {
+    margin-bottom: 11px;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+
+.admin-game-editor-score-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+
+.admin-game-editor-score {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+
+.admin-game-editor-score span {
+    color: var(--admin-text-soft);
+    font-size: 11px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+
+.admin-game-editor-score-input {
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    padding: 0 10px;
+    border: 1px solid var(--admin-border);
+    border-radius: 9px;
+    background: #ffffff;
+    color: var(--admin-text);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+}
+
+
+.admin-game-editor-score-input:focus {
+    outline: none;
+    border-color: #9ca3af;
+    box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+}
+
+
+.admin-game-editor-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+
+@media (min-width: 650px) {
+
+    .admin-game-editor-players {
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+    }
+
+
+    .admin-game-editor-score-grid {
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+    }
+
+}
+
+/* ============================================================
+   HISTORICAL MONTH MANAGEMENT
+============================================================ */
+
+.admin-historical-month {
+    padding: 15px;
+    border: 1px solid var(--admin-border);
+    border-radius: 14px;
+    background: var(--admin-surface-soft);
+}
+
+
+.admin-historical-month + .admin-historical-month {
+    margin-top: 10px;
+}
+
+
+.admin-historical-month-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+
+.admin-historical-month-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+
+.admin-historical-month-info strong {
+    font-size: 15px;
+}
+
+
+.admin-historical-month-info small {
+    color: var(--admin-text-soft);
+    font-size: 12px;
+}
+
+
+.admin-historical-status {
+    flex-shrink: 0;
+    padding: 5px 8px;
+    border: 1px solid var(--admin-border);
+    border-radius: 999px;
+    background: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+}
+
+
+.admin-historical-status-reopened {
+    border-color: rgba(180, 110, 0, 0.3);
+    background: rgba(245, 158, 11, 0.08);
+}
+
+
+.admin-historical-month-actions {
+    margin-top: 12px;
+}
+
+
+.admin-historical-reopen-button {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid var(--admin-border);
+    border-radius: 10px;
+    background: #ffffff;
+    color: var(--admin-text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+
+.admin-historical-reopen-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+.admin-historical-reopened-note {
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(245, 158, 11, 0.08);
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* ============================================================
+   HISTORICAL MONTH CORRECTION PANEL
+============================================================ */
+
+.admin-historical-manage-button {
+    width: 100%;
+    min-height: 42px;
+    margin-top: 8px;
+    border: 1px solid var(--admin-border);
+    border-radius: 10px;
+    background: #ffffff;
+    color: var(--admin-text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+
+.admin-historical-manage-button:hover {
+    background: var(--admin-surface-soft);
+}
+
+
+.admin-historical-correction-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+
+.admin-historical-cancelled-games-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.admin-historical-cancelled-game {
+    padding: 14px;
+    border: 1px solid var(--admin-border);
+    border-radius: 12px;
+    background: var(--admin-surface-soft);
+}
+
+
+.admin-historical-cancelled-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+
+.admin-historical-cancelled-top strong {
+    font-size: 14px;
+}
+
+
+.admin-historical-cancelled-top span {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+}
+
+
+.admin-historical-cancelled-players {
+    margin-top: 8px;
+    color: var(--admin-text-soft);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
+@media (max-width: 480px) {
+
+    .admin-historical-correction-summary {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+/* ============================================================
+   HISTORICAL COMPLETED GAME EDIT
+============================================================ */
+
+.admin-historical-game-edit {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid var(--admin-border);
+    border-radius: 10px;
+    background: #ffffff;
+    color: var(--admin-text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+
+.admin-historical-game-edit:hover {
+    background: var(--admin-surface-soft);
+}
+
+/* ============================================================
+   HISTORICAL RE-FINALIZATION
+============================================================ */
+
+.admin-historical-correction-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+/* ============================================================
+   PLAYER MANAGEMENT
+   Step 11G-1
+============================================================ */
+
+.admin-player-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 22px;
+}
+
+.admin-player-management-block {
+    margin-top: 20px;
+}
+
+.admin-player-add-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.admin-player-add-row .admin-primary-button {
+    width: auto;
+    min-width: 110px;
+}
+
+.admin-players-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.admin-player-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px;
+    border: 1px solid var(--admin-border);
+    border-radius: 12px;
+    background: #ffffff;
+}
+
+.admin-player-row-main {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+}
+
+.admin-player-avatar {
+    display: grid;
+    place-items: center;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--admin-surface-soft);
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.admin-player-info {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+}
+
+.admin-player-info strong {
+    overflow: hidden;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-player-info small {
+    color: var(--admin-muted);
+    font-size: 11px;
+}
+
+.admin-player-status {
+    flex: 0 0 auto;
+    padding: 6px 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+}
+
+.admin-player-status-active {
+    background: rgba(34, 197, 94, 0.12);
+    color: #15803d;
+}
+
+.admin-player-status-inactive {
+    background: rgba(100, 116, 139, 0.12);
+    color: #64748b;
+}
+
+@media (max-width: 520px) {
+
+    .admin-player-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-player-add-row {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-player-add-row .admin-primary-button {
+        width: 100%;
+    }
+
+}
+
+/* ============================================================
+   PLAYER NAME EDITING
+   Step 11G-3
+============================================================ */
+
+.admin-player-row-side {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+}
+
+
+.admin-player-edit-button {
+    min-height: 34px;
+    padding: 0 10px;
+
+    border:
+        1px solid var(--admin-border);
+
+    border-radius:
+        9px;
+
+    background:
+        #ffffff;
+
+    color:
+        var(--admin-text);
+
+    font: inherit;
+
+    font-size:
+        11px;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+}
+
+
+.admin-player-edit-button:hover {
+    background:
+        var(--admin-surface-soft);
+}
+
+
+.admin-player-edit-button:disabled {
+    opacity:
+        0.5;
+
+    cursor:
+        not-allowed;
+}
+
+
+@media (max-width: 520px) {
+
+    .admin-player-row {
+        align-items:
+            flex-start;
+    }
+
+
+    .admin-player-row-side {
+        flex-direction:
+            column;
+
+        align-items:
+            flex-end;
+    }
+
+}

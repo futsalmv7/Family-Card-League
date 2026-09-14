@@ -27,11 +27,7 @@ from "../firebase-config.js";
 
 import {
     ref,
-    push,
-    set,
-    update,
-    onValue,
-    get
+    onValue
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
 
@@ -39,22 +35,6 @@ from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
 /* ============================================================
    02. DOM REFERENCES
 ============================================================ */
-
-const addPlayerForm =
-    document.getElementById("addPlayerForm");
-
-
-const playerNameInput =
-    document.getElementById("playerNameInput");
-
-
-const addPlayerButton =
-    document.getElementById("addPlayerButton");
-
-
-const formMessage =
-    document.getElementById("formMessage");
-
 
 const playersList =
     document.getElementById("playersList");
@@ -273,178 +253,29 @@ renderMonthlyPlayerStats();
         );
 
 
-        showMessage(
-            "Could not load players. Check your Firebase connection.",
-            "error"
-        );
+        playersEmptyState.classList.remove(
+    "hidden"
+);
+
+
+playersEmptyState.innerHTML =
+    `
+        <div class="players-empty-icon">
+            !
+        </div>
+
+        <strong>
+            Unable to load players
+        </strong>
+
+        <p>
+            Please check the connection and try again.
+        </p>
+    `;
 
     }
 
 );
-
-
-
-/* ============================================================
-   06. ADD PLAYER FORM
-============================================================ */
-
-addPlayerForm.addEventListener(
-
-    "submit",
-
-    async (event) => {
-
-        event.preventDefault();
-
-
-        clearMessage();
-
-
-        const playerName =
-            cleanPlayerName(
-                playerNameInput.value
-            );
-
-
-        /* --------------------------------------------
-           Basic validation
-        --------------------------------------------- */
-
-        if (!playerName) {
-
-            showMessage(
-                "Please enter a player name.",
-                "error"
-            );
-
-            return;
-
-        }
-
-
-        if (playerName.length < 2) {
-
-            showMessage(
-                "Player name must contain at least 2 characters.",
-                "error"
-            );
-
-            return;
-
-        }
-
-
-        /* --------------------------------------------
-           Duplicate player check
-
-           Comparison is case-insensitive.
-
-           Hassan and HASSAN cannot both be created.
-        --------------------------------------------- */
-
-        const duplicatePlayer =
-            currentPlayers.find(
-
-                (player) =>
-
-                    normalizeName(player.name)
-                    ===
-                    normalizeName(playerName)
-
-            );
-
-
-        if (duplicatePlayer) {
-
-            showMessage(
-                `${duplicatePlayer.name} already exists.`,
-                "error"
-            );
-
-            return;
-
-        }
-
-
-        /* --------------------------------------------
-           Save player
-        --------------------------------------------- */
-
-        try {
-
-            setFormBusy(true);
-
-
-            const newPlayerRef =
-                push(playersRef);
-
-
-            const now =
-                Date.now();
-
-
-            const newPlayer = {
-
-                name:
-                    playerName,
-
-                active:
-                    true,
-
-                createdAt:
-                    now,
-
-                updatedAt:
-                    now
-
-            };
-
-
-            await set(
-                newPlayerRef,
-                newPlayer
-            );
-
-
-            playerNameInput.value =
-                "";
-
-
-            showMessage(
-                `${playerName} added successfully.`,
-                "success"
-            );
-
-
-            playerNameInput.focus();
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "Error adding player:",
-                error
-            );
-
-
-            showMessage(
-                "Player could not be added.",
-                "error"
-            );
-
-        }
-
-        finally {
-
-            setFormBusy(false);
-
-        }
-
-    }
-
-);
-
 
 
 /* ============================================================
@@ -666,57 +497,6 @@ row.setAttribute(
         meta
     );
 
-
-
-    /* --------------------------------------------
-       Action Button
-    --------------------------------------------- */
-
-    const actions =
-        document.createElement("div");
-
-
-    actions.className =
-        "player-actions";
-
-
-    const statusButton =
-        document.createElement("button");
-
-
-    statusButton.type =
-        "button";
-
-
-    statusButton.className =
-        player.active
-            ? "player-action-button deactivate"
-            : "player-action-button activate";
-
-
-    statusButton.textContent =
-        player.active
-            ? "Deactivate"
-            : "Activate";
-
-
-    statusButton.addEventListener(
-
-        "click",
-
-        () => {
-
-            togglePlayerStatus(player);
-
-        }
-
-    );
-
-
-    actions.appendChild(
-        statusButton
-    );
-
 /* --------------------------------------------
    Open Player Profile
 --------------------------------------------- */
@@ -731,23 +511,7 @@ row.addEventListener(
 
     "click",
 
-    (event) => {
-
-        /*
-           If the user clicked the Activate /
-           Deactivate button, do not open profile.
-        */
-
-        if (
-            event.target.closest(
-                ".player-action-button"
-            )
-        ) {
-
-            return;
-
-        }
-
+    () => {
 
         window.location.href =
             profileLink;
@@ -768,17 +532,6 @@ row.addEventListener(
             ||
             event.key === " "
         ) {
-
-            if (
-                event.target.closest(
-                    ".player-action-button"
-                )
-            ) {
-
-                return;
-
-            }
-
 
             event.preventDefault();
 
@@ -806,95 +559,9 @@ row.addEventListener(
     );
 
 
-    row.appendChild(
-        actions
-    );
-
-
     return row;
 
 }
-
-
-
-/* ============================================================
-   10. ACTIVATE / DEACTIVATE PLAYER
-============================================================ */
-
-async function togglePlayerStatus(player) {
-
-    const newStatus =
-        !player.active;
-
-
-    const actionWord =
-        newStatus
-            ? "activate"
-            : "deactivate";
-
-
-    const confirmed =
-        window.confirm(
-            `Do you want to ${actionWord} ${player.name}?`
-        );
-
-
-    if (!confirmed) {
-        return;
-    }
-
-
-    try {
-
-        const playerRef =
-            ref(
-                database,
-                `players/${player.id}`
-            );
-
-
-        await update(
-
-            playerRef,
-
-            {
-
-                active:
-                    newStatus,
-
-                updatedAt:
-                    Date.now()
-
-            }
-
-        );
-
-
-        showMessage(
-            `${player.name} is now ${newStatus ? "active" : "inactive"}.`,
-            "success"
-        );
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Unable to change player status:",
-            error
-        );
-
-
-        showMessage(
-            "Player status could not be changed.",
-            "error"
-        );
-
-    }
-
-}
-
-
 
 /* ============================================================
    11. PLAYER SUMMARY
@@ -954,14 +621,6 @@ function cleanPlayerName(name) {
 /* ============================================================
    13. NORMALIZE NAME FOR DUPLICATE CHECK
 ============================================================ */
-
-function normalizeName(name) {
-
-    return cleanPlayerName(name)
-        .toLocaleLowerCase();
-
-}
-
 
 
 /* ============================================================
@@ -1032,62 +691,6 @@ function formatDate(timestamp) {
         }
 
     );
-
-}
-
-
-
-/* ============================================================
-   16. FORM BUSY STATE
-============================================================ */
-
-function setFormBusy(isBusy) {
-
-    addPlayerButton.disabled =
-        isBusy;
-
-
-    playerNameInput.disabled =
-        isBusy;
-
-
-    addPlayerButton.textContent =
-        isBusy
-            ? "Adding..."
-            : "Add Player";
-
-}
-
-
-
-/* ============================================================
-   17. FORM MESSAGES
-============================================================ */
-
-function showMessage(
-    message,
-    type
-) {
-
-    formMessage.textContent =
-        message;
-
-
-    formMessage.className =
-        `form-message ${type}`;
-
-}
-
-
-
-function clearMessage() {
-
-    formMessage.textContent =
-        "";
-
-
-    formMessage.className =
-        "form-message";
 
 }
 
