@@ -451,7 +451,7 @@
     grid-template-columns:
         42px
         minmax(0, 1fr)
-        105px;
+        150px;
 
     align-items: center;
 
@@ -1139,7 +1139,7 @@
         grid-template-columns:
             34px
             minmax(0, 1fr)
-            88px;
+            135px;
 
         gap: 7px;
 
@@ -1245,4 +1245,9 @@
     background: #fee2e2;
     border-color: #ef4444;
     color: #b91c1c;
+}
+
+.score-input-group .score-input {
+    min-width: 0;
+    flex: 1;
 }
