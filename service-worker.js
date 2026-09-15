@@ -6,7 +6,7 @@
 ============================================================ */
 
 const CACHE_NAME =
-    "family-card-league-v1";
+    "family-card-league-v2";
 
 
 /*

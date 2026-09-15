@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- =========================================================
+         BASIC SETTINGS
+    ========================================================== -->
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#111827"
+    >
+
+    <title>Live Game | Family Card League</title>
+
+
+    <!-- =========================================================
+         FONT
+    ========================================================== -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =========================================================
+         SHARED CSS
+    ========================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="../style.css"
+    >
+
+
+    <!-- =========================================================
+         LIVE GAME CSS
+    ========================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="live-game.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <header class="live-header">
+
+        <div class="live-header-inner">
+
+            <a
+                href="../index.html"
+                class="live-back-link"
+            >
+                ← Dashboard
+            </a>
+
+
+            <div class="live-header-content">
+
+                <div>
+
+                    <div class="live-eyebrow">
+                        LIVE GAME
+                    </div>
+
+                    <h1 id="gameTitle">
+                        Loading...
+                    </h1>
+
+                    <p id="gameMonth">
+                        —
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="live-status-badge"
+                    id="gameStatusBadge"
+                >
+                    ACTIVE
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         MAIN CONTENT
+    ========================================================== -->
+
+    <main class="main-container live-container">
+
+
+        <!-- =====================================================
+             LOADING
+        ====================================================== -->
+
+        <section
+            class="live-state-card"
+            id="loadingState"
+        >
+
+            <div class="live-state-icon">
+                ♠
+            </div>
+
+            <strong>
+                Loading game...
+            </strong>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             ERROR
+        ====================================================== -->
+
+        <section
+            class="live-state-card hidden"
+            id="errorState"
+        >
+
+            <div class="live-state-icon">
+                !
+            </div>
+
+            <strong>
+                Game could not be loaded
+            </strong>
+
+            <p id="errorMessage">
+                Please return to the dashboard.
+            </p>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             ACTIVE GAME AREA
+        ====================================================== -->
+
+        <div
+            class="hidden"
+            id="activeGameContent"
+        >
+
+
+            <!-- =================================================
+                 MATCH PROGRESS
+            ================================================== -->
+
+            <section class="match-progress-card">
+
+                <div>
+
+                    <span class="progress-label">
+                        CURRENT MATCH
+                    </span>
+
+                    <strong id="currentMatchLabel">
+                        Match 1 of 10
+                    </strong>
+
+                </div>
+
+
+                <div class="progress-number">
+
+                    <span id="completedMatchesNumber">
+                        0
+                    </span>
+
+                    <small>
+                        / 10
+                    </small>
+
+                </div>
+
+
+                <div class="progress-track">
+
+                    <div
+                        class="progress-fill"
+                        id="progressFill"
+                    ></div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 SCORE ENTRY
+            ================================================== -->
+
+            <section
+                class="live-card"
+                id="scoreEntryCard"
+            >
+
+                <div class="live-section-heading">
+
+                    <div>
+
+                        <span class="live-section-kicker">
+                            ENTER SCORES
+                        </span>
+
+                        <h2 id="scoreEntryTitle">
+                            Match 1
+                        </h2>
+
+                        <p>
+    Positive, negative and zero scores are allowed. Whole numbers only.
+</p>
+
+                    </div>
+
+                </div>
+
+
+                <form id="scoreForm">
+
+                    <div
+                        class="score-entry-list"
+                        id="scoreEntryList"
+                    >
+                        <!-- Created by JavaScript -->
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="save-match-button"
+                        id="saveMatchButton"
+                    >
+                        Save Match
+                    </button>
+
+
+                    <div
+                        class="score-message"
+                        id="scoreMessage"
+                    ></div>
+
+                </form>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 RUNNING GAME TOTALS
+            ================================================== -->
+
+            <section class="live-card">
+
+                <div class="live-section-heading">
+
+                    <div>
+
+                        <span class="live-section-kicker">
+                            LIVE STANDINGS
+                        </span>
+
+                        <h2>
+                            Game Totals
+                        </h2>
+
+                        <p>
+                            Running total from all saved matches in this game.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="totals-list"
+                    id="totalsList"
+                >
+                    <!-- Created by JS -->
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 MATCH HISTORY
+            ================================================== -->
+
+            <section class="live-card">
+
+                <div class="live-section-heading">
+
+                    <div>
+
+                        <span class="live-section-kicker">
+                            THIS GAME
+                        </span>
+
+                        <h2>
+                            Match History
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="no-match-history"
+                    id="noMatchHistory"
+                >
+                    No matches saved yet.
+                </div>
+
+
+                <div
+                    class="match-history-wrapper hidden"
+                    id="matchHistoryWrapper"
+                >
+
+                    <table class="match-history-table">
+
+                        <thead id="matchHistoryHead">
+                        </thead>
+
+                        <tbody id="matchHistoryBody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             COMPLETED GAME
+        ====================================================== -->
+
+        <section
+            class="completed-game-card hidden"
+            id="completedGameCard"
+        >
+
+            <div class="completed-icon">
+                🏆
+            </div>
+
+            <span class="completed-kicker">
+                GAME COMPLETED
+            </span>
+
+            <h2 id="completedGameTitle">
+                Game #1
+            </h2>
+
+
+            <div class="winner-area">
+
+                <span>
+                    Winner
+                </span>
+
+                <strong id="winnerNames">
+                    —
+                </strong>
+
+                <small id="winnerScore">
+                    —
+                </small>
+
+            </div>
+
+
+            <div
+                class="final-results"
+                id="finalResults"
+            >
+                <!-- JS -->
+            </div>
+
+
+            <a
+                href="../index.html"
+                class="completed-dashboard-button"
+            >
+                Return to Dashboard
+            </a>
+
+        </section>
+
+
+
+        <div class="bottom-spacing"></div>
+
+    </main>
+
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script
+        type="module"
+        src="live-game.js"
+    ></script>
+
+</body>
+
+</html>
