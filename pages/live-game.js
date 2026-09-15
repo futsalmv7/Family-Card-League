@@ -538,17 +538,30 @@ function renderScoreInputs(
 
                 </div>
 
-                <input
-    class="score-input"
-    type="number"
-    step="1"
-    inputmode="numeric"
-                    id="score-${player.id}"
-                    data-player-id="${player.id}"
-                    placeholder="0"
-                    aria-label="${escapeHTML(player.name)} score"
-                    required
-                >
+                <div class="score-input-group">
+
+    <button
+        type="button"
+        class="score-sign-button"
+        data-score-input="score-${player.id}"
+        aria-label="Toggle negative score for ${escapeHTML(player.name)}"
+    >
+        −
+    </button>
+
+    <input
+        class="score-input"
+        type="number"
+        step="1"
+        inputmode="numeric"
+        id="score-${player.id}"
+        data-player-id="${player.id}"
+        placeholder="0"
+        aria-label="${escapeHTML(player.name)} score"
+        required
+    >
+
+</div>
 
             `;
 
@@ -560,6 +573,101 @@ function renderScoreInputs(
         }
 
     );
+
+           /*
+       Negative / positive score toggle buttons.
+
+       Enter the score first, then tap the − button
+       to change between positive and negative.
+    */
+
+    scoreEntryList
+        .querySelectorAll(
+            ".score-sign-button"
+        )
+        .forEach(
+
+            (button) => {
+
+                button.addEventListener(
+
+                    "click",
+
+                    () => {
+
+                        const input =
+                            document.getElementById(
+                                button.dataset.scoreInput
+                            );
+
+
+                        if (!input) {
+                            return;
+                        }
+
+
+                        const rawValue =
+                            input.value.trim();
+
+
+                        if (rawValue === "") {
+
+                            input.focus();
+
+                            return;
+
+                        }
+
+
+                        const score =
+                            Number(rawValue);
+
+
+                        if (
+                            !Number.isFinite(score)
+                        ) {
+
+                            input.focus();
+
+                            return;
+
+                        }
+
+
+                        if (score < 0) {
+
+                            input.value =
+                                Math.abs(score);
+
+
+                            button.classList.remove(
+                                "negative"
+                            );
+
+                        }
+
+                        else if (score > 0) {
+
+                            input.value =
+                                -score;
+
+
+                            button.classList.add(
+                                "negative"
+                            );
+
+                        }
+
+
+                        input.focus();
+
+                    }
+
+                );
+
+            }
+
+        );
 
 
     saveMatchButton.textContent =

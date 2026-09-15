@@ -1200,3 +1200,49 @@
     }
 
 }
+
+/* ============================================================
+   SCORE SIGN TOGGLE
+============================================================ */
+
+.score-input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+.score-sign-button {
+    width: 44px;
+    height: 44px;
+
+    flex: 0 0 44px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+
+    background: #f3f4f6;
+    color: #111827;
+
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.score-sign-button:active {
+    transform: scale(0.96);
+}
+
+
+.score-sign-button.negative {
+    background: #fee2e2;
+    border-color: #ef4444;
+    color: #b91c1c;
+}
