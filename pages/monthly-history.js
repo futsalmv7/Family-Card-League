@@ -1108,23 +1108,105 @@ function normalizeFinalizedMonthlyStandings(
                 ),
 
             totalPoints:
-                Number(
-                    player.totalPoints
-                    ??
-                    player.points
-                    ??
-                    0
-                ),
+    Number(
+        player.totalPoints
+        ??
+        player.points
+        ??
+        0
+    ),
 
-            rank:
-                Number(
-                    player.rank
-                    ||
-                    0
-                )
+averagePoints:
+    getFinalizedAveragePoints(
+        player
+    ),
+
+rank:
+    Number(
+        player.rank
+        ||
+        0
+    )
 
         })
 
+    );
+
+}
+
+/* ============================================================
+   FINALIZED SNAPSHOT AVERAGE POINTS
+
+   New finalized snapshots may store averagePoints directly.
+
+   Older snapshots may not contain averagePoints.
+   For those snapshots, Average Points can safely be derived
+   from the already-frozen Total Points and Games Played.
+
+   This does NOT recalculate the month from raw games and
+   does NOT change the saved frozen rank.
+============================================================ */
+
+function getFinalizedAveragePoints(
+    player
+) {
+
+    const savedAverage =
+        Number(
+            player.averagePoints
+        );
+
+
+    if (
+        Number.isFinite(
+            savedAverage
+        )
+        &&
+        player.averagePoints
+        !==
+        undefined
+        &&
+        player.averagePoints
+        !==
+        null
+    ) {
+
+        return savedAverage;
+
+    }
+
+
+    const totalPoints =
+        Number(
+            player.totalPoints
+            ??
+            player.points
+            ??
+            0
+        );
+
+
+    const gamesPlayed =
+        Number(
+            player.gamesPlayed
+            ??
+            0
+        );
+
+
+    if (
+        gamesPlayed <= 0
+    ) {
+
+        return 0;
+
+    }
+
+
+    return (
+        totalPoints
+        /
+        gamesPlayed
     );
 
 }
@@ -1459,13 +1541,16 @@ function buildMonthlyStandings(
                                     0,
 
                                 totalPoints:
-                                    0,
+    0,
 
-                                winPercentage:
-                                    0,
+averagePoints:
+    0,
 
-                                rank:
-                                    null
+winPercentage:
+    0,
+
+rank:
+    null
 
                             }
 
@@ -1521,22 +1606,43 @@ function buildMonthlyStandings(
 
     standings.forEach(
 
-        (player) => {
+    (player) => {
+
+        if (
+            player.gamesPlayed > 0
+        ) {
+
+            player.averagePoints =
+                player.totalPoints
+                /
+                player.gamesPlayed;
+
 
             player.winPercentage =
-                player.gamesPlayed > 0
-                    ? (
-                        player.gamesWon
-                        /
-                        player.gamesPlayed
-                        *
-                        100
-                    )
-                    : 0;
+                (
+                    player.gamesWon
+                    /
+                    player.gamesPlayed
+                    *
+                    100
+                );
 
         }
 
-    );
+        else {
+
+            player.averagePoints =
+                0;
+
+
+            player.winPercentage =
+                0;
+
+        }
+
+    }
+
+);
 
 
     standings.sort(
@@ -1564,20 +1670,28 @@ function compareMonthlyStandings(
     playerB
 ) {
 
+    /*
+       1. Average Points
+    */
+
     if (
-        playerB.totalPoints
+        playerB.averagePoints
         !==
-        playerA.totalPoints
+        playerA.averagePoints
     ) {
 
         return (
-            playerB.totalPoints
+            playerB.averagePoints
             -
-            playerA.totalPoints
+            playerA.averagePoints
         );
 
     }
 
+
+    /*
+       2. Win %
+    */
 
     if (
         playerB.winPercentage
@@ -1594,6 +1708,10 @@ function compareMonthlyStandings(
     }
 
 
+    /*
+       3. Games Won
+    */
+
     if (
         playerB.gamesWon
         !==
@@ -1608,6 +1726,13 @@ function compareMonthlyStandings(
 
     }
 
+
+    /*
+       Alphabetical order only keeps
+       exact ties displayed consistently.
+
+       It does NOT break the joint rank.
+    */
 
     return String(
         playerA.name || ""
@@ -1691,9 +1816,9 @@ function hasSameMonthlyStandingValues(
 ) {
 
     return (
-        playerA.totalPoints
+        playerA.averagePoints
         ===
-        playerB.totalPoints
+        playerB.averagePoints
 
         &&
 
@@ -1806,60 +1931,75 @@ function createMonthlyStandingRow(
 
         <div class="monthly-history-row-stats">
 
-            <div class="monthly-history-row-stat">
+    <div class="monthly-history-row-stat">
 
-                <strong>
-                    ${player.gamesPlayed}
-                </strong>
+        <strong>
+            ${player.gamesPlayed}
+        </strong>
 
-                <span>
-                    Played
-                </span>
+        <span>
+            Played
+        </span>
 
-            </div>
-
-
-            <div class="monthly-history-row-stat">
-
-                <strong>
-                    ${player.gamesWon}
-                </strong>
-
-                <span>
-                    Won
-                </span>
-
-            </div>
+    </div>
 
 
-            <div class="monthly-history-row-stat">
+    <div class="monthly-history-row-stat">
 
-                <strong>
-                    ${formatMonthlyWinPercentage(
-                        player.winPercentage
-                    )}%
-                </strong>
+        <strong>
+            ${player.gamesWon}
+        </strong>
 
-                <span>
-                    Win %
-                </span>
+        <span>
+            Won
+        </span>
 
-            </div>
+    </div>
 
 
-            <div class="monthly-history-row-stat">
+    <div class="monthly-history-row-stat">
 
-                <strong>
-                    ${player.totalPoints}
-                </strong>
+        <strong>
+            ${formatMonthlyWinPercentage(
+                player.winPercentage
+            )}%
+        </strong>
 
-                <span>
-                    Points
-                </span>
+        <span>
+            Win %
+        </span>
 
-            </div>
+    </div>
 
-        </div>
+
+    <div class="monthly-history-row-stat monthly-history-average-stat">
+
+        <strong>
+            ${formatMonthlyAveragePoints(
+                player.averagePoints
+            )}
+        </strong>
+
+        <span>
+            Avg
+        </span>
+
+    </div>
+
+
+    <div class="monthly-history-row-stat">
+
+        <strong>
+            ${player.totalPoints}
+        </strong>
+
+        <span>
+            Points
+        </span>
+
+    </div>
+
+</div>
 
     `;
 
@@ -2104,7 +2244,49 @@ function getWinnerIdsForStandings(
 
 }
 
+/* ============================================================
+   FORMAT AVERAGE POINTS
+============================================================ */
 
+function formatMonthlyAveragePoints(
+    value
+) {
+
+    const number =
+        Number(
+            value || 0
+        );
+
+
+    if (
+        !Number.isFinite(
+            number
+        )
+    ) {
+
+        return "0";
+
+    }
+
+
+    if (
+        Number.isInteger(
+            number
+        )
+    ) {
+
+        return String(
+            number
+        );
+
+    }
+
+
+    return number.toFixed(
+        1
+    );
+
+}
 
 /* ============================================================
    28. FORMAT WIN %

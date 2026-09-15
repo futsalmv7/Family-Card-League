@@ -763,13 +763,16 @@ function buildLifetimeStandings(
                                     0,
 
                                 totalPoints:
-                                    0,
+    0,
 
-                                winPercentage:
-                                    0,
+averagePoints:
+    0,
 
-                                rank:
-                                    null
+winPercentage:
+    0,
+
+rank:
+    null
 
                             }
 
@@ -826,28 +829,48 @@ function buildLifetimeStandings(
 
     standings.forEach(
 
-        (player) => {
+    (player) => {
+
+        if (
+            player.gamesPlayed > 0
+        ) {
+
+            /*
+               Lifetime Average Points =
+               Total Points / Completed Games Played
+            */
+
+            player.averagePoints =
+                player.totalPoints
+                /
+                player.gamesPlayed;
+
 
             player.winPercentage =
-                player.gamesPlayed > 0
-
-                    ?
-
-                    (
-                        player.gamesWon
-                        /
-                        player.gamesPlayed
-                    )
-                    *
-                    100
-
-                    :
-
-                    0;
+                (
+                    player.gamesWon
+                    /
+                    player.gamesPlayed
+                )
+                *
+                100;
 
         }
 
-    );
+        else {
+
+            player.averagePoints =
+                0;
+
+
+            player.winPercentage =
+                0;
+
+        }
+
+    }
+
+);
 
 
     standings.sort(
@@ -875,20 +898,28 @@ function compareLifetimeStandings(
     playerB
 ) {
 
+    /*
+       1. Lifetime Average Points
+    */
+
     if (
-        playerB.totalPoints
+        playerB.averagePoints
         !==
-        playerA.totalPoints
+        playerA.averagePoints
     ) {
 
         return (
-            playerB.totalPoints
+            playerB.averagePoints
             -
-            playerA.totalPoints
+            playerA.averagePoints
         );
 
     }
 
+
+    /*
+       2. Win %
+    */
 
     if (
         playerB.winPercentage
@@ -905,6 +936,10 @@ function compareLifetimeStandings(
     }
 
 
+    /*
+       3. Games Won
+    */
+
     if (
         playerB.gamesWon
         !==
@@ -919,6 +954,13 @@ function compareLifetimeStandings(
 
     }
 
+
+    /*
+       Alphabetical order only keeps
+       exact ties displayed consistently.
+
+       It does NOT break the joint rank.
+    */
 
     return String(
         playerA.name
@@ -992,9 +1034,9 @@ function haveSameLifetimeRankingValues(
 
     return (
 
-        playerA.totalPoints
+        playerA.averagePoints
             ===
-        playerB.totalPoints
+        playerB.averagePoints
 
         &&
 
@@ -1311,32 +1353,47 @@ function renderLifetimeStandings(
 
                         <div class="hall-lifetime-stat">
 
-                            <strong>
-                                ${formatWinPercentage(
-                                    player.winPercentage
-                                )}
-                            </strong>
+    <strong>
+        ${formatWinPercentage(
+            player.winPercentage
+        )}
+    </strong>
 
-                            <span>
-                                Win %
-                            </span>
+    <span>
+        Win %
+    </span>
 
-                        </div>
+</div>
 
 
-                        <div class="hall-lifetime-stat">
+<div class="hall-lifetime-stat hall-lifetime-average-stat">
 
-                            <strong>
-                                ${formatNumber(
-                                    player.totalPoints
-                                )}
-                            </strong>
+    <strong>
+        ${formatAveragePoints(
+            player.averagePoints
+        )}
+    </strong>
 
-                            <span>
-                                Points
-                            </span>
+    <span>
+        Avg
+    </span>
 
-                        </div>
+</div>
+
+
+<div class="hall-lifetime-stat">
+
+    <strong>
+        ${formatNumber(
+            player.totalPoints
+        )}
+    </strong>
+
+    <span>
+        Points
+    </span>
+
+</div>
 
                     </div>
                 `;
@@ -2699,7 +2756,59 @@ function buildMonthLabel(
 
 }
 
+/* ============================================================
+   FORMAT AVERAGE POINTS
+============================================================ */
 
+function formatAveragePoints(
+    value
+) {
+
+    const number =
+        Number(
+            value || 0
+        );
+
+
+    if (
+        !Number.isFinite(
+            number
+        )
+    ) {
+
+        return "0";
+
+    }
+
+
+    if (
+        Number.isInteger(
+            number
+        )
+    ) {
+
+        return number.toLocaleString(
+            "en-US"
+        );
+
+    }
+
+
+    return number.toLocaleString(
+
+        "en-US",
+
+        {
+            minimumFractionDigits:
+                1,
+
+            maximumFractionDigits:
+                1
+        }
+
+    );
+
+}
 
 /* ============================================================
    32. FORMAT WIN %

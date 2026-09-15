@@ -109,6 +109,12 @@ const profileMonthlyWinPercentage =
     );
 
 
+const profileMonthlyAveragePoints =
+    document.getElementById(
+        "profileMonthlyAveragePoints"
+    );
+
+
 const profileMonthlyPoints =
     document.getElementById(
         "profileMonthlyPoints"
@@ -474,10 +480,13 @@ function calculateCurrentMonthStatistics(
             0,
 
         winPercentage:
-            0,
+    0,
 
-        totalPoints:
-            0
+totalPoints:
+    0,
+
+averagePoints:
+    0
 
     };
 
@@ -597,13 +606,16 @@ function calculateStatsForPlayers(
                     0,
 
                 totalPoints:
-                    0,
+    0,
 
-                winPercentage:
-                    0,
+averagePoints:
+    0,
 
-                rank:
-                    null
+winPercentage:
+    0,
+
+rank:
+    null
 
             })
 
@@ -703,22 +715,48 @@ function calculateStatsForPlayers(
 
     stats.forEach(
 
-        (playerStats) => {
+    (playerStats) => {
+
+        if (
+            playerStats.gamesPlayed > 0
+        ) {
+
+            /*
+               Monthly Average Points =
+               Total Points / Completed Games Played
+            */
+
+            playerStats.averagePoints =
+                playerStats.totalPoints
+                /
+                playerStats.gamesPlayed;
+
 
             playerStats.winPercentage =
-                playerStats.gamesPlayed > 0
-                    ? (
-                        playerStats.gamesWon
-                        /
-                        playerStats.gamesPlayed
-                        *
-                        100
-                    )
-                    : 0;
+                (
+                    playerStats.gamesWon
+                    /
+                    playerStats.gamesPlayed
+                    *
+                    100
+                );
 
         }
 
-    );
+        else {
+
+            playerStats.averagePoints =
+                0;
+
+
+            playerStats.winPercentage =
+                0;
+
+        }
+
+    }
+
+);
 
 
     stats.sort(
@@ -846,20 +884,28 @@ function comparePlayerStats(
     }
 
 
+    /*
+       1. Average Points
+    */
+
     if (
-        playerB.totalPoints
+        playerB.averagePoints
         !==
-        playerA.totalPoints
+        playerA.averagePoints
     ) {
 
         return (
-            playerB.totalPoints
+            playerB.averagePoints
             -
-            playerA.totalPoints
+            playerA.averagePoints
         );
 
     }
 
+
+    /*
+       2. Win %
+    */
 
     if (
         playerB.winPercentage
@@ -876,6 +922,10 @@ function comparePlayerStats(
     }
 
 
+    /*
+       3. Games Won
+    */
+
     if (
         playerB.gamesWon
         !==
@@ -890,6 +940,13 @@ function comparePlayerStats(
 
     }
 
+
+    /*
+       Alphabetical order is only for
+       consistent display of exact ties.
+
+       It does NOT break the joint rank.
+    */
 
     return String(
         playerA.name || ""
@@ -913,9 +970,9 @@ function hasSameRankingValues(
 ) {
 
     return (
-        playerA.totalPoints
+        playerA.averagePoints
         ===
-        playerB.totalPoints
+        playerB.averagePoints
 
         &&
 
@@ -1491,13 +1548,19 @@ function renderCurrentMonthStatistics(
 
 
     profileMonthlyWinPercentage.textContent =
-        `${formatPercentage(
-            stats.winPercentage
-        )}%`;
+    `${formatPercentage(
+        stats.winPercentage
+    )}%`;
 
 
-    profileMonthlyPoints.textContent =
-        stats.totalPoints;
+profileMonthlyAveragePoints.textContent =
+    formatAveragePoints(
+        stats.averagePoints
+    );
+
+
+profileMonthlyPoints.textContent =
+    stats.totalPoints;
 
 }
 
@@ -1587,7 +1650,59 @@ function showProfileError(
 
 }
 
+/* ============================================================
+   FORMAT AVERAGE POINTS
+============================================================ */
 
+function formatAveragePoints(
+    value
+) {
+
+    const number =
+        Number(
+            value || 0
+        );
+
+
+    if (
+        !Number.isFinite(
+            number
+        )
+    ) {
+
+        return "0";
+
+    }
+
+
+    if (
+        Number.isInteger(
+            number
+        )
+    ) {
+
+        return number.toLocaleString(
+            "en-US"
+        );
+
+    }
+
+
+    return number.toLocaleString(
+
+        "en-US",
+
+        {
+            minimumFractionDigits:
+                1,
+
+            maximumFractionDigits:
+                1
+        }
+
+    );
+
+}
 
 /* ============================================================
    22. FORMAT WIN %

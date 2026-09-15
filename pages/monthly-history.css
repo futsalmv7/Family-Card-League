@@ -616,10 +616,10 @@
         grid;
 
     grid-template-columns:
-        repeat(4, minmax(0, 1fr));
+        repeat(5, minmax(0, 1fr));
 
     gap:
-        6px;
+        5px;
 
 }
 
@@ -1165,5 +1165,24 @@
 
     font-weight:
         800;
+
+}
+
+/* ============================================================
+   AVERAGE POINTS HIGHLIGHT
+============================================================ */
+
+.monthly-history-average-stat {
+
+    border-color:
+        rgba(212, 160, 23, 0.35);
+
+}
+
+
+.monthly-history-average-stat strong {
+
+    color:
+        var(--accent);
 
 }

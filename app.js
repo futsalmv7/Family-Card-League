@@ -903,10 +903,13 @@ function calculatePlayerStats(
                                 0,
 
                             totalPoints:
-                                0,
+    0,
 
-                            winPercentage:
-                                0
+averagePoints:
+    0,
+
+winPercentage:
+    0
 
                         };
 
@@ -968,34 +971,43 @@ function calculatePlayerStats(
 
 
     /* --------------------------------------------------------
-       WIN %
-    --------------------------------------------------------- */
+   AVERAGE POINTS + WIN %
 
-    Object.values(
-        stats
-    )
-    .forEach(
+   Average Points =
+   Total Points / Completed Games Played
+--------------------------------------------------------- */
 
-        player => {
+Object.values(
+    stats
+)
+.forEach(
 
-            if (
-                player.gamesPlayed > 0
-            ) {
+    player => {
 
-                player.winPercentage =
-                    (
-                        player.gamesWon
-                        /
-                        player.gamesPlayed
-                    )
-                    *
-                    100;
+        if (
+            player.gamesPlayed > 0
+        ) {
 
-            }
+            player.averagePoints =
+                player.totalPoints
+                /
+                player.gamesPlayed;
+
+
+            player.winPercentage =
+                (
+                    player.gamesWon
+                    /
+                    player.gamesPlayed
+                )
+                *
+                100;
 
         }
 
-    );
+    }
+
+);
 
 
     return stats;
@@ -1113,20 +1125,28 @@ function buildRanking(
 
         (a, b) => {
 
+            /*
+               1. Average Points
+            */
+
             if (
-                b.totalPoints
+                b.averagePoints
                 !==
-                a.totalPoints
+                a.averagePoints
             ) {
 
                 return (
-                    b.totalPoints
+                    b.averagePoints
                     -
-                    a.totalPoints
+                    a.averagePoints
                 );
 
             }
 
+
+            /*
+               2. Win %
+            */
 
             if (
                 b.winPercentage
@@ -1143,6 +1163,10 @@ function buildRanking(
             }
 
 
+            /*
+               3. Games Won
+            */
+
             if (
                 b.gamesWon
                 !==
@@ -1157,6 +1181,13 @@ function buildRanking(
 
             }
 
+
+            /*
+               Alphabetical order is only used to keep
+               exact ties displayed consistently.
+
+               It does NOT break the joint ranking.
+            */
 
             return a.name.localeCompare(
                 b.name
@@ -1229,9 +1260,9 @@ function sameRankingResult(
 
     return (
 
-        a.totalPoints
+        a.averagePoints
             ===
-        b.totalPoints
+        b.averagePoints
 
         &&
 
@@ -1341,18 +1372,26 @@ function renderOverallRanking(
                 </td>
 
                 <td>
-                    ${formatPercentage(
-                        player.winPercentage
-                    )}
-                </td>
+    ${formatPercentage(
+        player.winPercentage
+    )}
+</td>
 
-                <td>
-                    <strong>
-                        ${formatPoints(
-                            player.totalPoints
-                        )}
-                    </strong>
-                </td>
+<td>
+    <strong>
+        ${formatAveragePoints(
+            player.averagePoints
+        )}
+    </strong>
+</td>
+
+<td>
+    <strong>
+        ${formatPoints(
+            player.totalPoints
+        )}
+    </strong>
+</td>
 
             `;
 
@@ -2165,15 +2204,31 @@ function renderFullCategoryStandings(
     }
 
 
-    element.textContent =
+    element.innerHTML =
         ranking
             .map(
 
-                player =>
-                    `#${player.rank} ${player.name}`
+                player => {
+
+                    return `
+                        <span class="category-standing-player">
+                            <strong>
+                                #${player.rank}
+                                ${escapeHTML(player.name)}
+                            </strong>
+
+                            <span>
+                                Avg ${formatAveragePoints(
+                                    player.averagePoints
+                                )}
+                            </span>
+                        </span>
+                    `;
+
+                }
 
             )
-            .join("  •  ");
+            .join("");
 
 }
 
@@ -2342,6 +2397,57 @@ function formatPercentage(
 
 }
 
+/* ============================================================
+   FORMAT AVERAGE POINTS
+
+   Average Points may contain decimals.
+
+   Examples:
+   120     -> 120
+   105.5   -> 105.5
+   98.333  -> 98.3
+============================================================ */
+
+function formatAveragePoints(
+    value
+) {
+
+    const number =
+        Number(value);
+
+
+    if (
+        !Number.isFinite(number)
+    ) {
+
+        return "0";
+
+    }
+
+
+    if (
+        Number.isInteger(number)
+    ) {
+
+        return new Intl.NumberFormat(
+            "en-US"
+        ).format(number);
+
+    }
+
+
+    return new Intl.NumberFormat(
+
+        "en-US",
+
+        {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1
+        }
+
+    ).format(number);
+
+}
 
 /* ============================================================
    29. FORMAT POINTS

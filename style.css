@@ -2017,3 +2017,72 @@ body {
     }
 
 }
+
+/* ============================================================
+   CATEGORY FULL STANDINGS - AVERAGE POINTS
+============================================================ */
+
+.category-current-standings {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+}
+
+
+.category-standing-player {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+}
+
+
+.category-standing-player strong {
+
+    min-width: 0;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+}
+
+
+.category-standing-player > span {
+
+    flex-shrink: 0;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+}
+
+
+.category-one
+.category-standing-player > span {
+
+    color:
+        var(--accent-light);
+
+}
+
+
+.category-two
+.category-standing-player > span {
+
+    color:
+        var(--accent);
+
+}
