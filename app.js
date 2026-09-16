@@ -47,6 +47,17 @@ let allPlayers = {};
 
 let monthGames = {};
 
+/*
+   All months are stored separately for the
+   Yearly Ranking system.
+
+   This does NOT replace monthGames.
+
+   monthGames = current active month only
+   allMonths   = all months for yearly statistics
+*/
+
+let allMonths = {};
 
 /* ============================================================
    03. DOM REFERENCES
@@ -245,6 +256,50 @@ const categoryTwoThird =
     );
 
 /* ============================================================
+   YEARLY RANKING ELEMENTS
+============================================================ */
+
+const yearlyRankingTitle =
+    document.getElementById(
+        "yearlyRankingTitle"
+    );
+
+
+const yearlyRankingEmptyState =
+    document.getElementById(
+        "yearlyRankingEmptyState"
+    );
+
+
+const yearlyRankingTableWrapper =
+    document.getElementById(
+        "yearlyRankingTableWrapper"
+    );
+
+
+const yearlyRankingTableBody =
+    document.getElementById(
+        "yearlyRankingTableBody"
+    );
+
+const yearlyCategoryCutoff =
+    document.getElementById(
+        "yearlyCategoryCutoff"
+    );
+
+
+const yearlyCategoryOneStandings =
+    document.getElementById(
+        "yearlyCategoryOneStandings"
+    );
+
+
+const yearlyCategoryTwoStandings =
+    document.getElementById(
+        "yearlyCategoryTwoStandings"
+    );
+
+/* ============================================================
    04. INITIALIZE
 ============================================================ */
 
@@ -257,6 +312,8 @@ document.addEventListener(
         listenForActiveMonth();
 
         listenForPlayers();
+
+        listenForAllMonths();
 
     }
 
@@ -294,13 +351,33 @@ function listenForActiveMonth() {
 
 
             activeMonth =
-                snapshot.val();
+    snapshot.val();
 
 
-            displayActiveMonth();
+displayActiveMonth();
 
 
-            listenForMonthGames();
+listenForMonthGames();
+
+
+/*
+   The all-months listener may have loaded before
+   activeMonth became available.
+
+   Re-check yearly games now that we know the year.
+*/
+
+const yearlyGames =
+    getCurrentYearCompletedGames();
+
+
+console.log(
+    "Current year completed games:",
+    yearlyGames.length
+);
+
+
+calculateAndRenderYearlyRanking();
 
         },
 
@@ -373,7 +450,10 @@ function listenForPlayers() {
             updateActivePlayerCount();
 
 
-            calculateDashboard();
+calculateDashboard();
+
+
+calculateAndRenderYearlyRanking();
 
         },
 
@@ -438,6 +518,190 @@ function listenForMonthGames() {
 
 }
 
+/* ============================================================
+   YEARLY DATA — ALL MONTHS
+
+   This listener is separate from the normal monthly
+   dashboard listener.
+
+   It reads all months so the Yearly Ranking can later use
+   COMPLETED games from every month in the selected year.
+============================================================ */
+
+function listenForAllMonths() {
+
+    const monthsRef =
+        ref(
+            database,
+            "months"
+        );
+
+
+    onValue(
+
+        monthsRef,
+
+        (snapshot) => {
+
+            allMonths =
+                snapshot.exists()
+                    ? snapshot.val()
+                    : {};
+
+
+            /*
+               For Step 2 we only verify that the correct
+               yearly completed games can be collected.
+
+               Rendering begins in Yearly Step 3.
+            */
+
+            const yearlyGames =
+    getCurrentYearCompletedGames();
+
+
+console.log(
+    "Current year completed games:",
+    yearlyGames.length
+);
+
+
+calculateAndRenderYearlyRanking();
+
+        },
+
+        (error) => {
+
+            console.error(
+                "Yearly months error:",
+                error
+            );
+
+        }
+
+    );
+
+}
+
+
+/* ============================================================
+   GET CURRENT YEAR COMPLETED GAMES
+
+   Uses the active month's year when available.
+
+   Example:
+   activeMonth.year = 2026
+
+   Only COMPLETED games count.
+   ACTIVE and CANCELLED games are ignored.
+============================================================ */
+
+function getCurrentYearCompletedGames() {
+
+    const currentYear =
+        Number(
+            activeMonth?.year
+        );
+
+
+    if (
+        !Number.isInteger(
+            currentYear
+        )
+    ) {
+
+        return [];
+
+    }
+
+
+    const yearlyGames =
+        [];
+
+
+    Object.entries(
+        allMonths
+    )
+    .forEach(
+
+        ([monthId, month]) => {
+
+            if (!month) {
+                return;
+            }
+
+
+            /*
+               Month IDs use YYYY-MM.
+
+               Example:
+               2026-09
+            */
+
+            const monthYear =
+                Number(
+                    String(
+                        monthId
+                    ).slice(
+                        0,
+                        4
+                    )
+                );
+
+
+            if (
+                monthYear !==
+                currentYear
+            ) {
+
+                return;
+
+            }
+
+
+            Object.entries(
+                month.games || {}
+            )
+            .forEach(
+
+                ([gameId, game]) => {
+
+                    if (
+                        !game
+                        ||
+                        game.status !==
+                            "COMPLETED"
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    yearlyGames.push({
+
+                        id:
+                            gameId,
+
+                        monthId:
+                            monthId,
+
+                        ...game
+
+                    });
+
+                }
+
+            );
+
+        }
+
+    );
+
+
+    return yearlyGames;
+
+}
 
 /* ============================================================
    09. ACTIVE PLAYER COUNT
@@ -2554,6 +2818,497 @@ function escapeHTML(
 
 
     return div.innerHTML;
+
+}
+
+/* ============================================================
+   YEARLY RANKING
+
+   Uses COMPLETED games from every month belonging to the
+   current active year.
+
+   Ranking:
+   1. Average Points
+   2. Win %
+   3. Games Won
+   4. Exact tie = joint rank
+
+   This does NOT change monthly rankings or individual
+   game winner calculations.
+============================================================ */
+
+function calculateAndRenderYearlyRanking() {
+
+    if (!activeMonth) {
+        return;
+    }
+
+
+    const currentYear =
+        Number(
+            activeMonth.year
+        );
+
+
+    /*
+       Keep the heading synchronized with the active year.
+    */
+
+    if (
+        yearlyRankingTitle
+        &&
+        Number.isInteger(
+            currentYear
+        )
+    ) {
+
+        yearlyRankingTitle.textContent =
+            `${currentYear} Ranking`;
+
+    }
+
+
+    const completedGames =
+        getCurrentYearCompletedGames();
+
+
+    /*
+       We can safely reuse calculatePlayerStats() because
+       that function accepts an array of COMPLETED games.
+
+       Passing all completed games for the year gives us:
+
+       - yearly games played
+       - yearly games won
+       - yearly total points
+       - yearly average points
+       - yearly win percentage
+    */
+
+    const yearlyPlayerStats =
+        calculatePlayerStats(
+            completedGames
+        );
+
+
+    /*
+       buildRanking() already uses:
+
+       Average Points
+       -> Win %
+       -> Games Won
+       -> Joint position
+    */
+
+    const yearlyRanking =
+        buildRanking(
+
+            Object.values(
+                yearlyPlayerStats
+            )
+
+        );
+
+
+    renderYearlyRanking(
+    yearlyRanking
+);
+
+
+calculateAndRenderYearlyCategories(
+    yearlyPlayerStats
+);
+
+}
+
+
+/* ============================================================
+   RENDER YEARLY RANKING
+============================================================ */
+
+function renderYearlyRanking(
+    ranking
+) {
+
+    if (
+        !yearlyRankingTableBody
+        ||
+        !yearlyRankingEmptyState
+        ||
+        !yearlyRankingTableWrapper
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+       No completed games in the current year.
+    */
+
+    if (
+        ranking.length === 0
+    ) {
+
+        yearlyRankingTableBody.innerHTML =
+            "";
+
+
+        yearlyRankingEmptyState.classList.remove(
+            "hidden"
+        );
+
+
+        yearlyRankingTableWrapper.classList.add(
+            "hidden"
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+       Completed yearly data exists.
+    */
+
+    yearlyRankingEmptyState.classList.add(
+        "hidden"
+    );
+
+
+    yearlyRankingTableWrapper.classList.remove(
+        "hidden"
+    );
+
+
+    yearlyRankingTableBody.innerHTML =
+        "";
+
+
+    ranking.forEach(
+
+        player => {
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            row.innerHTML = `
+
+                <td>
+                    <strong>
+                        ${player.rank}
+                    </strong>
+                </td>
+
+
+                <td>
+                    ${escapeHTML(
+                        player.name
+                    )}
+                </td>
+
+
+                <td>
+                    ${player.gamesPlayed}
+                </td>
+
+
+                <td>
+                    ${player.gamesWon}
+                </td>
+
+
+                <td>
+                    ${formatPercentage(
+                        player.winPercentage
+                    )}
+                </td>
+
+
+                <td>
+                    <strong>
+                        ${formatAveragePoints(
+                            player.averagePoints
+                        )}
+                    </strong>
+                </td>
+
+
+                <td>
+                    <strong>
+                        ${formatPoints(
+                            player.totalPoints
+                        )}
+                    </strong>
+                </td>
+
+            `;
+
+
+            yearlyRankingTableBody.appendChild(
+                row
+            );
+
+        }
+
+    );
+
+}
+
+/* ============================================================
+   YEARLY CATEGORIES
+
+   Membership is based only on yearly COMPLETED games.
+
+   Cutoff =
+   ceil(
+       highest yearly games played
+       /
+       2
+   )
+
+   Category 1:
+   Games Played >= cutoff
+
+   Category 2:
+   Games Played > 0
+   AND
+   Games Played < cutoff
+
+   Ranking inside each category:
+   1. Average Points
+   2. Win %
+   3. Games Won
+   4. Exact tie = joint rank
+============================================================ */
+
+function calculateAndRenderYearlyCategories(
+    playerStats
+) {
+
+    const players =
+        Object.values(
+            playerStats
+        );
+
+
+    /*
+       No completed yearly participation yet.
+    */
+
+    if (
+        players.length === 0
+    ) {
+
+        resetYearlyCategories();
+
+        return;
+
+    }
+
+
+    /*
+       Find the highest number of completed games
+       played by any player during the year.
+    */
+
+    const maximumGamesPlayed =
+        Math.max(
+
+            ...players.map(
+
+                player =>
+                    player.gamesPlayed
+
+            )
+
+        );
+
+
+    /*
+       Same cutoff rule used by Monthly Categories.
+    */
+
+    const cutoff =
+        Math.ceil(
+            maximumGamesPlayed
+            /
+            2
+        );
+
+
+    if (yearlyCategoryCutoff) {
+
+        yearlyCategoryCutoff.textContent =
+            `Cutoff ${cutoff}`;
+
+    }
+
+
+    /* --------------------------------------------------------
+       YEARLY CATEGORY 1
+    --------------------------------------------------------- */
+
+    const categoryOnePlayers =
+        players.filter(
+
+            player =>
+                player.gamesPlayed
+                >=
+                cutoff
+
+        );
+
+
+    const categoryOneRanking =
+        buildRanking(
+            categoryOnePlayers
+        );
+
+
+    renderYearlyCategoryStandings(
+        categoryOneRanking,
+        yearlyCategoryOneStandings
+    );
+
+
+    /* --------------------------------------------------------
+       YEARLY CATEGORY 2
+
+       Zero-game players are excluded.
+    --------------------------------------------------------- */
+
+    const categoryTwoPlayers =
+        players.filter(
+
+            player =>
+
+                player.gamesPlayed > 0
+
+                &&
+
+                player.gamesPlayed
+                <
+                cutoff
+
+        );
+
+
+    const categoryTwoRanking =
+        buildRanking(
+            categoryTwoPlayers
+        );
+
+
+    renderYearlyCategoryStandings(
+        categoryTwoRanking,
+        yearlyCategoryTwoStandings
+    );
+
+}
+
+
+/* ============================================================
+   RENDER YEARLY CATEGORY STANDINGS
+============================================================ */
+
+function renderYearlyCategoryStandings(
+    ranking,
+    element
+) {
+
+    if (!element) {
+        return;
+    }
+
+
+    if (
+        ranking.length === 0
+    ) {
+
+        element.textContent =
+            "No qualified players yet";
+
+        return;
+
+    }
+
+
+    element.innerHTML =
+        ranking
+            .map(
+
+                player => {
+
+                    return `
+
+                        <span class="category-standing-player">
+
+                            <strong>
+
+                                #${player.rank}
+
+                                ${escapeHTML(
+                                    player.name
+                                )}
+
+                            </strong>
+
+
+                            <span>
+
+                                Avg ${formatAveragePoints(
+                                    player.averagePoints
+                                )}
+
+                            </span>
+
+                        </span>
+
+                    `;
+
+                }
+
+            )
+            .join("");
+
+}
+
+
+/* ============================================================
+   RESET YEARLY CATEGORIES
+============================================================ */
+
+function resetYearlyCategories() {
+
+    if (yearlyCategoryCutoff) {
+
+        yearlyCategoryCutoff.textContent =
+            "Cutoff —";
+
+    }
+
+
+    if (yearlyCategoryOneStandings) {
+
+        yearlyCategoryOneStandings.textContent =
+            "No qualified players yet";
+
+    }
+
+
+    if (yearlyCategoryTwoStandings) {
+
+        yearlyCategoryTwoStandings.textContent =
+            "No qualified players yet";
+
+    }
 
 }
 

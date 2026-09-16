@@ -1,0 +1,1021 @@
+/* ============================================================
+   YEARLY HISTORY PAGE
+============================================================ */
+
+
+/* ============================================================
+   PAGE HEADER
+============================================================ */
+
+.yearly-history-header {
+
+    padding:
+        28px
+        18px
+        24px;
+
+    background:
+        #111827;
+
+    color:
+        #ffffff;
+
+}
+
+
+.yearly-history-header-inner {
+
+    width:
+        min(100%, 900px);
+
+    margin:
+        0 auto;
+
+}
+
+
+.yearly-history-eyebrow {
+
+    margin-bottom:
+        7px;
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1.5px;
+
+    opacity:
+        0.65;
+
+}
+
+
+.yearly-history-header h1 {
+
+    margin:
+        0;
+
+    font-size:
+        26px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.5px;
+
+}
+
+
+.yearly-history-header p {
+
+    max-width:
+        520px;
+
+    margin:
+        8px
+        0
+        0;
+
+    font-size:
+        11px;
+
+    line-height:
+        1.6;
+
+    opacity:
+        0.72;
+
+}
+
+
+
+/* ============================================================
+   CARDS
+============================================================ */
+
+.yearly-history-card {
+
+    margin-bottom:
+        12px;
+
+    padding:
+        17px;
+
+    background:
+        var(--surface);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        16px;
+
+}
+
+
+.yearly-history-section-heading {
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+
+    margin-bottom:
+        14px;
+
+}
+
+
+.yearly-history-kicker {
+
+    display:
+        block;
+
+    margin-bottom:
+        4px;
+
+    color:
+        var(--accent);
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1.2px;
+
+}
+
+
+.yearly-history-section-heading h2 {
+
+    margin:
+        0;
+
+    font-size:
+        17px;
+
+    font-weight:
+        800;
+
+}
+
+
+.yearly-history-card > p {
+
+    margin:
+        0;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        11px;
+
+    line-height:
+        1.6;
+
+}
+
+
+
+/* ============================================================
+   MESSAGE / PLACEHOLDER
+============================================================ */
+
+.yearly-history-message {
+
+    padding:
+        22px
+        14px;
+
+    text-align:
+        center;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        12px;
+
+}
+
+
+.yearly-history-message-icon {
+
+    margin-bottom:
+        8px;
+
+    font-size:
+        25px;
+
+}
+
+
+.yearly-history-message strong {
+
+    display:
+        block;
+
+    margin-bottom:
+        4px;
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+
+}
+
+
+.yearly-history-message p {
+
+    margin:
+        0;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        10px;
+
+    line-height:
+        1.5;
+
+}
+
+
+
+/* ============================================================
+   MONTHLY HISTORY LINK
+============================================================ */
+
+.yearly-history-monthly-link {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-height:
+        42px;
+
+    margin-top:
+        14px;
+
+    padding:
+        0
+        16px;
+
+    background:
+        #111827;
+
+    color:
+        #ffffff;
+
+    border-radius:
+        10px;
+
+    text-decoration:
+        none;
+
+    font-size:
+        11px;
+
+    font-weight:
+        800;
+
+}
+
+
+
+/* ============================================================
+   DESKTOP / TABLET
+============================================================ */
+
+@media (min-width: 650px) {
+
+    .yearly-history-header {
+
+        padding:
+            36px
+            24px
+            30px;
+
+    }
+
+
+    .yearly-history-header h1 {
+
+        font-size:
+            31px;
+
+    }
+
+
+    .yearly-history-card {
+
+        padding:
+            21px;
+
+    }
+
+}
+
+/* ============================================================
+   AVAILABLE YEAR CARDS
+============================================================ */
+
+.yearly-history-years {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        9px;
+
+}
+
+
+.yearly-history-year-card {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        14px;
+
+    padding:
+        15px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        12px;
+
+    color:
+        var(--text-primary);
+
+    text-decoration:
+        none;
+
+}
+
+
+.yearly-history-year-main {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    min-width:
+        0;
+
+}
+
+
+.yearly-history-year-label {
+
+    margin-bottom:
+        3px;
+
+    color:
+        var(--accent);
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1px;
+
+}
+
+
+.yearly-history-year-number {
+
+    font-size:
+        21px;
+
+    font-weight:
+        800;
+
+}
+
+
+.yearly-history-year-status {
+
+    margin-top:
+        3px;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        9px;
+
+    font-weight:
+        600;
+
+}
+
+
+.yearly-history-year-action {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    flex-shrink:
+        0;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        9px;
+
+    font-weight:
+        700;
+
+}
+
+
+.yearly-history-year-action strong {
+
+    color:
+        var(--accent);
+
+    font-size:
+        21px;
+
+    line-height:
+        1;
+
+}
+
+/* ============================================================
+   SELECTED YEAR SUMMARY
+============================================================ */
+
+.yearly-history-summary-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap:
+        8px;
+
+}
+
+
+.yearly-history-summary-item {
+
+    padding:
+        12px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        11px;
+
+}
+
+
+.yearly-history-summary-item span {
+
+    display:
+        block;
+
+    margin-bottom:
+        5px;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        8px;
+
+    font-weight:
+        700;
+
+}
+
+
+.yearly-history-summary-item strong {
+
+    font-size:
+        18px;
+
+    font-weight:
+        800;
+
+}
+
+
+
+/* ============================================================
+   YEARLY STANDINGS
+============================================================ */
+
+.yearly-history-standings {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        8px;
+
+}
+
+
+.yearly-history-standing-row {
+
+    padding:
+        13px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        11px;
+
+}
+
+
+.yearly-history-standing-top {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+
+    margin-bottom:
+        10px;
+
+}
+
+
+.yearly-history-standing-player {
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+
+}
+
+
+.yearly-history-standing-rank {
+
+    color:
+        var(--accent);
+
+    font-size:
+        15px;
+
+    font-weight:
+        800;
+
+}
+
+
+.yearly-history-standing-stats {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    gap:
+        5px;
+
+}
+
+
+.yearly-history-standing-stat {
+
+    min-width:
+        0;
+
+    text-align:
+        center;
+
+}
+
+
+.yearly-history-standing-stat strong {
+
+    display:
+        block;
+
+    overflow:
+        hidden;
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+    text-overflow:
+        ellipsis;
+
+}
+
+
+.yearly-history-standing-stat span {
+
+    display:
+        block;
+
+    margin-top:
+        3px;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        7px;
+
+    font-weight:
+        600;
+
+}
+
+
+.yearly-history-empty-standings {
+
+    padding:
+        18px;
+
+    color:
+        var(--text-secondary);
+
+    text-align:
+        center;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        11px;
+
+    font-size:
+        10px;
+
+}
+
+/* ============================================================
+   YEARLY HISTORY CATEGORIES
+============================================================ */
+
+.yearly-history-cutoff-badge {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex-shrink:
+        0;
+
+    padding:
+        5px 8px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        999px;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+}
+
+
+.yearly-history-category {
+
+    margin-top:
+        10px;
+
+    padding:
+        13px;
+
+    background:
+        var(--surface-soft);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        12px;
+
+}
+
+
+.yearly-history-category-header {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+
+}
+
+
+.yearly-history-category-header > div {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        2px;
+
+}
+
+
+.yearly-history-category-number {
+
+    color:
+        var(--accent);
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.8px;
+
+}
+
+
+.yearly-history-category-header strong {
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+
+}
+
+
+.yearly-history-category-symbol {
+
+    color:
+        var(--accent);
+
+    font-size:
+        19px;
+
+    line-height:
+        1;
+
+}
+
+
+.yearly-history-category-description {
+
+    margin:
+        7px 0 11px;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        9px;
+
+    line-height:
+        1.5;
+
+}
+
+
+.yearly-history-category-standings {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        6px;
+
+}
+
+
+.yearly-history-category-row {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+
+    padding:
+        9px 10px;
+
+    background:
+        var(--surface);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        9px;
+
+}
+
+
+.yearly-history-category-player {
+
+    min-width:
+        0;
+
+    overflow:
+        hidden;
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.yearly-history-category-result {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    flex-shrink:
+        0;
+
+}
+
+
+.yearly-history-category-average {
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        8px;
+
+    font-weight:
+        700;
+
+}
+
+
+.yearly-history-category-rank {
+
+    min-width:
+        24px;
+
+    color:
+        var(--accent);
+
+    font-size:
+        11px;
+
+    font-weight:
+        800;
+
+    text-align:
+        right;
+
+}
+
+
+.yearly-history-category-empty {
+
+    padding:
+        12px;
+
+    color:
+        var(--text-secondary);
+
+    text-align:
+        center;
+
+    font-size:
+        9px;
+
+}

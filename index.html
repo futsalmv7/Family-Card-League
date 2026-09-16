@@ -881,7 +881,247 @@
 
         </section>
 
+<!-- =====================================================
+     CURRENT YEAR RANKING
+====================================================== -->
+<section class="content-card yearly-ranking-card">
 
+    <div class="section-heading">
+
+        <div>
+
+            <span class="section-kicker">
+                CURRENT YEAR
+            </span>
+
+            <h2 id="yearlyRankingTitle">
+                2026 Ranking
+            </h2>
+
+        </div>
+
+
+        <div class="live-badge">
+
+            <span class="live-dot"></span>
+
+            LIVE
+
+        </div>
+
+    </div>
+
+
+    <!--
+        Empty state remains visible until completed games
+        from the current year are loaded.
+    -->
+    <div
+        class="empty-state"
+        id="yearlyRankingEmptyState"
+    >
+
+        <div class="empty-state-icon">
+            📅
+        </div>
+
+        <strong>
+            No yearly rankings yet
+        </strong>
+
+        <p>
+            Completed games from this year will appear here.
+        </p>
+
+    </div>
+
+
+    <!--
+        Yearly ranking table.
+
+        JavaScript will populate this in the next step.
+    -->
+    <div
+        class="ranking-table-wrapper hidden"
+        id="yearlyRankingTableWrapper"
+    >
+
+        <table class="ranking-table">
+
+            <thead>
+
+                <tr>
+
+                    <th class="rank-column">
+                        #
+                    </th>
+
+                    <th>
+                        Player
+                    </th>
+
+                    <th>
+                        GP
+                    </th>
+
+                    <th>
+                        W
+                    </th>
+
+                    <th>
+                        Win %
+                    </th>
+
+                    <th>
+                        Avg
+                    </th>
+
+                    <th class="points-column">
+                        Points
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="yearlyRankingTableBody">
+
+                <!-- JavaScript creates yearly rows here -->
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+<!-- =================================================
+     YEARLY CATEGORIES
+================================================== -->
+<div class="yearly-categories">
+
+    <div class="yearly-categories-heading">
+
+        <div>
+
+            <span class="section-kicker">
+                YEARLY COMPETITION
+            </span>
+
+            <h3>
+                Categories
+            </h3>
+
+        </div>
+
+
+        <span
+            class="yearly-cutoff-badge"
+            id="yearlyCategoryCutoff"
+        >
+            Cutoff —
+        </span>
+
+    </div>
+
+
+    <div class="yearly-category-grid">
+
+
+        <!-- =========================================
+             YEARLY CATEGORY 1
+        ========================================== -->
+        <article class="yearly-category-box">
+
+            <div class="yearly-category-title">
+
+                <div>
+
+                    <span class="yearly-category-number">
+                        CATEGORY 1
+                    </span>
+
+                    <strong>
+                        Regular Players
+                    </strong>
+
+                </div>
+
+
+                <span class="yearly-category-symbol">
+                    ♠
+                </span>
+
+            </div>
+
+
+            <p class="yearly-category-description">
+
+                Players meeting the yearly
+                participation cutoff.
+
+            </p>
+
+
+            <div
+                class="yearly-category-standings"
+                id="yearlyCategoryOneStandings"
+            >
+                No qualified players yet
+            </div>
+
+        </article>
+
+
+        <!-- =========================================
+             YEARLY CATEGORY 2
+        ========================================== -->
+        <article class="yearly-category-box">
+
+            <div class="yearly-category-title">
+
+                <div>
+
+                    <span class="yearly-category-number">
+                        CATEGORY 2
+                    </span>
+
+                    <strong>
+                        Casual Players
+                    </strong>
+
+                </div>
+
+
+                <span class="yearly-category-symbol">
+                    ♦
+                </span>
+
+            </div>
+
+
+            <p class="yearly-category-description">
+
+                Players below the yearly
+                participation cutoff.
+
+            </p>
+
+
+            <div
+                class="yearly-category-standings"
+                id="yearlyCategoryTwoStandings"
+            >
+                No qualified players yet
+            </div>
+
+        </article>
+
+    </div>
+
+</div>
+
+</section>
 
         <!-- =====================================================
              EXTRA SPACE FOR FIXED MOBILE NAVIGATION
