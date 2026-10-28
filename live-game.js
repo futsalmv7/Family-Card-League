@@ -30,10 +30,9 @@ import {
     onValue,
     get,
     update,
-    runTransaction,
-    push,
-    set
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+    runTransaction
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
 
 
 /* ============================================================
@@ -47,12 +46,6 @@ let gameId = null;
 let currentGame = null;
 
 let orderedPlayers = [];
-
-/* ============================================================
-   MATCH COMMENTS - REGISTERED ACTIVE PLAYERS
-============================================================ */
-
-let activeCommentPlayers = [];
 
 let matchBeingSaved = false;
 
@@ -148,9 +141,7 @@ const matchHistoryHead =
 const matchHistoryBody =
     document.getElementById("matchHistoryBody");
 
-    /* ============================================================
-   MATCH COMMENTS - DOM REFERENCES
-============================================================ */
+    /* Match Comments */
 
 const matchCommentsArea =
     document.getElementById("matchCommentsArea");
@@ -202,9 +193,7 @@ document.addEventListener(
         }
 
 
-        listenToActiveCommentPlayers();
-
-listenToGame();
+        listenToGame();
 
     }
 
@@ -242,58 +231,6 @@ function readGameFromURL() {
    Any saved match immediately appears on every device that
    has this game open.
 ============================================================ */
-
-/* ============================================================
-   LOAD ACTIVE PLAYERS FOR MATCH COMMENTS
-============================================================ */
-
-function listenToActiveCommentPlayers() {
-
-    const playersRef = ref(database, "players");
-
-    onValue(playersRef, (snapshot) => {
-
-        activeCommentPlayers = [];
-
-        if (snapshot.exists()) {
-
-            snapshot.forEach((childSnapshot) => {
-
-                const player = childSnapshot.val();
-
-                if (player && player.active === true) {
-
-                    activeCommentPlayers.push({
-                        id: childSnapshot.key,
-                        name: player.name
-                    });
-
-                }
-
-            });
-
-        }
-
-        // Sort players alphabetically.
-        activeCommentPlayers.sort((a, b) =>
-            a.name.localeCompare(b.name)
-        );
-
-        // Refresh comment dropdowns when players change.
-        if (currentGame) {
-            renderMatchComments();
-        }
-
-    }, (error) => {
-
-        console.error(
-            "Unable to load active comment players:",
-            error
-        );
-
-    });
-
-}
 
 function listenToGame() {
 
@@ -439,10 +376,7 @@ function renderGame() {
 
         renderCompletedGame();
 
-// Keep saved match comments visible after game completion.
-renderMatchComments();
-
-return;
+        return;
 
     }
 
@@ -509,7 +443,9 @@ return;
 
         renderTotals();
 
+
     renderMatchHistory();
+
 
     renderMatchComments();
 
@@ -1291,7 +1227,9 @@ function renderMatchHistory() {
         "";
 
 
-   matches.forEach(match => {
+    matches.forEach(
+
+        (match) => {
 
             const row =
                 document.createElement(
@@ -1340,154 +1278,37 @@ function renderMatchHistory() {
 }
 
 /* ============================================================
-   MATCH COMMENTS - DISPLAY CARDS
+   15A. RENDER MATCH COMMENTS
+   Display-only preparation.
+   No Firebase writes are performed here.
 ============================================================ */
-
-/* ============================================================
-   MATCH COMMENTS - SAVE TO FIREBASE
-============================================================ */
-
-/* ============================================================
-   MATCH COMMENTS - 24 HOUR POSTING WINDOW
-============================================================ */
-
-function canPostMatchComments() {
-
-    if (!currentGame) {
-        return false;
-    }
-
-    if (currentGame.status === "ACTIVE") {
-        return true;
-    }
-
-    if (currentGame.status !== "COMPLETED") {
-        return false;
-    }
-
-    const completedAt = Number(currentGame.completedAt);
-
-    if (!Number.isFinite(completedAt) || completedAt <= 0) {
-        return false;
-    }
-
-    return Date.now() < completedAt + (24 * 60 * 60 * 1000);
-}
-
-
-async function saveMatchComment(matchNumber, playerId, text) {
-
-    // Only active registered players can post.
-    const player = activeCommentPlayers.find(
-        p => String(p.id) === String(playerId)
-    );
-
-    if (!player) {
-        throw new Error("Please select a valid player.");
-    }
-
-    const commentText = text.trim();
-
-    if (!commentText || commentText.length > 300) {
-        throw new Error("Comment must contain 1 to 300 characters.");
-    }
-
-    // Preserve the existing 24-hour commenting rule.
-    if (!canPostMatchComments()) {
-        throw new Error(
-            "Commenting is closed. Comments are allowed for 24 hours after game completion."
-        );
-    }
-
-    // Comments now belong to the GAME, not an individual match.
-    const commentsRef = ref(
-        database,
-        `months/${monthId}/games/${gameId}/gameComments`
-    );
-
-    const newCommentRef = push(commentsRef);
-
-    await set(newCommentRef, {
-        playerId: String(player.id),
-        playerName: player.name,
-        text: commentText,
-        createdAt: Date.now()
-    });
-
-}
-
 
 function renderMatchComments() {
 
-        const matches = getMatches();
+        console.log("MATCH COMMENTS FUNCTION RUNNING");
 
-    // Preserve unfinished comments before rebuilding the cards.
-    const commentDrafts = {};
-
-    matchCommentsList
-        .querySelectorAll(".match-comment-card")
-        .forEach((card) => {
-
-            const matchNumber = card.dataset.matchNumber;
-
-            const playerSelect =
-                card.querySelector(".match-comment-select");
-
-            const commentInput =
-                card.querySelector(".match-comment-input");
-
-            if (!matchNumber || !playerSelect || !commentInput) {
-                return;
-            }
-
-            commentDrafts[matchNumber] = {
-                playerId: playerSelect.value,
-                text: commentInput.value
-            };
-
-        });
+    const matches = getMatches();
 
     matchCommentsList.innerHTML = "";
 
-    // Game Comments belong to the whole game.
-// Show them even before the first match is saved.
-matchCommentsArea.classList.remove("hidden");
+    if (matches.length === 0) {
 
-// One comment card for the entire game.
-const gameCommentCard = [{ matchNumber: 1 }];
+        matchCommentsArea.classList.add("hidden");
 
-gameCommentCard.forEach((match) => {
+        return;
+
+    }
+
+    matchCommentsArea.classList.remove("hidden");
+
+    matches.forEach((match) => {
 
         const card = document.createElement("div");
 
         card.className = "match-comment-card";
 
-                card.dataset.matchNumber = String(match.matchNumber);
-
-        // Collect all previously saved match comments
-// and new game-level comments into one discussion.
-
-const comments = {
-    ...(currentGame.gameComments || {})
-};
-
-Object.values(currentGame.matchComments || {}).forEach(
-    (matchComments, matchIndex) => {
-
-        if (!matchComments || typeof matchComments !== "object") {
-            return;
-        }
-
-        Object.entries(matchComments).forEach(
-            ([commentId, comment]) => {
-
-                comments[`legacy_${matchIndex}_${commentId}`] = comment;
-
-            }
-        );
-
-    }
-);
+        const comments =
+            currentGame.matchComments?.[match.matchNumber] || {};
 
         const commentCount =
             Object.keys(comments).length;
@@ -1497,8 +1318,8 @@ Object.values(currentGame.matchComments || {}).forEach(
             <div class="match-comment-card-header">
 
                 <strong class="match-comment-card-title">
-    💬 Game Comments
-</strong>
+                    Match ${match.matchNumber}
+                </strong>
 
                 <span class="match-comment-count">
                     💬 ${commentCount} comments
@@ -1506,299 +1327,33 @@ Object.values(currentGame.matchComments || {}).forEach(
 
             </div>
 
-                        <div class="match-comment-messages">
+            <div class="match-comment-messages">
 
-                ${
-                    commentCount === 0
-                        ? `
-                            <div class="match-comment-empty">
-                                No comments yet. Be the first! 😄
-                            </div>
-                        `
-                        : Object.values(comments)
-                            .sort((a, b) =>
-                                (a.createdAt || 0) - (b.createdAt || 0)
-                            )
-                            .map(comment => {
-
-                                const playerName =
-                                    escapeHTML(comment.playerName || "Player");
-
-                                const message =
-                                    escapeHTML(comment.text || "");
-
-                                const time =
-                                    Number.isFinite(comment.createdAt)
-                                        ? new Date(comment.createdAt)
-                                            .toLocaleTimeString([], {
-                                                hour: "2-digit",
-                                                minute: "2-digit"
-                                            })
-                                        : "";
-
-                                return `
-                                    <div class="match-comment-message">
-
-                                        <div class="match-comment-message-header">
-
-                                            <strong>
-                                                ${playerName}
-                                            </strong>
-
-                                            <span>
-                                                ${time}
-                                            </span>
-
-                                        </div>
-
-                                        <div class="match-comment-message-text">${message}</div>
-
-                                    </div>
-                                `;
-
-                            }).join("")
-                }
-
-            </div>
-
-                        <div class="match-comment-form">
-
-                <label class="match-comment-label">
-                    Comment as
-                </label>
-
-                <select class="match-comment-select">
-                    <option value="">Select player</option>
-
-                    ${activeCommentPlayers.map(player => `
-    <option value="${escapeHTML(player.id)}">
-        ${escapeHTML(player.name)}
-    </option>
-`).join("")}
-
-                </select>
-
-                <label class="match-comment-label">
-                    Your comment
-                </label>
-
-                <textarea
-                    class="match-comment-input"
-                    rows="3"
-                    maxlength="300"
-                    placeholder="Write something about this game..."
-                ></textarea>
-
-                <div class="match-emoji-row">
-
-                    ${["😂", "🔥", "👏", "❤️", "😎", "🏆", "😢", "😮"].map(emoji => `
-                        <button
-                            type="button"
-                            class="match-emoji-button"
-                            data-emoji="${emoji}"
-                        >${emoji}</button>
-                    `).join("")}
-
+                <div class="match-comment-empty">
+                    ${
+                        commentCount === 0
+                            ? "No comments yet. Be the first! 😄"
+                            : "Comments will appear here."
+                    }
                 </div>
 
-                <button
-    type="button"
-    class="match-comment-submit"
-    disabled
->
-    Post Comment
-</button>
-
             </div>
+
+            <button
+                type="button"
+                class="match-add-comment-button"
+                disabled
+            >
+                + Add Comment (Coming Soon)
+            </button>
 
         `;
 
         matchCommentsList.appendChild(card);
 
-                /* ====================================================
-           EMOJI BUTTONS - MATCH COMMENTS
-        ==================================================== */
-
-        const commentInput =
-            card.querySelector(".match-comment-input");
-                    const playerSelect =
-            card.querySelector(".match-comment-select");
-
-        const submitButton =
-            card.querySelector(".match-comment-submit");
-
-                    // Restore the unfinished comment for this match.
-        const savedDraft = commentDrafts[match.matchNumber];
-
-        if (savedDraft) {
-
-            playerSelect.value = savedDraft.playerId;
-
-            commentInput.value = savedDraft.text;
-
-        }
-
-        // Enable Post Comment only when the form is complete.
-        function updateCommentButton() {
-
-    const commentingOpen = canPostMatchComments();
-
-    const hasPlayer = playerSelect.value !== "";
-
-    const hasComment =
-        commentInput.value.trim().length > 0;
-
-    playerSelect.disabled = !commentingOpen;
-    commentInput.disabled = !commentingOpen;
-
-    submitButton.disabled =
-        !commentingOpen || !hasPlayer || !hasComment;
-
-    submitButton.textContent = commentingOpen
-        ? "Post Comment"
-        : "Commenting Closed";
-
-    card.querySelectorAll(".match-emoji-button")
-        .forEach(button => {
-            button.disabled = !commentingOpen;
-        });
-}
-
-        playerSelect.addEventListener(
-            "change",
-            updateCommentButton
-        );
-
-        commentInput.addEventListener(
-            "input",
-            updateCommentButton
-        );
-
-                // Restore the correct button state after rebuilding.
-        updateCommentButton();
-
-                // Save the comment when Post Comment is clicked.
-        submitButton.addEventListener("click", async () => {
-
-            if (submitButton.disabled) {
-                return;
-            }
-
-            const selectedPlayerId = playerSelect.value;
-            const commentText = commentInput.value.trim();
-
-            submitButton.disabled = true;
-            submitButton.textContent = "Posting...";
-
-            try {
-
-                await saveMatchComment(
-                    match.matchNumber,
-                    selectedPlayerId,
-                    commentText
-                );
-
-                // Clear only this match's comment form.
-                playerSelect.value = "";
-                commentInput.value = "";
-
-                updateCommentButton();
-
-            } catch (error) {
-
-                console.error("Failed to post comment:", error);
-
-                alert(
-                    error.message ||
-                    "Unable to post comment. Please try again."
-                );
-
-                updateCommentButton();
-
-            } finally {
-
-                submitButton.textContent = "Post Comment";
-
-            }
-
-        });
-
-        const emojiButtons =
-            card.querySelectorAll(".match-emoji-button");
-
-        emojiButtons.forEach((button) => {
-
-            button.addEventListener("click", () => {
-
-                const emoji = button.dataset.emoji;
-
-                if (!commentInput || !emoji) {
-                    return;
-                }
-
-                const start = commentInput.selectionStart;
-                const end = commentInput.selectionEnd;
-
-                commentInput.setRangeText(
-                    emoji,
-                    start,
-                    end,
-                    "end"
-                );
-
-                commentInput.focus();
-                                updateCommentButton();
-
-            });
-
-        });
-
     });
 
 }
-
-/* ============================================================
-   MATCH COMMENTS - AUTOMATIC EXPIRY
-============================================================ */
-
-setInterval(() => {
-
-    if (!currentGame || currentGame.status !== "COMPLETED") {
-        return;
-    }
-
-    const commentingOpen = canPostMatchComments();
-
-    if (!commentingOpen) {
-
-        document.querySelectorAll(".match-comment-card")
-            .forEach(card => {
-
-                const playerSelect =
-                    card.querySelector(".match-comment-select");
-
-                const commentInput =
-                    card.querySelector(".match-comment-input");
-
-                const submitButton =
-                    card.querySelector(".match-comment-submit");
-
-                if (playerSelect) playerSelect.disabled = true;
-                if (commentInput) commentInput.disabled = true;
-
-                if (submitButton) {
-                    submitButton.disabled = true;
-                    submitButton.textContent = "Commenting Closed";
-                }
-
-                card.querySelectorAll(".match-emoji-button")
-                    .forEach(button => {
-                        button.disabled = true;
-                    });
-            });
-    }
-
-}, 10000);
 
 /* ============================================================
    16. COMPLETE GAME

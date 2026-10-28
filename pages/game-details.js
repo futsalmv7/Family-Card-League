@@ -150,7 +150,15 @@ const playerTotalList =
         "playerTotalList"
     );
 
+/* ============================================================
+   MATCH COMMENTS - DOM ELEMENTS
+============================================================ */
 
+const matchCommentsSection =
+    document.getElementById("matchCommentsSection");
+
+const matchCommentsList =
+    document.getElementById("matchCommentsList");
 
 /* ============================================================
    04. START
@@ -408,7 +416,8 @@ function renderGame(
         standings
     );
 
-
+    // Display one shared Game Comments section in History.
+renderGameComments(game);
 
     loadingState.classList.add(
         "hidden"
@@ -1021,6 +1030,89 @@ function renderPlayerTotals(
    15. STATUS CLASS
 ============================================================ */
 
+/* ============================================================
+   MATCH COMMENTS - READ ONLY HISTORY
+============================================================ */
+
+function renderSavedMatchComments(game, matches) {
+
+    matchCommentsList.innerHTML = "";
+
+    const allComments = game.matchComments || {};
+
+    if (matches.length === 0) {
+        matchCommentsSection.classList.add("hidden");
+        return;
+    }
+
+    matchCommentsSection.classList.remove("hidden");
+
+    matches.forEach((match) => {
+
+        const comments = Object.values(
+            allComments[match.matchNumber] || {}
+        ).sort((a, b) =>
+            (a.createdAt || 0) - (b.createdAt || 0)
+        );
+
+        const card = document.createElement("div");
+        card.className = "history-comment-card";
+
+        const heading = document.createElement("h3");
+        heading.textContent =
+            `Match ${match.matchNumber} · ${comments.length} comment${comments.length === 1 ? "" : "s"}`;
+
+        card.appendChild(heading);
+
+        if (comments.length === 0) {
+
+            const empty = document.createElement("p");
+            empty.textContent = "No comments for this match.";
+            card.appendChild(empty);
+
+        } else {
+
+            comments.forEach((comment) => {
+
+                const message = document.createElement("div");
+                message.className = "history-comment-message";
+
+                const author = document.createElement("strong");
+                author.textContent = comment.playerName || "Player";
+
+                const time = document.createElement("small");
+
+                const timestamp = Number(comment.createdAt);
+
+                time.textContent =
+                    Number.isFinite(timestamp) && timestamp > 0
+                        ? new Date(timestamp).toLocaleString("en-GB", {
+                            day: "2-digit",
+                            month: "short",
+                            hour: "2-digit",
+                            minute: "2-digit"
+                        })
+                        : "";
+
+                const text = document.createElement("p");
+                text.textContent = comment.text || "";
+
+                message.appendChild(author);
+                message.appendChild(time);
+                message.appendChild(text);
+
+                card.appendChild(message);
+
+            });
+
+        }
+
+        matchCommentsList.appendChild(card);
+
+    });
+
+}
+
 function getStatusClass(
     status
 ) {
@@ -1152,6 +1244,109 @@ function showError(
 /* ============================================================
    18. SAFE HTML
 ============================================================ */
+
+
+/* ============================================================
+   GAME COMMENTS - HISTORY (READ ONLY)
+============================================================ */
+
+function renderGameComments(game) {
+
+    const commentsList =
+        document.getElementById("matchCommentsList");
+
+    const commentsSection =
+        document.getElementById("matchCommentsSection");
+
+    if (!commentsList || !commentsSection) {
+        return;
+    }
+
+    // Collect new game-level comments.
+    const comments = Object.values(game.gameComments || {});
+
+    // Include older comments saved under individual matches.
+    Object.values(game.matchComments || {}).forEach(matchComments => {
+
+        if (!matchComments || typeof matchComments !== "object") {
+            return;
+        }
+
+        Object.values(matchComments).forEach(comment => {
+            comments.push(comment);
+        });
+
+    });
+
+    // Show comment count beside the heading.
+    const countElement = document.getElementById("gameCommentsCount");
+    if (countElement) countElement.textContent = `(${comments.length})`;
+
+    // Display oldest comments first.
+    comments.sort((a, b) =>
+        (Number(a.createdAt) || 0) -
+        (Number(b.createdAt) || 0)
+    );
+
+    if (comments.length === 0) {
+
+        commentsList.innerHTML = `
+            <p class="match-comment-empty">
+                No comments were posted for this game.
+            </p>
+        `;
+
+        return;
+    }
+
+    commentsList.innerHTML = `
+        <div class="game-history-comments">
+
+            <p>
+                💬 ${comments.length}
+                ${comments.length === 1 ? "comment" : "comments"}
+            </p>
+
+            ${comments.map(comment => {
+
+                const playerName =
+                    escapeHTML(comment.playerName || "Player");
+
+                const message =
+                    escapeHTML(comment.text || "");
+
+                const timestamp = Number(comment.createdAt);
+
+                const time =
+                    Number.isFinite(timestamp) && timestamp > 0
+                        ? new Date(timestamp).toLocaleString([], {
+                            dateStyle: "medium",
+                            timeStyle: "short"
+                        })
+                        : "";
+
+                return `
+                    <div class="match-comment-message">
+
+                        <div class="match-comment-message-header">
+                            <strong>${playerName}</strong>
+                            <span>${time}</span>
+                        </div>
+
+                        <div class="match-comment-message-text">
+                            ${message}
+                        </div>
+
+                    </div>
+                `;
+
+            }).join("")}
+
+        </div>
+    `;
+
+}
+
 
 function escapeHTML(
     value
