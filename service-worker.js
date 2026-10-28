@@ -2,11 +2,11 @@
    FAMILY CARD LEAGUE
    SERVICE WORKER
 
-   Version 1
+   Version 3
 ============================================================ */
 
 const CACHE_NAME =
-    "family-card-league-v2";
+    "family-card-league-v3";
 
 
 /*
