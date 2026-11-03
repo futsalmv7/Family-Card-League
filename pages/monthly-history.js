@@ -847,13 +847,34 @@ function renderMonthOverview(
         );
 
 
-        renderMonthlyRecords(
-            frozenRecords
-        );
+        
+        
+
+renderMonthlyRecords({
+    ...frozenRecords,
+
+    most1000Games:
+        calculateMonthlyMost1000Games(
+            completedGames
+        ),
+
+    bestGoaper:
+        Object.prototype.hasOwnProperty.call(
+            frozenRecords,
+            "bestGoaper"
+        )
+            ? frozenRecords.bestGoaper
+            : calculateMonthlyBestGoaper(
+                completedGames
+            )
+});
+
+
 
 
         /*
-           Individual completed games remain linked
+            Individual completed games remain linked
+
            to the original game data.
 
            The official month results above are frozen.
@@ -987,15 +1008,29 @@ function renderMonthOverview(
     );
 
 
-    renderMonthlyRecords(
-        monthlyRecords
-    );
+    
+    
+renderMonthlyRecords({
+    ...monthlyRecords,
+
+    most1000Games:
+        calculateMonthlyMost1000Games(
+            completedGames
+        ),
+
+    bestGoaper:
+        calculateMonthlyBestGoaper(
+            completedGames
+        )
+});
+
 
 
     renderMonthlyGames(
         completedGames,
         month.id
     );
+
 
 
     console.log(
@@ -2996,6 +3031,168 @@ function chooseRecordTieBreaker(
 }
 
 
+/* ============================================================
+   MOST 1000+ GAMES — MONTHLY CALCULATION
+============================================================ */
+
+function calculateMonthlyMost1000Games(completedGames) {
+
+    const playerCounts = new Map();
+
+    completedGames.forEach(game => {
+
+        const gamePlayers = getGamePlayers(game);
+
+        const totals = getGameTotalsForStandings(
+            game,
+            gamePlayers
+        );
+
+        gamePlayers.forEach(player => {
+
+            const playerId = String(player.id);
+
+            const totalScore = Number(
+                totals[player.id] ?? 0
+            );
+
+            if (
+                !Number.isFinite(totalScore) ||
+                totalScore < 1000
+            ) {
+                return;
+            }
+
+            if (!playerCounts.has(playerId)) {
+
+                playerCounts.set(playerId, {
+                    name: player.name || "Unknown Player",
+                    count: 0
+                });
+
+            }
+
+            playerCounts.get(playerId).count += 1;
+
+        });
+
+    });
+
+    const ranking = Array.from(
+        playerCounts.values()
+    ).sort((a, b) =>
+        b.count - a.count ||
+        a.name.localeCompare(b.name)
+    );
+
+    if (ranking.length === 0) {
+        return null;
+    }
+
+    const highestCount = ranking[0].count;
+
+    const leaders = ranking.filter(
+        player => player.count === highestCount
+    );
+
+    return {
+        score: highestCount,
+        playerName: leaders
+            .map(player => player.name)
+            .join(" / "),
+        gameNumber: null,
+        matchNumber: null,
+        date: null
+    };
+
+}
+
+
+/* ============================================================
+   BEST GOAPER — MONTHLY CALCULATION
+============================================================ */
+
+function calculateMonthlyBestGoaper(completedGames) {
+
+    const playerCounts = new Map();
+
+    completedGames.forEach(game => {
+
+        // Ignore games completed before Goaper selection existed.
+        if (!game.goaperSubmittedAt) {
+            return;
+        }
+
+        // Firebase may omit an empty Goaper list.
+        const goaperIds = Array.isArray(game.goaperIds)
+            ? game.goaperIds
+            : [];
+
+        const gamePlayers = getGamePlayers(game);
+
+        const playersById = new Map(
+            gamePlayers.map(player => [
+                String(player.id),
+                player
+            ])
+        );
+
+        // Prevent counting the same player twice in one game.
+        const uniqueIds = new Set(
+            goaperIds.map(id => String(id))
+        );
+
+        uniqueIds.forEach(playerId => {
+
+            const player = playersById.get(playerId);
+
+            // Count only participants in the completed game.
+            if (!player) {
+                return;
+            }
+
+            if (!playerCounts.has(playerId)) {
+                playerCounts.set(playerId, {
+                    name: player.name || "Unknown Player",
+                    count: 0
+                });
+            }
+
+            playerCounts.get(playerId).count += 1;
+
+        });
+
+    });
+
+    const ranking = Array.from(
+        playerCounts.values()
+    ).sort((a, b) =>
+        b.count - a.count ||
+        a.name.localeCompare(b.name)
+    );
+
+    if (ranking.length === 0) {
+        return null;
+    }
+
+    const highestCount = ranking[0].count;
+
+    const leaders = ranking.filter(
+        player => player.count === highestCount
+    );
+
+    return {
+        score: highestCount,
+        playerName: leaders
+            .map(player => player.name)
+            .join(" / "),
+        gameNumber: null,
+        matchNumber: null,
+        date: null
+    };
+
+}
+
 
 /* ============================================================
    36. RENDER MONTHLY RECORDS
@@ -3050,7 +3247,7 @@ function renderMonthlyRecords(
 
         },
 
-        {
+                {
 
             label:
                 "Lowest Game Total",
@@ -3061,9 +3258,35 @@ function renderMonthlyRecords(
             includeMatch:
                 false
 
+        },
+
+        
+        {
+            label:
+                "Most 1000+ Games",
+
+            record:
+                records.most1000Games,
+
+            includeMatch:
+                false
+
+        },
+
+        {
+            label:
+                "Best Goaper",
+
+            record:
+                records.bestGoaper,
+
+            includeMatch:
+                false
+
         }
 
     ];
+
 
 
     recordCards.forEach(
@@ -3134,8 +3357,10 @@ function createMonthlyRecordCard(
     }
 
 
-    const gameText =
-        `Game #${record.gameNumber}`;
+        const gameText =
+        record.gameNumber == null
+            ? ""
+            : `Game #${record.gameNumber}`;
 
 
     const matchText =

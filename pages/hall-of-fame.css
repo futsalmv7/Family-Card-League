@@ -575,6 +575,7 @@ body {
    07. ALL-TIME RECORDS
 ============================================================ */
 
+
 .hall-record-grid {
 
     display:
@@ -587,6 +588,14 @@ body {
         8px;
 
 }
+
+/* Fifth record fills the last row on mobile */
+.hall-record-grid > .hall-record-card:last-child:nth-child(odd) {
+
+    grid-column: 1 / -1;
+
+}
+
 
 
 .hall-record-card {

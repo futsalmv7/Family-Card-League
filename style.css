@@ -1130,6 +1130,7 @@ body {
    10. MONTHLY RECORDS
 ============================================================ */
 
+
 .records-grid {
 
     display: grid;
@@ -1140,6 +1141,14 @@ body {
     gap: 9px;
 
 }
+
+/* Fifth record fills the last row on mobile */
+.records-grid > .record-card:last-child:nth-child(odd) {
+
+    grid-column: 1 / -1;
+
+}
+
 
 
 .record-card {

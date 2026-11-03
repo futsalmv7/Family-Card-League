@@ -374,6 +374,61 @@
         </div>
 
 
+        <!-- =====================================================
+             GOAPER SELECTION
+             Appears after Match 10 is saved.
+        ====================================================== -->
+
+        <section
+            class="live-card hidden"
+            id="goaperSelectionCard"
+        >
+
+            <div class="live-section-heading">
+                <div>
+                    <span class="live-section-kicker">
+                        GAME COMPLETION
+                    </span>
+
+                    <h2>
+                        Select Goapers
+                    </h2>
+
+                    <p>
+                        Select up to 3 Goapers from this game.
+                        If there are no Goapers, leave everyone
+                        unselected and submit.
+                    </p>
+                </div>
+            </div>
+
+            <div
+                class="score-entry-list"
+                id="goaperPlayerList"
+            >
+                <!-- Player choices will be added by JavaScript -->
+            </div>
+
+            <p id="goaperSelectionCount">
+                0 of 3 Goapers selected
+            </p>
+
+            <button
+                type="button"
+                class="save-match-button"
+                id="submitGoapersButton"
+            >
+                Submit &amp; Complete Game
+            </button>
+
+            <div
+                class="score-message"
+                id="goaperMessage"
+                aria-live="polite"
+            ></div>
+
+        </section>
+
 
         <!-- =====================================================
              COMPLETED GAME

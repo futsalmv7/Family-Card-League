@@ -195,6 +195,7 @@ const lowestGamePlayer =
     );
 
 
+
 const lowestGameDetail =
     document.getElementById(
         "lowestGameDetail"
@@ -202,8 +203,41 @@ const lowestGameDetail =
 
 
 /* ============================================================
+   MOST 1000+ GAMES ELEMENTS
+============================================================ */
+
+const most1000GamesCount =
+    document.getElementById(
+        "most1000GamesCount"
+    );
+
+const most1000GamesPlayer =
+    document.getElementById(
+        "most1000GamesPlayer"
+    );
+
+const most1000GamesDetail =
+    document.getElementById(
+        "most1000GamesDetail"
+    );
+
+    /* ============================================================
+   BEST GOAPER AWARD ELEMENTS
+============================================================ */
+
+const bestGoaperCount =
+    document.getElementById("bestGoaperCount");
+
+const bestGoaperPlayer =
+    document.getElementById("bestGoaperPlayer");
+
+const bestGoaperDetail =
+    document.getElementById("bestGoaperDetail");
+
+/* ============================================================
    CATEGORY ELEMENTS
 ============================================================ */
+
 
 const categoryOneCutoff =
     document.getElementById(
@@ -782,15 +816,27 @@ renderActiveGames(
     );
 
 
-    calculateAndRenderRecords(
-        completedGames,
-        playerStats
-    );
+    
+calculateAndRenderRecords(
+    completedGames,
+    playerStats
+);
 
 
-    calculateAndRenderCategories(
-        playerStats
-    );
+renderMost1000Games(
+    completedGames
+);
+
+
+renderBestGoaper(
+    completedGames
+);
+
+
+calculateAndRenderCategories(
+    playerStats
+);
+
 
 }
 
@@ -1952,6 +1998,180 @@ function calculateAndRenderRecords(
         lowestGameDetail
 
     );
+
+}
+
+
+/* ============================================================
+   MOST 1000+ GAMES — MONTHLY RECORD
+============================================================ */
+
+function renderMost1000Games(completedGames) {
+
+    if (
+        !most1000GamesCount ||
+        !most1000GamesPlayer ||
+        !most1000GamesDetail
+    ) {
+        return;
+    }
+
+    const playerCounts = {};
+
+    completedGames.forEach(game => {
+
+        Object.keys(game.players || {}).forEach(playerId => {
+
+            const points = getPlayerGamePoints(
+                game,
+                playerId
+            );
+
+            if (points < 1000) {
+                return;
+            }
+
+            if (!playerCounts[playerId]) {
+
+                playerCounts[playerId] = {
+                    name: getHistoricalPlayerName(
+                        game,
+                        playerId
+                    ),
+                    count: 0
+                };
+
+            }
+
+            playerCounts[playerId].count += 1;
+
+        });
+
+    });
+
+    const ranking = Object.values(playerCounts)
+        .sort((a, b) =>
+            b.count - a.count ||
+            a.name.localeCompare(b.name)
+        );
+
+    if (ranking.length === 0) {
+
+        most1000GamesCount.textContent = "0";
+
+        most1000GamesPlayer.textContent =
+            "No qualifying games yet";
+
+        most1000GamesDetail.textContent =
+            "Score 1,000+ points in a completed game";
+
+        return;
+    }
+
+    const highestCount = ranking[0].count;
+
+    const leaders = ranking.filter(
+        player => player.count === highestCount
+    );
+
+    most1000GamesCount.textContent =
+        highestCount;
+
+    most1000GamesPlayer.textContent =
+        leaders.map(player => player.name).join(" & ");
+
+    most1000GamesDetail.textContent =
+        `${highestCount} completed game${highestCount === 1 ? "" : "s"} with 1,000+ points`;
+
+}
+
+
+/* ============================================================
+   BEST GOAPER — MONTHLY AWARD
+============================================================ */
+
+function renderBestGoaper(completedGames) {
+
+    if (
+        !bestGoaperCount ||
+        !bestGoaperPlayer ||
+        !bestGoaperDetail
+    ) {
+        return;
+    }
+
+    const playerCounts = {};
+
+    completedGames.forEach(game => {
+
+        // Older games without Goaper submission are excluded.
+        if (!game.goaperSubmittedAt) {
+            return;
+        }
+
+        // No Goapers selected is a valid result.
+        const goaperIds = Array.isArray(game.goaperIds)
+            ? game.goaperIds
+            : [];
+
+        // Count each player only once per game.
+        const uniqueIds = new Set(goaperIds);
+
+        uniqueIds.forEach(playerId => {
+
+            // Only count players who participated in this game.
+            if (!game.players?.[playerId]) {
+                return;
+            }
+
+            if (!playerCounts[playerId]) {
+                playerCounts[playerId] = {
+                    name: getHistoricalPlayerName(
+                        game,
+                        playerId
+                    ),
+                    count: 0
+                };
+            }
+
+            playerCounts[playerId].count += 1;
+
+        });
+
+    });
+
+    const ranking = Object.values(playerCounts)
+        .sort((a, b) =>
+            b.count - a.count ||
+            a.name.localeCompare(b.name)
+        );
+
+    if (ranking.length === 0) {
+
+        bestGoaperCount.textContent = "0";
+
+        bestGoaperPlayer.textContent =
+            "No Goapers yet";
+
+        bestGoaperDetail.textContent =
+            "No Goaper selections in completed games";
+
+        return;
+    }
+
+    const highestCount = ranking[0].count;
+
+    const leaders = ranking.filter(
+        player => player.count === highestCount
+    );
+
+    bestGoaperCount.textContent = highestCount;
+
+    bestGoaperPlayer.textContent =
+        leaders.map(player => player.name).join(" & ");
+
+    bestGoaperDetail.textContent =
+        `${highestCount} Goaper selection${highestCount === 1 ? "" : "s"} this month`;
 
 }
 

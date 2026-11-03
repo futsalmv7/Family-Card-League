@@ -174,6 +174,96 @@ const winnerScore =
 const finalResults =
     document.getElementById("finalResults");
 
+    
+const goaperSelectionCard =
+    document.getElementById("goaperSelectionCard");
+
+const goaperPlayerList =
+    document.getElementById("goaperPlayerList");
+
+const goaperSelectionCount =
+    document.getElementById("goaperSelectionCount");
+
+const submitGoapersButton =
+    document.getElementById("submitGoapersButton");
+
+const goaperMessage =
+    document.getElementById("goaperMessage");
+
+let selectedGoapers = [];
+
+
+/* ============================================================
+   GOAPER SELECTION — PLAYER BUTTONS
+============================================================ */
+
+function renderGoaperSelection() {
+
+    if (!goaperPlayerList) {
+        return;
+    }
+
+    goaperPlayerList.innerHTML = "";
+
+    orderedPlayers.forEach((player) => {
+
+        const button = document.createElement("button");
+
+        button.type = "button";
+        button.className = "score-entry-row";
+
+        const isSelected =
+            selectedGoapers.includes(player.id);
+
+        button.style.width = "100%";
+        button.style.cursor = "pointer";
+        button.style.textAlign = "left";
+        button.style.border = isSelected
+            ? "2px solid #16a34a"
+            : "2px solid transparent";
+
+        button.setAttribute(
+            "aria-pressed",
+            String(isSelected)
+        );
+
+        const name = document.createElement("span");
+        name.className = "score-player-name";
+        name.textContent = player.name;
+
+        const indicator = document.createElement("strong");
+        indicator.textContent = isSelected ? "✓ Selected" : "Select";
+
+        button.appendChild(name);
+        button.appendChild(indicator);
+
+        button.addEventListener("click", () => {
+
+            if (selectedGoapers.includes(player.id)) {
+
+                selectedGoapers = selectedGoapers.filter(
+                    id => id !== player.id
+                );
+
+            } else {
+
+                if (selectedGoapers.length >= 3) {
+                    return;
+                }
+
+                selectedGoapers.push(player.id);
+            }
+
+            renderGoaperSelection();
+        });
+
+        goaperPlayerList.appendChild(button);
+    });
+
+    goaperSelectionCount.textContent =
+        `${selectedGoapers.length} of 3 Goapers selected`;
+}
+
 
 /* ============================================================
    04. INITIALIZE
@@ -432,6 +522,9 @@ function renderGame() {
         );
 
 
+goaperSelectionCard.classList.add("hidden");
+
+
         completedGameCard.classList.remove(
             "hidden"
         );
@@ -455,6 +548,9 @@ return;
             "hidden"
         );
 
+        
+goaperSelectionCard.classList.add("hidden");
+
 
         showFatalError(
             "This game has been cancelled."
@@ -477,6 +573,31 @@ return;
 
     const completedMatches =
         getCompletedMatchCount();
+
+        
+    /*
+       If all 10 matches are saved but the game
+       is still ACTIVE, Goaper selection is pending.
+
+       This also restores the selection screen
+       after a page refresh or reopening the game.
+    */
+
+    if (completedMatches === 10) {
+
+        scoreEntryCard.classList.add("hidden");
+
+        goaperSelectionCard.classList.remove("hidden");
+
+        renderGoaperSelection();
+
+    } else {
+
+        scoreEntryCard.classList.remove("hidden");
+
+        goaperSelectionCard.classList.add("hidden");
+
+    }
 
 
     const nextMatch =
@@ -973,11 +1094,19 @@ if (
                Match 10 completes the whole game.
             */
 
-            if (matchNumber === 10) {
+            
+if (matchNumber === 10) {
 
-                await completeGame();
+    selectedGoapers = [];
 
-            }
+    renderGoaperSelection();
+
+    scoreEntryCard.classList.add("hidden");
+
+    goaperSelectionCard.classList.remove("hidden");
+
+}
+
 
             else {
 
@@ -1800,11 +1929,65 @@ setInterval(() => {
 
 }, 10000);
 
+
+/* ============================================================
+   GOAPER SUBMISSION
+============================================================ */
+
+let goapersBeingSubmitted = false;
+
+submitGoapersButton.addEventListener("click", async () => {
+
+    if (goapersBeingSubmitted) return;
+
+    if (
+        !currentGame ||
+        currentGame.status !== "ACTIVE" ||
+        getCompletedMatchCount() !== 10
+    ) {
+        return;
+    }
+
+    if (selectedGoapers.length > 3) {
+        goaperMessage.textContent =
+            "You can select a maximum of 3 Goapers.";
+        return;
+    }
+
+    goapersBeingSubmitted = true;
+    submitGoapersButton.disabled = true;
+    submitGoapersButton.textContent = "Completing Game...";
+    goaperMessage.textContent = "";
+
+    try {
+
+        await completeGame([...selectedGoapers]);
+
+    } catch (error) {
+
+        console.error("Goaper submission error:", error);
+
+        goaperMessage.textContent =
+            error.message ||
+            "Unable to complete game. Please try again.";
+
+    } finally {
+
+        goapersBeingSubmitted = false;
+        submitGoapersButton.disabled = false;
+        submitGoapersButton.textContent =
+            "Submit & Complete Game";
+
+    }
+
+});
+
+
 /* ============================================================
    16. COMPLETE GAME
 ============================================================ */
 
-async function completeGame() {
+async function completeGame(goaperIds) {
 
     /*
        Read the game fresh because Match 10 was just written.
@@ -1929,39 +2112,55 @@ async function completeGame() {
     );
 
 
-    await update(
+    
+    const validPlayerIds = orderedPlayers.map(
+        player => player.id
+    );
 
-        gameRef,
+    if (
+        !Array.isArray(goaperIds) ||
+        goaperIds.length > 3 ||
+        new Set(goaperIds).size !== goaperIds.length ||
+        !goaperIds.every(id => validPlayerIds.includes(id))
+    ) {
+        throw new Error("Invalid Goaper selection.");
+    }
 
-        {
+    const result = await runTransaction(gameRef, (latestGame) => {
 
-            status:
-                "COMPLETED",
-
-            completedMatches:
-                10,
-
-            currentMatchNumber:
-                10,
-
-            completedAt:
-                Date.now(),
-
-            updatedAt:
-                Date.now(),
-
-            finalTotals:
-                totals,
-
-            winners:
-                winnerData,
-
-            winningTotal:
-                highestTotal
-
+        if (
+            !latestGame ||
+            latestGame.status !== "ACTIVE" ||
+            Object.keys(latestGame.matches || {}).length !== 10 ||
+            latestGame.goaperSubmittedAt != null
+        ) {
+            return;
         }
 
-    );
+        const now = Date.now();
+
+        return {
+            ...latestGame,
+            status: "COMPLETED",
+            completedMatches: 10,
+            currentMatchNumber: 10,
+            completedAt: now,
+            updatedAt: now,
+            finalTotals: totals,
+            winners: winnerData,
+            winningTotal: highestTotal,
+            goaperIds: goaperIds,
+            goaperSubmittedAt: now
+        };
+
+    });
+
+    if (!result.committed) {
+        throw new Error(
+            "This game was already completed or changed. Please refresh."
+        );
+    }
+
 
 
     localStorage.removeItem(

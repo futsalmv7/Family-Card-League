@@ -196,16 +196,51 @@ const hallLowestGamePlayer =
     );
 
 
+
 const hallLowestGameMeta =
     document.getElementById(
         "hallLowestGameMeta"
     );
 
 
+/* ============================================================
+   MOST 1000+ GAMES — ALL-TIME ELEMENTS
+============================================================ */
+
+const hallMost1000GamesCount =
+    document.getElementById(
+        "hallMost1000GamesCount"
+    );
+
+const hallMost1000GamesPlayer =
+    document.getElementById(
+        "hallMost1000GamesPlayer"
+    );
+
+const hallMost1000GamesDetail =
+    document.getElementById(
+        "hallMost1000GamesDetail"
+    );
+
+
+/* ============================================================
+   BEST GOAPER — ALL-TIME ELEMENTS
+============================================================ */
+
+const hallBestGoaperCount =
+    document.getElementById("hallBestGoaperCount");
+
+const hallBestGoaperPlayer =
+    document.getElementById("hallBestGoaperPlayer");
+
+const hallBestGoaperDetail =
+    document.getElementById("hallBestGoaperDetail");
+
 
 /* ============================================================
    03. PAGE STATE
 ============================================================ */
+
 
 let allPlayers =
     [];
@@ -339,15 +374,27 @@ async function loadHallOfFameData() {
             );
 
 
-                renderAllTimeRecords(
-            allTimeRecords
-        );
+                
+renderAllTimeRecords(
+    allTimeRecords
+);
 
 
-        const monthlyChampions =
-            buildMonthlyChampions(
-                allMonths
-            );
+renderAllTimeMost1000Games(
+    allCompletedGames
+);
+
+
+renderAllTimeBestGoaper(
+    allCompletedGames
+);
+
+
+const monthlyChampions =
+    buildMonthlyChampions(
+        allMonths
+    );
+
 
 
                 renderMonthlyChampions(
@@ -1891,6 +1938,247 @@ function renderAllTimeRecords(
 
 }
 
+
+/* ============================================================
+   MOST 1000+ GAMES — ALL-TIME CALCULATION
+============================================================ */
+
+function renderAllTimeMost1000Games(completedGames) {
+
+    if (
+        !hallMost1000GamesCount ||
+        !hallMost1000GamesPlayer ||
+        !hallMost1000GamesDetail
+    ) {
+        return;
+    }
+
+    const playerCounts = new Map();
+
+    const playerLookup = new Map(
+        allPlayers.map(player => [
+            String(player.id),
+            player.name
+        ])
+    );
+
+    completedGames.forEach(game => {
+
+        const gamePlayers = getGamePlayers(game);
+
+        const gameTotals = getGameTotals(
+            game,
+            gamePlayers
+        );
+
+        gamePlayers.forEach(player => {
+
+            const playerId = String(player.id);
+
+            if (!playerId) {
+                return;
+            }
+
+            const totalScore = Number(
+                gameTotals[playerId] ?? 0
+            );
+
+            if (
+                !Number.isFinite(totalScore) ||
+                totalScore < 1000
+            ) {
+                return;
+            }
+
+            if (!playerCounts.has(playerId)) {
+
+                playerCounts.set(playerId, {
+                    name:
+                        playerLookup.get(playerId) ||
+                        player.name ||
+                        "Unknown Player",
+                    count: 0
+                });
+
+            }
+
+            playerCounts.get(playerId).count += 1;
+
+        });
+
+    });
+
+    const ranking = Array.from(
+        playerCounts.values()
+    ).sort((a, b) =>
+        b.count - a.count ||
+        a.name.localeCompare(b.name)
+    );
+
+    if (ranking.length === 0) {
+
+        hallMost1000GamesCount.textContent = "0";
+
+        hallMost1000GamesPlayer.textContent =
+            "No qualifying games yet";
+
+        hallMost1000GamesDetail.textContent =
+            "Score 1,000+ points in a completed game";
+
+        return;
+    }
+
+    const highestCount = ranking[0].count;
+
+    const leaders = ranking.filter(
+        player => player.count === highestCount
+    );
+
+    hallMost1000GamesCount.textContent =
+        formatNumber(highestCount);
+
+    hallMost1000GamesPlayer.textContent =
+        leaders.map(player => player.name).join(" / ");
+
+    hallMost1000GamesDetail.textContent =
+        `${highestCount} completed game${highestCount === 1 ? "" : "s"} with 1,000+ points across all months`;
+
+}
+
+
+/* ============================================================
+   BEST GOAPER — ALL-TIME CALCULATION
+============================================================ */
+
+function calculateAllTimeBestGoaper(completedGames) {
+
+    const playerCounts = new Map();
+
+    const playerLookup = new Map(
+        allPlayers.map(player => [
+            String(player.id),
+            player.name
+        ])
+    );
+
+    completedGames.forEach(game => {
+
+        // Ignore games before Goaper selection existed.
+        if (!game.goaperSubmittedAt) {
+            return;
+        }
+
+        const goaperIds = Array.isArray(game.goaperIds)
+            ? game.goaperIds
+            : [];
+
+        const gamePlayers = getGamePlayers(game);
+
+        const playersById = new Map(
+            gamePlayers.map(player => [
+                String(player.id),
+                player
+            ])
+        );
+
+        // Each player can receive only one Goaper
+        // count per completed game.
+        const uniqueIds = new Set(
+            goaperIds.map(id => String(id))
+        );
+
+        uniqueIds.forEach(playerId => {
+
+            const player = playersById.get(playerId);
+
+            if (!player) {
+                return;
+            }
+
+            if (!playerCounts.has(playerId)) {
+                playerCounts.set(playerId, {
+                    id: playerId,
+                    name:
+                        playerLookup.get(playerId) ||
+                        player.name ||
+                        "Unknown Player",
+                    count: 0
+                });
+            }
+
+            playerCounts.get(playerId).count += 1;
+
+        });
+
+    });
+
+    const ranking = Array.from(playerCounts.values())
+        .sort((a, b) =>
+            b.count - a.count ||
+            a.name.localeCompare(b.name)
+        );
+
+    if (ranking.length === 0) {
+        return null;
+    }
+
+    const highestCount = ranking[0].count;
+
+    const leaders = ranking.filter(
+        player => player.count === highestCount
+    );
+
+    return {
+        count: highestCount,
+        playerNames: leaders
+            .map(player => player.name)
+            .join(" / "),
+        leaders: leaders
+    };
+
+}
+
+
+/* ============================================================
+   BEST GOAPER — ALL-TIME DISPLAY
+============================================================ */
+
+function renderAllTimeBestGoaper(completedGames) {
+
+    if (
+        !hallBestGoaperCount ||
+        !hallBestGoaperPlayer ||
+        !hallBestGoaperDetail
+    ) {
+        return;
+    }
+
+    const result =
+        calculateAllTimeBestGoaper(completedGames);
+
+    if (!result) {
+
+        hallBestGoaperCount.textContent = "0";
+
+        hallBestGoaperPlayer.textContent =
+            "No Goaper awards yet";
+
+        hallBestGoaperDetail.textContent =
+            "Across all completed games";
+
+        return;
+    }
+
+    hallBestGoaperCount.textContent =
+        formatNumber(result.count);
+
+    hallBestGoaperPlayer.textContent =
+        result.playerNames;
+
+    hallBestGoaperDetail.textContent =
+        `${result.count} Goaper award${result.count === 1 ? "" : "s"} across all completed games`;
+
+}
 
 
 /* ============================================================

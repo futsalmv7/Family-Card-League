@@ -8395,6 +8395,86 @@ function cloneStanding(
    BUILD FINALIZED RECORDS
 ============================================================ */
 
+
+/* ============================================================
+   BEST GOAPER — FINALIZED MONTH CALCULATION
+============================================================ */
+
+function buildFinalizedBestGoaper(completedGames) {
+
+    const playerCounts = new Map();
+
+    completedGames.forEach(game => {
+
+        if (!game.goaperSubmittedAt) {
+            return;
+        }
+
+        const goaperIds = Array.isArray(game.goaperIds)
+            ? game.goaperIds
+            : [];
+
+        const playersById = new Map(
+            getGamePlayers(game).map(player => [
+                String(player.id),
+                player
+            ])
+        );
+
+        const uniqueIds = new Set(
+            goaperIds.map(id => String(id))
+        );
+
+        uniqueIds.forEach(playerId => {
+
+            const player = playersById.get(playerId);
+
+            if (!player) {
+                return;
+            }
+
+            if (!playerCounts.has(playerId)) {
+                playerCounts.set(playerId, {
+                    name: player.name || "Unknown Player",
+                    count: 0
+                });
+            }
+
+            playerCounts.get(playerId).count += 1;
+
+        });
+
+    });
+
+    const ranking = Array.from(playerCounts.values())
+        .sort((a, b) =>
+            b.count - a.count ||
+            a.name.localeCompare(b.name)
+        );
+
+    if (ranking.length === 0) {
+        return null;
+    }
+
+    const highestCount = ranking[0].count;
+
+    const leaders = ranking.filter(
+        player => player.count === highestCount
+    );
+
+    return {
+        score: highestCount,
+        playerName: leaders
+            .map(player => player.name)
+            .join(" / "),
+        gameNumber: null,
+        matchNumber: null,
+        date: null
+    };
+
+}
+
+
 function buildFinalizedRecords(
     completedGames,
     standings
@@ -8610,12 +8690,19 @@ function buildFinalizedRecords(
                 highestGame
             ),
 
-        lowestGameTotal:
-            stripRecordTieBreakerData(
-                lowestGame
-            )
+        
+lowestGameTotal:
+    stripRecordTieBreakerData(
+        lowestGame
+    ),
 
-    };
+bestGoaper:
+    buildFinalizedBestGoaper(
+        completedGames
+    )
+
+};
+
 
 }
 
