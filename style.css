@@ -2293,3 +2293,195 @@ body {
     }
 
 }
+
+/* ============================================================
+   AWARD DETAILS MODAL
+   Most 1000+ Games / Best Goaper
+============================================================ */
+
+.award-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 16px;
+}
+
+.award-modal.hidden {
+    display: none !important;
+}
+
+/* Dark background */
+.award-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 15, 25, 0.7);
+}
+
+/* Main popup */
+.award-modal-panel {
+    position: relative;
+    z-index: 1;
+
+    width: 100%;
+    max-width: 520px;
+    max-height: min(85vh, 750px);
+
+    display: flex;
+    flex-direction: column;
+
+    background: #ffffff;
+    border-radius: 18px;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+/* Header */
+.award-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 18px 20px;
+
+    background: #111827;
+    color: #ffffff;
+}
+
+.award-modal-header h2 {
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+/* Close button */
+.award-modal-close {
+    flex-shrink: 0;
+
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+
+    font-size: 26px;
+    cursor: pointer;
+}
+
+.award-modal-close:hover {
+    background: rgba(255, 255, 255, 0.22);
+}
+
+/* Scrollable content */
+.award-modal-content {
+    padding: 18px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+/* Player details card */
+.award-player-card {
+    padding: 14px;
+    margin-bottom: 12px;
+
+    background: #f8fafc;
+    border: 1px solid #e8ecf1;
+    border-radius: 12px;
+}
+
+.award-player-card:last-child {
+    margin-bottom: 0;
+}
+
+.award-player-name {
+    font-size: 15px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 5px;
+}
+
+.award-player-count {
+    font-size: 11px;
+    font-weight: 700;
+    color: #a4770d;
+    margin-bottom: 10px;
+}
+
+/* Individual game details */
+.award-game-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+
+    padding: 9px 0;
+    border-top: 1px solid #e8ecf1;
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.award-game-label {
+    color: #687386;
+}
+
+.award-game-score {
+    font-weight: 800;
+    color: #111827;
+    text-align: right;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+    .award-modal {
+        padding: 12px;
+    }
+
+    .award-modal-panel {
+        max-height: 88dvh;
+        border-radius: 16px;
+    }
+
+    .award-modal-header {
+        padding: 15px;
+    }
+
+    .award-modal-content {
+        padding: 14px;
+    }
+}
+
+/* ============================================================
+   CLICKABLE MONTHLY AWARD CARDS
+============================================================ */
+
+.award-clickable-card {
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.award-clickable-card:active {
+    transform: scale(0.98);
+}
+
+.award-clickable-card:hover {
+    box-shadow: 0 5px 16px rgba(17, 24, 39, 0.1);
+}
+
+.award-clickable-card:focus-visible {
+    outline: 3px solid #d4a017;
+    outline-offset: 3px;
+}

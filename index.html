@@ -591,7 +591,13 @@
 <!-- =========================================
      MOST 1000+ GAMES
 ========================================= -->
-<article class="record-card">
+<article
+    class="record-card award-clickable-card"
+    id="most1000AwardCard"
+    role="button"
+    tabindex="0"
+    aria-label="View Most 1000+ Games details"
+>
 
     <div class="record-card-top">
 
@@ -622,7 +628,13 @@
 <!-- =========================================
      BEST GOAPER AWARD
 ========================================= -->
-<article class="record-card">
+<article
+    class="record-card award-clickable-card"
+    id="bestGoaperAwardCard"
+    role="button"
+    tabindex="0"
+    aria-label="View Best Goaper details"
+>
 
     <div class="record-card-top">
 
@@ -1292,6 +1304,50 @@
     type="module"
     src="app.js"
 ></script>
+
+<!-- ============================================================
+     AWARD DETAILS MODAL
+     Most 1000+ Games / Best Goaper
+============================================================ -->
+
+<div
+    id="awardDetailsModal"
+    class="award-modal hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="awardModalTitle"
+>
+    <div
+        class="award-modal-overlay"
+        id="awardModalOverlay"
+    ></div>
+
+    <div class="award-modal-panel">
+
+        <div class="award-modal-header">
+            <h2 id="awardModalTitle">
+                Award Details
+            </h2>
+
+            <button
+                type="button"
+                id="awardModalClose"
+                class="award-modal-close"
+                aria-label="Close award details"
+            >
+                &times;
+            </button>
+        </div>
+
+        <div
+            id="awardModalContent"
+            class="award-modal-content"
+        >
+            <!-- Award details will appear here -->
+        </div>
+
+    </div>
+</div>
 
 </body>
 

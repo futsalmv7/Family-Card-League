@@ -3533,6 +3533,359 @@ function resetYearlyCategories() {
 }
 
 /* ============================================================
+   AWARD DETAILS MODAL
+   STEP M3B — OPEN AND CLOSE
+============================================================ */
+
+const awardDetailsModal =
+    document.getElementById("awardDetailsModal");
+
+const awardModalTitle =
+    document.getElementById("awardModalTitle");
+
+const awardModalContent =
+    document.getElementById("awardModalContent");
+
+const awardModalClose =
+    document.getElementById("awardModalClose");
+
+const awardModalOverlay =
+    document.getElementById("awardModalOverlay");
+
+const most1000AwardCard =
+    document.getElementById("most1000AwardCard");
+
+const bestGoaperAwardCard =
+    document.getElementById("bestGoaperAwardCard");
+
+
+/* ------------------------------------------------------------
+   OPEN MODAL
+------------------------------------------------------------ */
+
+function openAwardModal(title) {
+
+    if (!awardDetailsModal) {
+        return;
+    }
+
+    awardModalTitle.textContent = title;
+
+    if (title === "🏅 Most 1000+ Games") {
+
+    renderMost1000ModalDetails();
+
+} else if (title === "🃏 Best Goaper") {
+
+    renderBestGoaperModalDetails();
+
+} else {
+
+    awardModalContent.textContent =
+        "Award details unavailable.";
+
+}
+
+    awardDetailsModal.classList.remove("hidden");
+
+    document.body.style.overflow = "hidden";
+
+    awardModalClose.focus();
+}
+
+/* ============================================================
+   MOST 1000+ GAMES — MODAL DETAILS
+============================================================ */
+
+function renderMost1000ModalDetails() {
+
+    if (!awardModalContent) {
+        return;
+    }
+
+    const completedGames = getCompletedGames();
+    const playerRecords = {};
+
+    completedGames.forEach(game => {
+
+        Object.keys(game.players || {}).forEach(playerId => {
+
+            const points = getPlayerGamePoints(
+                game,
+                playerId
+            );
+
+            if (points < 1000) {
+                return;
+            }
+
+            if (!playerRecords[playerId]) {
+                playerRecords[playerId] = {
+                    name: getHistoricalPlayerName(
+                        game,
+                        playerId
+                    ),
+                    games: []
+                };
+            }
+
+            playerRecords[playerId].games.push({
+                gameNumber: game.gameNumber,
+                score: points
+            });
+
+        });
+
+    });
+
+    const ranking = Object.values(playerRecords)
+        .sort((a, b) =>
+            b.games.length - a.games.length ||
+            a.name.localeCompare(b.name)
+        );
+
+    if (ranking.length === 0) {
+        awardModalContent.textContent =
+            "No players have scored 1,000+ points in a completed game this month.";
+        return;
+    }
+
+    awardModalContent.innerHTML = ranking.map(player => {
+
+        const sortedGames = [...player.games].sort(
+            (a, b) =>
+                Number(a.gameNumber) - Number(b.gameNumber)
+        );
+
+        return `
+            <div class="award-player-card">
+
+                <div class="award-player-name">
+                    ${escapeHTML(player.name)}
+                </div>
+
+                <div class="award-player-count">
+                    ${player.games.length}
+                    qualifying game${player.games.length === 1 ? "" : "s"}
+                </div>
+
+                ${sortedGames.map(game => `
+                    <div class="award-game-row">
+
+                        <span class="award-game-label">
+                            Game #${escapeHTML(String(game.gameNumber ?? "?"))}
+                        </span>
+
+                        <span class="award-game-score">
+                            ${formatPoints(game.score)} pts
+                        </span>
+
+                    </div>
+                `).join("")}
+
+            </div>
+        `;
+
+    }).join("");
+
+}
+
+/* ============================================================
+   BEST GOAPER — MODAL DETAILS
+   Completed games from the active month only
+============================================================ */
+
+function renderBestGoaperModalDetails() {
+
+    if (!awardModalContent) {
+        return;
+    }
+
+    const completedGames = getCompletedGames();
+    const playerRecords = {};
+
+    completedGames.forEach(game => {
+
+        // Only games with a submitted Goaper result count.
+        if (!game.goaperSubmittedAt) {
+            return;
+        }
+
+        const goaperIds = Array.isArray(game.goaperIds)
+            ? game.goaperIds
+            : [];
+
+        // A player can receive only one Goaper award per game.
+        const uniqueIds = new Set(goaperIds);
+
+        uniqueIds.forEach(playerId => {
+
+            // Only count players who participated in the game.
+            if (!game.players?.[playerId]) {
+                return;
+            }
+
+            if (!playerRecords[playerId]) {
+
+                playerRecords[playerId] = {
+                    name: getHistoricalPlayerName(
+                        game,
+                        playerId
+                    ),
+                    games: []
+                };
+
+            }
+
+            playerRecords[playerId].games.push({
+                gameNumber: game.gameNumber
+            });
+
+        });
+
+    });
+
+    const ranking = Object.values(playerRecords)
+        .sort((a, b) =>
+            b.games.length - a.games.length ||
+            a.name.localeCompare(b.name)
+        );
+
+    if (ranking.length === 0) {
+
+        awardModalContent.textContent =
+            "No Goaper awards have been recorded in completed games this month.";
+
+        return;
+    }
+
+    awardModalContent.innerHTML = ranking.map(player => {
+
+        const sortedGames = [...player.games].sort(
+            (a, b) =>
+                Number(a.gameNumber) - Number(b.gameNumber)
+        );
+
+        return `
+            <div class="award-player-card">
+
+                <div class="award-player-name">
+                    ${escapeHTML(player.name)}
+                </div>
+
+                <div class="award-player-count">
+                    ${player.games.length}
+                    Goaper award${player.games.length === 1 ? "" : "s"}
+                </div>
+
+                ${sortedGames.map(game => `
+                    <div class="award-game-row">
+
+                        <span class="award-game-label">
+                            Game #${escapeHTML(
+                                String(game.gameNumber ?? "?")
+                            )}
+                        </span>
+
+                        <span class="award-game-score">
+                            Goaper
+                        </span>
+
+                    </div>
+                `).join("")}
+
+            </div>
+        `;
+
+    }).join("");
+
+}
+
+/* ------------------------------------------------------------
+   CLOSE MODAL
+------------------------------------------------------------ */
+
+function closeAwardModal() {
+
+    if (!awardDetailsModal) {
+        return;
+    }
+
+    awardDetailsModal.classList.add("hidden");
+
+    document.body.style.overflow = "";
+}
+
+
+/* ------------------------------------------------------------
+   CLICKABLE AWARD CARDS
+------------------------------------------------------------ */
+
+function setupAwardCard(card, title) {
+
+    if (!card) {
+        return;
+    }
+
+    card.addEventListener("click", () => {
+        openAwardModal(title);
+    });
+
+    card.addEventListener("keydown", (event) => {
+
+        if (event.key === "Enter" || event.key === " ") {
+
+            event.preventDefault();
+
+            openAwardModal(title);
+        }
+
+    });
+}
+
+setupAwardCard(
+    most1000AwardCard,
+    "🏅 Most 1000+ Games"
+);
+
+setupAwardCard(
+    bestGoaperAwardCard,
+    "🃏 Best Goaper"
+);
+
+
+/* ------------------------------------------------------------
+   CLOSE BUTTON AND BACKGROUND
+------------------------------------------------------------ */
+
+awardModalClose?.addEventListener(
+    "click",
+    closeAwardModal
+);
+
+awardModalOverlay?.addEventListener(
+    "click",
+    closeAwardModal
+);
+
+
+/* ------------------------------------------------------------
+   ESCAPE KEY
+------------------------------------------------------------ */
+
+document.addEventListener("keydown", (event) => {
+
+    if (
+        event.key === "Escape" &&
+        awardDetailsModal &&
+        !awardDetailsModal.classList.contains("hidden")
+    ) {
+        closeAwardModal();
+    }
+
+});
+
+/* ============================================================
    PWA SERVICE WORKER
 ============================================================ */
 
