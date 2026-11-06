@@ -536,7 +536,50 @@
 
     </nav>
 
+<!-- ============================================================
+     MONTHLY HISTORY — AWARD DETAILS MODAL
+============================================================ -->
 
+<div
+    id="monthlyAwardModal"
+    class="award-modal hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="monthlyAwardModalTitle"
+>
+    <div
+        class="award-modal-overlay"
+        id="monthlyAwardModalOverlay"
+    ></div>
+
+    <div class="award-modal-panel">
+
+        <div class="award-modal-header">
+
+            <h2 id="monthlyAwardModalTitle">
+                Award Details
+            </h2>
+
+            <button
+                type="button"
+                id="monthlyAwardModalClose"
+                class="award-modal-close"
+                aria-label="Close award details"
+            >
+                &times;
+            </button>
+
+        </div>
+
+        <div
+            id="monthlyAwardModalContent"
+            class="award-modal-content"
+        >
+            <!-- Selected month's award details appear here -->
+        </div>
+
+    </div>
+</div>
 
     <!-- =========================================================
          JAVASCRIPT

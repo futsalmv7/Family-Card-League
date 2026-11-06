@@ -501,7 +501,13 @@
 
                     
 <!-- MOST 1000+ GAMES — ALL TIME -->
-<article class="hall-record-card">
+<article
+    class="hall-record-card hall-award-clickable"
+    id="hallMost1000AwardCard"
+    role="button"
+    tabindex="0"
+    aria-label="View All-Time Most 1000+ Games details"
+>
 
     <div class="hall-record-label">
         🏅 Most 1000+ Games
@@ -523,7 +529,13 @@
 
 
 <!-- BEST GOAPER — ALL TIME -->
-<article class="hall-record-card">
+<article
+    class="hall-record-card hall-award-clickable"
+    id="hallBestGoaperAwardCard"
+    role="button"
+    tabindex="0"
+    aria-label="View All-Time Best Goaper details"
+>
 
     <div class="hall-record-label">
         ⭐ Best Goaper
@@ -783,7 +795,50 @@
 
     </nav>
 
+<!-- ============================================================
+     ALL-TIME RECORDS — AWARD DETAILS MODAL
+============================================================ -->
 
+<div
+    id="hallAwardModal"
+    class="hall-award-modal hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="hallAwardModalTitle"
+>
+    <div
+        class="hall-award-modal-overlay"
+        id="hallAwardModalOverlay"
+    ></div>
+
+    <div class="hall-award-modal-panel">
+
+        <div class="hall-award-modal-header">
+
+            <h2 id="hallAwardModalTitle">
+                Award Details
+            </h2>
+
+            <button
+                type="button"
+                id="hallAwardModalClose"
+                class="hall-award-modal-close"
+                aria-label="Close award details"
+            >
+                &times;
+            </button>
+
+        </div>
+
+        <div
+            id="hallAwardModalContent"
+            class="hall-award-modal-content"
+        >
+            <!-- All-time award details appear here -->
+        </div>
+
+    </div>
+</div>
 
     <!-- =========================================================
          JAVASCRIPT

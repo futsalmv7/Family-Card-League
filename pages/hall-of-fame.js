@@ -236,6 +236,466 @@ const hallBestGoaperPlayer =
 const hallBestGoaperDetail =
     document.getElementById("hallBestGoaperDetail");
 
+    /* ============================================================
+   ALL-TIME RECORDS — AWARD DETAILS MODAL
+   STEP AT4 — OPEN AND CLOSE
+============================================================ */
+
+/* ------------------------------------------------------------
+   MODAL ELEMENTS
+------------------------------------------------------------ */
+
+const hallAwardModal =
+    document.getElementById("hallAwardModal");
+
+const hallAwardModalTitle =
+    document.getElementById("hallAwardModalTitle");
+
+const hallAwardModalContent =
+    document.getElementById("hallAwardModalContent");
+
+const hallAwardModalClose =
+    document.getElementById("hallAwardModalClose");
+
+const hallAwardModalOverlay =
+    document.getElementById("hallAwardModalOverlay");
+
+/* ------------------------------------------------------------
+   CLICKABLE AWARD CARDS
+------------------------------------------------------------ */
+
+const hallMost1000AwardCard =
+    document.getElementById("hallMost1000AwardCard");
+
+const hallBestGoaperAwardCard =
+    document.getElementById("hallBestGoaperAwardCard");
+
+/* ------------------------------------------------------------
+   OPEN AWARD MODAL
+------------------------------------------------------------ */
+
+function openHallAwardModal(awardType) {
+
+    if (
+        !hallAwardModal ||
+        !hallAwardModalTitle ||
+        !hallAwardModalContent
+    ) {
+        return;
+    }
+
+    const awardTitle =
+        awardType === "most1000"
+            ? "Most 1000+ Games"
+            : "Best Goaper";
+
+    hallAwardModalTitle.textContent =
+        `${awardTitle} — All Time`;
+
+    if (awardType === "most1000") {
+
+    renderHallMost1000ModalDetails();
+
+} else if (awardType === "goaper") {
+
+    renderHallBestGoaperModalDetails();
+
+}
+
+    hallAwardModal.classList.remove("hidden");
+
+    document.body.style.overflow = "hidden";
+
+    hallAwardModalClose?.focus();
+
+}
+
+/* ============================================================
+   ALL-TIME RECORDS — MOST 1000+ GAMES DETAILS
+   STEP AT5
+============================================================ */
+
+function renderHallMost1000ModalDetails() {
+
+    if (!hallAwardModalContent) {
+        return;
+    }
+
+    const playerRecords = new Map();
+
+    // Use the completed games already loaded from all months.
+    const playerLookup = new Map(
+        allPlayers.map(player => [
+            String(player.id),
+            player.name
+        ])
+    );
+
+    allCompletedGames.forEach(game => {
+
+        const gamePlayers = getGamePlayers(game);
+
+        // Same scoring calculation as the existing record card.
+        const gameTotals = getGameTotals(
+            game,
+            gamePlayers
+        );
+
+        gamePlayers.forEach(player => {
+
+            const playerId = String(player.id);
+
+            if (!playerId) {
+                return;
+            }
+
+            const score = Number(
+                gameTotals[playerId] ?? 0
+            );
+
+            if (
+                !Number.isFinite(score) ||
+                score < 1000
+            ) {
+                return;
+            }
+
+            if (!playerRecords.has(playerId)) {
+
+                playerRecords.set(playerId, {
+                    name:
+                        playerLookup.get(playerId) ||
+                        player.name ||
+                        "Unknown Player",
+                    games: []
+                });
+
+            }
+
+            playerRecords.get(playerId).games.push({
+                monthId: game.monthId,
+                monthLabel: game.monthLabel,
+                gameNumber: game.gameNumber,
+                score: score
+            });
+
+        });
+
+    });
+
+    // Rank players by qualifying game count.
+    const ranking = Array.from(
+        playerRecords.values()
+    ).sort((a, b) =>
+        b.games.length - a.games.length ||
+        a.name.localeCompare(b.name)
+    );
+
+    if (ranking.length === 0) {
+
+        hallAwardModalContent.textContent =
+            "No players have scored 1,000+ points in a completed game yet.";
+
+        return;
+    }
+
+    hallAwardModalContent.innerHTML = ranking.map(player => {
+
+        // Show newest months first, then game number.
+        const sortedGames = [...player.games].sort((a, b) => {
+
+            const monthComparison = String(
+                b.monthId ?? ""
+            ).localeCompare(
+                String(a.monthId ?? "")
+            );
+
+            if (monthComparison !== 0) {
+                return monthComparison;
+            }
+
+            return Number(a.gameNumber) - Number(b.gameNumber);
+
+        });
+
+        return `
+            <div class="hall-award-player-card">
+
+                <div class="hall-award-player-name">
+                    ${escapeHtml(player.name)}
+                </div>
+
+                <div class="hall-award-player-count">
+                    ${player.games.length}
+                    qualifying game${player.games.length === 1 ? "" : "s"}
+                </div>
+
+                ${sortedGames.map(game => `
+                    <div class="hall-award-game-row">
+
+                        <span class="hall-award-game-label">
+                            ${escapeHtml(
+                                game.monthLabel || game.monthId || "Unknown Month"
+                            )}
+                            — Game #${escapeHtml(
+                                String(game.gameNumber ?? "—")
+                            )}
+                        </span>
+
+                        <span class="hall-award-game-score">
+                            ${formatNumber(game.score)} pts
+                        </span>
+
+                    </div>
+                `).join("")}
+
+            </div>
+        `;
+
+    }).join("");
+
+}
+
+/* ============================================================
+   ALL-TIME RECORDS — BEST GOAPER DETAILS
+   STEP AT6
+============================================================ */
+
+function renderHallBestGoaperModalDetails() {
+
+    if (!hallAwardModalContent) {
+        return;
+    }
+
+    const playerRecords = new Map();
+
+    const playerLookup = new Map(
+        allPlayers.map(player => [
+            String(player.id),
+            player.name
+        ])
+    );
+
+    // Collect Goaper awards from all completed games.
+    allCompletedGames.forEach(game => {
+
+        // Ignore games without submitted Goaper selections.
+        if (!game.goaperSubmittedAt) {
+            return;
+        }
+
+        const goaperIds = Array.isArray(game.goaperIds)
+            ? game.goaperIds
+            : [];
+
+        const gamePlayers = getGamePlayers(game);
+
+        const playersById = new Map(
+            gamePlayers.map(player => [
+                String(player.id),
+                player
+            ])
+        );
+
+        // Count each selected player only once per game.
+        const uniqueIds = new Set(
+            goaperIds.map(id => String(id))
+        );
+
+        uniqueIds.forEach(playerId => {
+
+            const player = playersById.get(playerId);
+
+            if (!player) {
+                return;
+            }
+
+            if (!playerRecords.has(playerId)) {
+
+                playerRecords.set(playerId, {
+                    name:
+                        playerLookup.get(playerId) ||
+                        player.name ||
+                        "Unknown Player",
+                    games: []
+                });
+
+            }
+
+            playerRecords.get(playerId).games.push({
+                monthId: game.monthId,
+                monthLabel: game.monthLabel,
+                gameNumber: game.gameNumber
+            });
+
+        });
+
+    });
+
+    // Sort by Goaper count, then player name.
+    const ranking = Array.from(
+        playerRecords.values()
+    ).sort((a, b) =>
+        b.games.length - a.games.length ||
+        a.name.localeCompare(b.name)
+    );
+
+    if (ranking.length === 0) {
+
+        hallAwardModalContent.textContent =
+            "No Goaper awards have been recorded in completed games yet.";
+
+        return;
+    }
+
+    hallAwardModalContent.innerHTML = ranking.map(player => {
+
+        // Newest month first, then game number.
+        const sortedGames = [...player.games].sort((a, b) => {
+
+            const monthComparison = String(
+                b.monthId ?? ""
+            ).localeCompare(
+                String(a.monthId ?? "")
+            );
+
+            if (monthComparison !== 0) {
+                return monthComparison;
+            }
+
+            return Number(a.gameNumber) - Number(b.gameNumber);
+
+        });
+
+        return `
+            <div class="hall-award-player-card">
+
+                <div class="hall-award-player-name">
+                    ${escapeHtml(player.name)}
+                </div>
+
+                <div class="hall-award-player-count">
+                    ${player.games.length}
+                    Goaper award${player.games.length === 1 ? "" : "s"}
+                </div>
+
+                ${sortedGames.map(game => `
+                    <div class="hall-award-game-row">
+
+                        <span class="hall-award-game-label">
+                            ${escapeHtml(
+                                game.monthLabel || game.monthId || "Unknown Month"
+                            )}
+                            — Game #${escapeHtml(
+                                String(game.gameNumber ?? "—")
+                            )}
+                        </span>
+
+                        <span class="hall-award-game-score">
+                            Goaper
+                        </span>
+
+                    </div>
+                `).join("")}
+
+            </div>
+        `;
+
+    }).join("");
+
+}
+
+/* ------------------------------------------------------------
+   CLOSE AWARD MODAL
+------------------------------------------------------------ */
+
+function closeHallAwardModal() {
+
+    if (!hallAwardModal) {
+        return;
+    }
+
+    hallAwardModal.classList.add("hidden");
+
+    document.body.style.overflow = "";
+
+}
+
+/* ------------------------------------------------------------
+   MOST 1000+ GAMES — CLICK AND KEYBOARD
+------------------------------------------------------------ */
+
+hallMost1000AwardCard?.addEventListener("click", () => {
+
+    openHallAwardModal("most1000");
+
+});
+
+hallMost1000AwardCard?.addEventListener("keydown", (event) => {
+
+    if (event.key === "Enter" || event.key === " ") {
+
+        event.preventDefault();
+
+        openHallAwardModal("most1000");
+
+    }
+
+});
+
+/* ------------------------------------------------------------
+   BEST GOAPER — CLICK AND KEYBOARD
+------------------------------------------------------------ */
+
+hallBestGoaperAwardCard?.addEventListener("click", () => {
+
+    openHallAwardModal("goaper");
+
+});
+
+hallBestGoaperAwardCard?.addEventListener("keydown", (event) => {
+
+    if (event.key === "Enter" || event.key === " ") {
+
+        event.preventDefault();
+
+        openHallAwardModal("goaper");
+
+    }
+
+});
+
+/* ------------------------------------------------------------
+   CLOSE BUTTON AND OVERLAY
+------------------------------------------------------------ */
+
+hallAwardModalClose?.addEventListener(
+    "click",
+    closeHallAwardModal
+);
+
+hallAwardModalOverlay?.addEventListener(
+    "click",
+    closeHallAwardModal
+);
+
+/* ------------------------------------------------------------
+   ESCAPE KEY
+------------------------------------------------------------ */
+
+document.addEventListener("keydown", (event) => {
+
+    if (
+        event.key === "Escape" &&
+        hallAwardModal &&
+        !hallAwardModal.classList.contains("hidden")
+    ) {
+
+        closeHallAwardModal();
+
+    }
+
+});
 
 /* ============================================================
    03. PAGE STATE

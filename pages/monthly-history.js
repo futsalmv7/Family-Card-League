@@ -3330,6 +3330,37 @@ function createMonthlyRecordCard(
     card.className =
         "monthly-history-record-card";
 
+        /* ------------------------------------------------------------
+   CLICKABLE MONTHLY AWARD CARDS
+   Only Most 1000+ Games and Best Goaper
+------------------------------------------------------------ */
+
+if (
+    label === "Most 1000+ Games" ||
+    label === "Best Goaper"
+) {
+
+    card.classList.add(
+        "award-clickable-card"
+    );
+
+    card.setAttribute(
+        "role",
+        "button"
+    );
+
+    card.setAttribute(
+        "tabindex",
+        "0"
+    );
+
+    card.setAttribute(
+        "aria-label",
+        `View ${label} details`
+    );
+
+}
+
 
     if (
         !record
@@ -3431,7 +3462,419 @@ function createMonthlyRecordCard(
 
 }
 
+/* ============================================================
+   MONTHLY HISTORY — AWARD DETAILS MODAL
+   STEP MH3 — OPEN AND CLOSE
+============================================================ */
 
+const monthlyAwardModal =
+    document.getElementById("monthlyAwardModal");
+
+const monthlyAwardModalTitle =
+    document.getElementById("monthlyAwardModalTitle");
+
+const monthlyAwardModalContent =
+    document.getElementById("monthlyAwardModalContent");
+
+const monthlyAwardModalClose =
+    document.getElementById("monthlyAwardModalClose");
+
+const monthlyAwardModalOverlay =
+    document.getElementById("monthlyAwardModalOverlay");
+
+
+/* ------------------------------------------------------------
+   OPEN AWARD MODAL
+------------------------------------------------------------ */
+
+function openMonthlyAwardModal(awardType) {
+
+    if (!monthlyAwardModal || !selectedMonth) {
+        return;
+    }
+
+    const awardTitle =
+        awardType === "most1000"
+            ? "Most 1000+ Games"
+            : "Best Goaper";
+
+    monthlyAwardModalTitle.textContent =
+        `${awardTitle} — ${selectedMonth.label}`;
+
+    if (awardType === "most1000") {
+
+    renderMonthlyMost1000ModalDetails();
+
+} else if (awardType === "goaper") {
+
+    renderMonthlyBestGoaperModalDetails();
+
+} else {
+
+    monthlyAwardModalContent.textContent =
+        "Award details unavailable.";
+
+}
+
+    monthlyAwardModal.classList.remove("hidden");
+
+    document.body.style.overflow = "hidden";
+
+    monthlyAwardModalClose.focus();
+}
+
+/* ============================================================
+   MONTHLY HISTORY — MOST 1000+ GAMES DETAILS
+============================================================ */
+
+function renderMonthlyMost1000ModalDetails() {
+
+    if (!monthlyAwardModalContent || !selectedMonth) {
+        return;
+    }
+
+    const completedGames = getMonthGames(
+        selectedMonth.data || {}
+    ).filter(game =>
+        String(game.status || "").toUpperCase() === "COMPLETED"
+    );
+
+    const playerRecords = new Map();
+
+    completedGames.forEach(game => {
+
+        const gamePlayers = getGamePlayers(game);
+
+        const totals = getGameTotalsForStandings(
+            game,
+            gamePlayers
+        );
+
+        gamePlayers.forEach(player => {
+
+            const playerId = String(player.id);
+
+            const score = Number(
+                totals[player.id] ?? 0
+            );
+
+            if (
+                !Number.isFinite(score) ||
+                score < 1000
+            ) {
+                return;
+            }
+
+            if (!playerRecords.has(playerId)) {
+
+                playerRecords.set(playerId, {
+                    name: player.name || "Unknown Player",
+                    games: []
+                });
+
+            }
+
+            playerRecords.get(playerId).games.push({
+                gameNumber: game.gameNumber,
+                score: score
+            });
+
+        });
+
+    });
+
+    const ranking = Array.from(
+        playerRecords.values()
+    ).sort((a, b) =>
+        b.games.length - a.games.length ||
+        a.name.localeCompare(b.name)
+    );
+
+    if (ranking.length === 0) {
+
+        monthlyAwardModalContent.textContent =
+            "No players scored 1,000+ points in a completed game during this month.";
+
+        return;
+    }
+
+    monthlyAwardModalContent.innerHTML = ranking.map(player => {
+
+        const sortedGames = [...player.games].sort(
+            (a, b) =>
+                Number(a.gameNumber) - Number(b.gameNumber)
+        );
+
+        return `
+            <div class="award-player-card">
+
+                <div class="award-player-name">
+                    ${escapeMonthlyHistoryHTML(player.name)}
+                </div>
+
+                <div class="award-player-count">
+                    ${player.games.length}
+                    qualifying game${player.games.length === 1 ? "" : "s"}
+                </div>
+
+                ${sortedGames.map(game => `
+                    <div class="award-game-row">
+
+                        <span class="award-game-label">
+                            Game #${escapeMonthlyHistoryHTML(
+                                String(game.gameNumber ?? "—")
+                            )}
+                        </span>
+
+                        <span class="award-game-score">
+                            ${game.score.toLocaleString("en-GB")} pts
+                        </span>
+
+                    </div>
+                `).join("")}
+
+            </div>
+        `;
+
+    }).join("");
+
+}
+
+/* ============================================================
+   MONTHLY HISTORY — BEST GOAPER DETAILS
+   Completed games from the selected month only
+============================================================ */
+
+function renderMonthlyBestGoaperModalDetails() {
+
+    if (!monthlyAwardModalContent || !selectedMonth) {
+        return;
+    }
+
+    const completedGames = getMonthGames(
+        selectedMonth.data || {}
+    ).filter(game =>
+        String(game.status || "").toUpperCase() === "COMPLETED"
+    );
+
+    const playerRecords = new Map();
+
+    completedGames.forEach(game => {
+
+        // Only games where Goaper selection was submitted.
+        if (!game.goaperSubmittedAt) {
+            return;
+        }
+
+        const goaperIds = Array.isArray(game.goaperIds)
+            ? game.goaperIds
+            : [];
+
+        const gamePlayers = getGamePlayers(game);
+
+        const playersById = new Map(
+            gamePlayers.map(player => [
+                String(player.id),
+                player
+            ])
+        );
+
+        // Count each player only once per game.
+        const uniqueIds = new Set(
+            goaperIds.map(id => String(id))
+        );
+
+        uniqueIds.forEach(playerId => {
+
+            const player = playersById.get(playerId);
+
+            // Ignore IDs that are not participants.
+            if (!player) {
+                return;
+            }
+
+            if (!playerRecords.has(playerId)) {
+
+                playerRecords.set(playerId, {
+                    name: player.name || "Unknown Player",
+                    games: []
+                });
+
+            }
+
+            playerRecords.get(playerId).games.push({
+                gameNumber: game.gameNumber
+            });
+
+        });
+
+    });
+
+    const ranking = Array.from(
+        playerRecords.values()
+    ).sort((a, b) =>
+        b.games.length - a.games.length ||
+        a.name.localeCompare(b.name)
+    );
+
+    if (ranking.length === 0) {
+
+        monthlyAwardModalContent.textContent =
+            "No Goaper awards have been recorded in completed games during this month.";
+
+        return;
+    }
+
+    monthlyAwardModalContent.innerHTML = ranking.map(player => {
+
+        const sortedGames = [...player.games].sort(
+            (a, b) =>
+                Number(a.gameNumber) - Number(b.gameNumber)
+        );
+
+        return `
+            <div class="award-player-card">
+
+                <div class="award-player-name">
+                    ${escapeMonthlyHistoryHTML(player.name)}
+                </div>
+
+                <div class="award-player-count">
+                    ${player.games.length}
+                    Goaper award${player.games.length === 1 ? "" : "s"}
+                </div>
+
+                ${sortedGames.map(game => `
+                    <div class="award-game-row">
+
+                        <span class="award-game-label">
+                            Game #${escapeMonthlyHistoryHTML(
+                                String(game.gameNumber ?? "—")
+                            )}
+                        </span>
+
+                        <span class="award-game-score">
+                            Goaper
+                        </span>
+
+                    </div>
+                `).join("")}
+
+            </div>
+        `;
+
+    }).join("");
+
+}
+
+/* ------------------------------------------------------------
+   CLOSE AWARD MODAL
+------------------------------------------------------------ */
+
+function closeMonthlyAwardModal() {
+
+    if (!monthlyAwardModal) {
+        return;
+    }
+
+    monthlyAwardModal.classList.add("hidden");
+
+    document.body.style.overflow = "";
+}
+
+
+/* ------------------------------------------------------------
+   HANDLE AWARD CARD CLICKS
+------------------------------------------------------------ */
+
+monthlyHistoryRecords.addEventListener(
+    "click",
+    (event) => {
+
+        const card = event.target.closest(
+            ".award-clickable-card"
+        );
+
+        if (!card) {
+            return;
+        }
+
+        const label = card.querySelector(
+            ".monthly-history-record-label"
+        )?.textContent.trim();
+
+        if (label === "Most 1000+ Games") {
+            openMonthlyAwardModal("most1000");
+        }
+
+        if (label === "Best Goaper") {
+            openMonthlyAwardModal("goaper");
+        }
+
+    }
+);
+
+
+/* ------------------------------------------------------------
+   KEYBOARD SUPPORT
+------------------------------------------------------------ */
+
+monthlyHistoryRecords.addEventListener(
+    "keydown",
+    (event) => {
+
+        if (
+            event.key !== "Enter" &&
+            event.key !== " "
+        ) {
+            return;
+        }
+
+        const card = event.target.closest(
+            ".award-clickable-card"
+        );
+
+        if (!card) {
+            return;
+        }
+
+        event.preventDefault();
+
+        card.click();
+    }
+);
+
+
+/* ------------------------------------------------------------
+   CLOSE BUTTON AND OVERLAY
+------------------------------------------------------------ */
+
+monthlyAwardModalClose?.addEventListener(
+    "click",
+    closeMonthlyAwardModal
+);
+
+monthlyAwardModalOverlay?.addEventListener(
+    "click",
+    closeMonthlyAwardModal
+);
+
+
+/* ------------------------------------------------------------
+   ESCAPE KEY
+------------------------------------------------------------ */
+
+document.addEventListener("keydown", (event) => {
+
+    if (
+        event.key === "Escape" &&
+        monthlyAwardModal &&
+        !monthlyAwardModal.classList.contains("hidden")
+    ) {
+        closeMonthlyAwardModal();
+    }
+
+});
 
 /* ============================================================
    38. FORMAT RECORD DATE
